@@ -4,12 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".additionalSettings.DownloadsArray.list.DownlodPagger">
+    android:padding="@dimen/_15dp"
+    android:id="@+id/parentContainer"
+    tools:context=".additionalSettings.DownlodZipActivity">
+
+
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/action_bar_root"
-        style="@style/toolbarBackGroundColor"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="2dp"
@@ -36,7 +50,7 @@
         <TextView
             android:id="@+id/textTitle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:gravity="center|start"
@@ -170,7 +184,7 @@
                 android:layout_marginTop="8dp"
                 android:elegantTextHeight="true"
                 android:maxLines="1"
-                tools:text="/CLO/DE_MO_202100/App/Zip"
+                tools:text="/CLO/DE_MO_202100/App"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/imagePauseDownload"
@@ -234,7 +248,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
         <TextView
-            android:id="@+id/textContinuPassword222222"
+            android:id="@+id/text_launch_application"
             style="@style/cardDesignBuyGift222"
             android:layout_width="0dp"
             android:layout_height="35dp"

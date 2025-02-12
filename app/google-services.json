@@ -1,94 +1,26 @@
 {
   "project_info": {
-    "project_number": "514948973001",
-    "project_id": "advanced-plus-fc841",
-    "storage_bucket": "advanced-plus-fc841.appspot.com"
+    "project_number": "231505889929",
+    "project_id": "syncapplive",
+    "storage_bucket": "syncapplive.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:514948973001:android:fb4e133b83f90242c0e818",
+        "mobilesdk_app_id": "1:231505889929:android:ca125e625bd1a96b0e5458",
         "android_client_info": {
-          "package_name": "zidsworld.com.advancedplus"
+          "package_name": "sync2app.com.syncapplive"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "514948973001-u8oh7ir2t2i8ot1l3pu9i3b2b9sstfdd.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB5it8eSMSq4y6Unbdxz5ia9fCx26BES8k"
+          "current_key": "AIzaSyBXTd9D2sn3dAB9H4cgY-uiuuug2vhYB7U"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "514948973001-u8oh7ir2t2i8ot1l3pu9i3b2b9sstfdd.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:514948973001:android:81960ed3a0de1fe7c0e818",
-        "android_client_info": {
-          "package_name": "zidsworld.com.remotetestapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "514948973001-u8oh7ir2t2i8ot1l3pu9i3b2b9sstfdd.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB5it8eSMSq4y6Unbdxz5ia9fCx26BES8k"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "514948973001-u8oh7ir2t2i8ot1l3pu9i3b2b9sstfdd.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:514948973001:android:f7a49cb663fe69fdc0e818",
-        "android_client_info": {
-          "package_name": "zidsworld.com.remotewebview"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "514948973001-u8oh7ir2t2i8ot1l3pu9i3b2b9sstfdd.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB5it8eSMSq4y6Unbdxz5ia9fCx26BES8k"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "514948973001-u8oh7ir2t2i8ot1l3pu9i3b2b9sstfdd.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

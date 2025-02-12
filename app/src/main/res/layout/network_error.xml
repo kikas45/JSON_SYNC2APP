@@ -39,7 +39,6 @@
     <ImageButton
 
         android:id="@+id/errorlayouHomeButton"
-        android:onClick="goHomeOnError"
         android:src="@drawable/ic_home"
         android:background="@drawable/round_bg"
 
@@ -67,7 +66,6 @@
     <ImageButton
 
         android:id="@+id/errorlayoutExitButton"
-        android:onClick="ExitOnError"
         android:background="@drawable/round_bg"
         android:src="@drawable/ic_close"
         android:textAllCaps="false"

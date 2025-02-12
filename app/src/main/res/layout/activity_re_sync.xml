@@ -203,8 +203,25 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextSubPathFolder"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText,RtlSymmetry,TextFields" />
 
+
+            <EditText
+                android:id="@+id/editTextInputIndexManual"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/round_edit_text_design"
+                android:hint="Input index url"
+                android:inputType="text"
+                android:paddingStart="15dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextInputSynUrlZip"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
                 android:id="@+id/textTestConnectionAPPer"
@@ -245,13 +262,13 @@
                 android:focusable="true"
                 android:fontFamily="sans-serif-medium"
                 android:foreground="?selectableItemBackground"
-                android:gravity="center"
+                android:gravity="center_horizontal"
                 android:maxLines="1"
                 android:paddingLeft="18dp"
                 android:paddingTop="8dp"
                 android:paddingRight="18dp"
                 android:paddingBottom="8dp"
-                android:text="Connect Zip"
+                android:text="Connect to Zip Sync"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -285,6 +302,8 @@
                 android:paddingStart="26dp"
                 android:text="Test Toggle Mode"
                 android:textSize="14sp"
+                android:visibility="gone"
+                tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/divider7" />
@@ -299,7 +318,7 @@
                 android:maxLines="1"
                 android:paddingStart="26dp"
                 android:text="Download on files at set Intervals"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textSynfromApiZip" />
@@ -329,7 +348,7 @@
                 android:gravity="start|center"
                 android:maxLines="1"
                 android:paddingStart="26dp"
-                android:text="Use start file for first sync"
+                android:text="For first sync use start file"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -349,7 +368,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextInputSynUrlZip" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextInputIndexManual" />
 
             <TextView
                 android:id="@+id/textUseManual"
@@ -368,7 +387,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/imagSwtichEnablOrDisbalePassowrd"
+                android:id="@+id/imag_swtich_enable_laucng_online"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
@@ -384,6 +403,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:alpha="1"
+                android:visibility="gone"
+                tools:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@+id/textToogleMode"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textToogleMode" />

@@ -6,61 +6,76 @@
     android:layout_height="match_parent">
 
 
-    <TextView
-        android:id="@+id/textDefineInterVals2"
-        style="@style/textColorStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
-        android:gravity="center|start"
-        android:maxLines="1"
-        android:text="Defined Intervals"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_crash"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:alpha="0.7"
+        android:background="@color/deep_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
-    <ImageView
-        android:id="@+id/imagSpannerChoseIntervals2"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_weight="1"
-        android:background="@drawable/ic_drop_down_24"
-        app:tint="@color/light_gray" />
+        <ImageView
+            android:id="@+id/imageCrossClose"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close_24"
+            app:tint="@color/white" />
 
 
-    <TextView
-        android:id="@+id/textTimeCount3"
-        style="@style/constrain_gray_solid_color_stroke"
-        android:layout_width="90dp"
-        android:layout_height="35dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:maxLines="1"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:text="Customize"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imagSpannerChoseIntervals2"
-        app:layout_constraintStart_toEndOf="@+id/imagSpannerChoseIntervals2"
-        app:layout_constraintTop_toTopOf="@+id/imagSpannerChoseIntervals2" />
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="We apologize for the inconvenience. Please close the app."
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/imageCrossClose"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/textSend"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="SEND"
+            android:textColor="@color/white"
 
-    <TextView
-        android:id="@+id/textTimeShow"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:maxLines="1"
-        android:text="00:05"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textTimeCount3"
-        app:layout_constraintTop_toTopOf="@+id/textTimeCount3"
-        tools:layout_editor_absoluteX="361dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+        <TextView
+            android:id="@+id/textCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="CANCEL"
+
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/textSend"
+            app:layout_constraintEnd_toStartOf="@+id/textSend"
+            app:layout_constraintTop_toTopOf="@+id/textSend" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

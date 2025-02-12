@@ -7,7 +7,59 @@
         android:defaultValue="false"
         android:icon="@drawable/ic_app_or_tv_tv_24"
         android:key="appModeOrTvMode"
-        android:title="App Mode"
+        android:title="Mobile App Mode"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="true" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_full_screen"
+        android:key="fullscreen"
+        android:title="Full Screen (TV mode)"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="true" />
+    '
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_immersive_fullscreen"
+        android:key="immersive_mode"
+        android:title="Immersive Mode (TV mode)"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="true" />
+
+
+
+
+    <SwitchPreference
+        app:iconSpaceReserved="true"
+        android:key="hidebottombar"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_toolbar_bottom"
+        app:allowDividerBelow="true"
+        android:title="Hide Bottom Bar (TV Mode or Touch Screen Mode)"
+        android:defaultValue="false"/>
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_baseline_notes_24"
+        android:key="hide_drawer_icon"
+        android:title="Hide Bottom Menu Icon (TV mode)"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="true" />
+
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_floating_button_24"
+        android:key="shwoFloatingButton"
+        android:title="Hide Floating Button(TV Mode or Touch Screen Mode)"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
         app:iconSpaceReserved="true" />
@@ -53,6 +105,18 @@
         app:allowDividerBelow="true"
         app:iconSpaceReserved="true" />
 
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_swipe_reload"
+        android:key="swiperefresh"
+        android:title="Swipe Refresh"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="true" />
+
+
+
     <SwitchPreference
         android:defaultValue="false"
         android:icon="@drawable/ic_loading_svg"
@@ -63,33 +127,12 @@
         app:iconSpaceReserved="true"
         app:isPreferenceVisible="false" />
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:icon="@drawable/ic_full_screen"
-        android:key="fullscreen"
-        android:title="Full Screen"
-        app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
-        app:iconSpaceReserved="true" />
 
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:icon="@drawable/ic_expand_fullscreen"
-        android:key="immersive_mode"
-        android:title="Immersive Mode"
-        app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
-        app:iconSpaceReserved="true" />
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:icon="@drawable/ic_refresh"
-        android:key="swiperefresh"
-        android:title="@string/swipe_refresh"
-        app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
-        app:iconSpaceReserved="true" />
+
+
+
 
 
     <SwitchPreference
@@ -121,24 +164,30 @@
         app:iconSpaceReserved="true"
         app:isPreferenceVisible="false" />
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:icon="@drawable/ic_toolbar_bottom"
-        android:key="hidebottombar"
-        android:title="Hide Bottom Bar"
-        app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
 
-        app:iconSpaceReserved="true" />
+
+
 
     <SwitchPreference
         android:defaultValue="false"
         android:icon="@drawable/ic_toolbar_top"
         android:key="autohideToolbar"
-        android:title="Auto Hide Toolbar"
+        android:title="Auto Hide Toolbar Off"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
         app:iconSpaceReserved="true" />
+
+    <!--
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_toolbar_top"
+            android:key="HideToolbar"
+            android:title="Hide Toolbar"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            app:iconSpaceReserved="true" />
+    -->
 
 
     <SwitchPreference
@@ -149,6 +198,31 @@
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
         app:iconSpaceReserved="true" />
+
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_wifi_offline_icon"
+        android:key="useOfflineFolderOrNot"
+        android:title="If Not Connected Use App Offline Folder"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="true" />
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_cached_mode_24"
+        android:key="enableCacheMode"
+        android:title="Enable Cache Mode"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="true" />
+
+
+
+
 
 
     <EditTextPreference
@@ -174,13 +248,24 @@
 
 
     <Preference
-        android:icon="@drawable/ic_settings_svg"
+        android:icon="@drawable/ic_settings_additional_suggest_24"
+        android:key="powell_settings"
+        android:title="Powell Settings"
+        app:isPreferenceVisible="false"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:shouldDisableView="true"
+        app:iconSize="45dp"/>
+
+
+
+    <Preference
+        android:icon="@drawable/ic_information_icon"
         android:singleLineTitle="false"
         android:summary="App restart may be required for effect"
         android:title="@string/app_name"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
-        app:iconSize="15dp"
         tools:targetApi="o" />
 
 

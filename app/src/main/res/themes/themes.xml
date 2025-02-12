@@ -1,0 +1,149 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Locy" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.Locy" parent="Base.Theme.Locy" />
+
+
+
+    <style name="TitleTextStyle">
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="SplashTitleTextStyle">
+        <item name="android:textSize">@dimen/splash_title_text_size</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BackButtonTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/back_button_tex_size_normal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ButtonTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/button_tex_size_normal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="AboutTextStyle">
+        <item name="android:textSize">@dimen/about_tex_size_normal</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="popup_subtext_size_normal">
+        <item name="android:textSize">@dimen/popup_subtext_size_normal</item>
+        <item name="android:textColor">@color/blue_normal</item>
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="android:textSize">@dimen/edittext_size_normal</item>
+        <item name="android:textColor">@color/blue_normal</item>
+    </style>
+
+    <style name="DimEditTextStyle">
+        <item name="android:textSize">@dimen/edittext_size_normal</item>
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
+    <style name="AskPasswordEditTextStyle">
+        <item name="android:textSize">@dimen/aks_edittext_size_normal</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColorHint">@color/grey</item>
+    </style>
+
+    <style name="PasswordEditTextStyle">
+        <item name="android:textSize">@dimen/edittext_size_normal</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColorHint">@color/grey</item>
+    </style>
+
+    <style name="PasswordFloatingTextStyle">
+        <item name="android:textSize">@dimen/float_text_size</item>
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
+    <style name="PercentageTextStyle">
+        <item name="android:textSize">@dimen/percentage_text_size_normal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LoadingTextStyle">
+        <item name="android:textSize">@dimen/loading_text_size_normal</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="LoadingMessageTextStyle">
+        <item name="android:textSize">@dimen/loading_message_text_size_normal</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="FloatingTextStyle">
+        <item name="android:textSize">@dimen/float_text_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="FilesTextStyle">
+        <item name="android:textSize">@dimen/files_text_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="FileHeaderTextStyle">
+        <item name="android:textSize">@dimen/file_header_text_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="FloatingTitleTextStyle">
+        <item name="android:textSize">@dimen/float_text_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="SettingsTitleTextStyle">
+        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="SettingsSubTitleTextStyle">
+        <item name="android:textSize">@dimen/settings_sub_text_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ErrorTextStyle">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">@dimen/popup_subtext_size_normal</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorSecondary">@android:color/black</item>
+    </style>
+
+    <style name="ProgressSuccessTitleTextStyle">
+        <item name="android:textSize">@dimen/progress_bar_text_size</item>
+        <item name="android:textColor">@color/green</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ProgressNormalTitleTextStyle">
+        <item name="android:textSize">@dimen/progress_bar_text_size</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ProgressFailedTitleTextStyle">
+        <item name="android:textSize">@dimen/progress_bar_text_size</item>
+        <item name="android:textColor">@color/red_error</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>
