@@ -878,7 +878,11 @@ class SplashKT : AppCompatActivity() {
                             val hideFloatingButton = it.hide_Floating_Button
                             val hideFloatingButtonLabel = it.hide_Floating_Button_Label
 
-                            val use_local_schedule = it.hide_Floating_Button_Label
+                            val use_local_schedule = it.use_local_schedule
+
+
+                            Log.d("USE_DAVID", "fetchApiSettings: $use_local_schedule")
+
 
                             // Logging the values
                             //Log.d("ApiResponse", "Install TV Mode: $installTVMode")
