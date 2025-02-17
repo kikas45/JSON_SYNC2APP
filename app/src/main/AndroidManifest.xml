@@ -69,11 +69,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,UnusedAttribute">
 
-        <activity
-            android:name=".additionalSettings.DownloadZipActivityForSingle"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:exported="false"
-            android:launchMode="singleTop" />
+
 
         <service
             android:name=".myService.ParsingSyncService"
@@ -257,12 +253,6 @@
 
         </activity>
 
-
-        <activity
-            android:name=".DE_MO_TEST.KoloWebviewPage"
-            android:exported="false"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:launchMode="singleTop" />
 
         <activity
             android:name=".DE_MO_TEST.KoloWebviewPageZipIssues"

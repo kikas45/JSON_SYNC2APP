@@ -218,6 +218,27 @@ public class ScheduleMediaActivity extends AppCompatActivity {
             }
         });
 
+
+
+        /// Init Only Local Schedule or Online Scheldule
+
+        SharedPreferences getScheduleVisibilityToggle = getSharedPreferences(Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE);
+
+
+        if (getScheduleVisibilityToggle.equals(Constants.use_local_schedule_APP)){
+            textScheduleIndicator.setText("Use Local Schedule");
+            Paper.book().write(Common.set_schedule_key, Common.schedule_offline);
+
+            binding.textScheduleIndicator.setVisibility(View.GONE);
+            binding.scheduleSwitch.setVisibility(View.GONE);
+            binding.imageView46.setVisibility(View.GONE);
+            binding.divider32.setVisibility(View.GONE);
+
+        }
+
+
+
+
         // initialize schedule settings
         MethodsSchedule.setPersistentDefaults();
 

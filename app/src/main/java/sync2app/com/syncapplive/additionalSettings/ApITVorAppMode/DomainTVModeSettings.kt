@@ -12,7 +12,10 @@ data class DomainTVModeSettings(
     val hide_Bottom_Menu_Icon: Boolean,
     val hide_Bottom_Menu_Icon_Label: Boolean,
     val hide_Floating_Button: Boolean,
-    val hide_Floating_Button_Label: Boolean
+    val hide_Floating_Button_Label: Boolean,
+
+    /// newly added
+    val use_local_schedule: Boolean
 )
 
 data class ApiResponse(

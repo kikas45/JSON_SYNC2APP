@@ -136,12 +136,9 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
 
     private var btnisClicked = false
-
     private var navigateTVMode = false;
     private var navigateAppMolde = false;
-
     private val TAG = "TvActivityOrAppMode"
-
     private var getUrlBasedOnSpinnerText = ""
     private var API_Server = "API-Cloud App Server"
     private var CP_server = "CP-Cloud App Server"
@@ -211,10 +208,8 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
         MethodsSchedule.setPersistentDefaults()
 
 
-        val get_imgToggleImageBackground =
-            sharedBiometric.getString(Constants.imgToggleImageBackground, "").toString()
-        val get_imageUseBranding =
-            sharedBiometric.getString(Constants.imageUseBranding, "").toString()
+        val get_imgToggleImageBackground = sharedBiometric.getString(Constants.imgToggleImageBackground, "").toString()
+        val get_imageUseBranding = sharedBiometric.getString(Constants.imageUseBranding, "").toString()
         if (get_imgToggleImageBackground.equals(Constants.imgToggleImageBackground) && get_imageUseBranding.equals(
                 Constants.imageUseBranding
             )
@@ -1560,10 +1555,8 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
         val getFolderClo = myDownloadClass.getString(Constants.getFolderClo, "").toString()
         val getFolderSubpath = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
-        val pathFolder =
-            "/" + getFolderClo + "/" + getFolderSubpath + "/" + Constants.App + "/" + "Config"
-        val folder =
-            Environment.getExternalStorageDirectory().absolutePath + "/Download/" + Constants.Syn2AppLive + "/" + pathFolder
+        val pathFolder = "/" + getFolderClo + "/" + getFolderSubpath + "/" + Constants.App + "/" + "Config"
+        val folder = Environment.getExternalStorageDirectory().absolutePath + "/Download/" + Constants.Syn2AppLive + "/" + pathFolder
         val fileTypes = "app_logo.png"
         val file = File(folder, fileTypes)
         if (file.exists()) {

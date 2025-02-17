@@ -354,6 +354,7 @@ class Constants {
         const val  hide_Bottom_MenuIconLabel_APP = "showBottom_MenuIconLabel_APP"
         const val  hide_Floating_Button_APP ="showFloating_Button_APP"
         const val  hide_Floating_ButtonLabel_APP = "showFloating_ButtonLabel_APP"
+        const val  use_local_schedule_APP = "use_local_schedule_APP"
 
 
 

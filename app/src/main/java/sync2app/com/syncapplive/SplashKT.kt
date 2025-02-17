@@ -878,6 +878,8 @@ class SplashKT : AppCompatActivity() {
                             val hideFloatingButton = it.hide_Floating_Button
                             val hideFloatingButtonLabel = it.hide_Floating_Button_Label
 
+                            val use_local_schedule = it.hide_Floating_Button_Label
+
                             // Logging the values
                             //Log.d("ApiResponse", "Install TV Mode: $installTVMode")
 
@@ -894,6 +896,9 @@ class SplashKT : AppCompatActivity() {
                             editor.putBoolean(Constants.hide_Bottom_MenuIconLabel_APP, hideBottomMenuIconLabel)
                             editor.putBoolean(Constants.hide_Floating_Button_APP, hideFloatingButton)
                             editor.putBoolean(Constants.hide_Floating_ButtonLabel_APP, hideFloatingButtonLabel)
+
+                            // newly added
+                            editor.putBoolean(Constants.use_local_schedule_APP, use_local_schedule)
                             editor.apply()
 
                             if (installTVMode) {

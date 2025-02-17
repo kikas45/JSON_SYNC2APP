@@ -103,11 +103,12 @@ public class AddNewSchedule extends AppCompatActivity {
     private AppSettings currentSettings;
 
 
-    private static final String ANNOUNCE_HTML = "announce.html";
-    private static final String TRAINIG_HTML = "training.html";
-    private static final String CUSTOM_INPUT = "training.html";
-    private static final String HTTPS = "https://";
-    private static final String HTTP_P = "http://";
+    private static final String ANNOUNCE_HTML = "Path to announce.html";
+    private static final String TRAINIG_HTML = "Path to training.html";
+    private static final String CUSTOM_INPUT = "Path to custom folder";
+    private static final String CUSTOM_PATH_URL = "Path to custom url";
+    private static final String HTTPS = "Url path to https://";
+    private static final String HTTP_P = "Url path to http://";
 
     private SharedPreferences preferences;
 
@@ -426,6 +427,9 @@ public class AddNewSchedule extends AppCompatActivity {
 
         textHTTP_Or_AnnounceText.setText(ANNOUNCE_HTML);
         textHTTPS_Or_Training_Text.setText(TRAINIG_HTML);
+        textHTTPS_Or_Training_Text.setText(TRAINIG_HTML);
+        textCustomSelection.setText(CUSTOM_INPUT);
+
         textHTTP_Or_AnnounceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -500,6 +504,7 @@ public class AddNewSchedule extends AppCompatActivity {
 
         textHTTP_Or_AnnounceText.setText(HTTPS);
         textHTTP_Or_Training_Text.setText(HTTP_P);
+        textCustomSelection.setText(CUSTOM_PATH_URL);
         textHTTP_Or_AnnounceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
