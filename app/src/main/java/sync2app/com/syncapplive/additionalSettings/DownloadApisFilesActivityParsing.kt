@@ -334,8 +334,10 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
                 isFailedDownload = true
 
                 handler.postDelayed(Runnable {
-                    recreate()
-                }, 3000)
+                    val intent = Intent(applicationContext, DownloadApisFilesActivityParsing::class.java)
+                    startActivity(intent)
+                    finish()
+                }, 9000)
 
             }
 
@@ -1440,7 +1442,7 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
 
     private fun copyFilesToNewFolder(files: List<FilesApi>) {
-        if (downloadedFilesCount == totalFiles) {
+        if (downloadedFilesCount >= totalFiles) {
 
             binding.progressBarPref.progress = 100
             binding.textDownloadSieze.text = "Completed"

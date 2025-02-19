@@ -326,14 +326,18 @@ class DownloadApisFilesActivity : AppCompatActivity() {
 
 
             } else {
-                Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
                 binding.textCsvStatus.text = "Poor Internet, Retry download";
                 isFailedDownload = true
 
                 handler.postDelayed(Runnable {
-                    recreate()
-                }, 3000)
+
+                    Toast.makeText(applicationContext, "Please try again", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(applicationContext, ReSyncActivity::class.java)
+                    startActivity(intent)
+                    finish()
+
+                }, 9000)
 
             }
 
@@ -1260,7 +1264,7 @@ class DownloadApisFilesActivity : AppCompatActivity() {
 
 
     private fun copyFilesToNewFolder(files: List<FilesApi>) {
-        if (downloadedFilesCount == totalFiles) {
+        if (downloadedFilesCount >= totalFiles) {
 
             binding.progressBarPref.progress = 100
             binding.textDownloadSieze.text = "Completed"

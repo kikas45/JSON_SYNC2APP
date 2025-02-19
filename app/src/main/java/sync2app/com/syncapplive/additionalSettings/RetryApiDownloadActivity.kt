@@ -1245,7 +1245,7 @@ class RetryApiDownloadActivity : AppCompatActivity() {
 
 
     private fun copyFilesToNewFolder(files: List<FilesApi>) {
-        if (downloadedFilesCount == totalFiles) {
+        if (downloadedFilesCount >= totalFiles) {
 
             binding.progressBarPref.progress = 100
             binding.textDownloadSieze.text = "Completed"
