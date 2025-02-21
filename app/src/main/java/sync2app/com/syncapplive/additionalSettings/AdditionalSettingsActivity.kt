@@ -122,6 +122,15 @@ class AdditionalSettingsActivity : AppCompatActivity() {
         }
 
 
+        initUtilityForOnCreateView()
+
+        initView()
+
+    }
+
+
+
+    private fun initUtilityForOnCreateView() {
         applyOritenation()
 
 
@@ -727,11 +736,7 @@ class AdditionalSettingsActivity : AppCompatActivity() {
 
         }
 
-
-        initView()
-
     }
-
 
 
     private fun initView() {

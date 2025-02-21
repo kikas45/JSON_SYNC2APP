@@ -125,6 +125,21 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
         setContentView(binding.root)
         applyOritenation()
 
+        var isEmpty = true
+        mfilesViewModel.readAllData.observe(this@DownloadApisFilesActivityParsing,
+            Observer { files ->
+                if (files.isEmpty()){
+                    if (isEmpty){
+                        isEmpty = false
+                        myHandler.postDelayed(Runnable {
+                            copyFilesToFailedDownloads()
+                        }, 2000)
+
+                    } }
+            })
+
+
+
         preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         binding.apply {
@@ -631,6 +646,9 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
                     }, 300)
                 } else {
+
+                    Log.d("GRAB_FAILED_URL", "$folderName/$fileName")
+
                     binding.textRemainging.visibility = View.VISIBLE
                     binding.textPercentageCompleted.visibility = View.VISIBLE
 
@@ -659,9 +677,7 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
     private fun checkWhatAreaToDownloadFrom(sn: String, folderName: String, fileName: String) {
 
-
-        val imagUsemanualOrnotuseManual =
-            sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
+        val imagUsemanualOrnotuseManual = sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
 
         if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
             currentDownloadIndex++
@@ -685,6 +701,7 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
 
         } else {
+
             currentDownloadIndex++
             downloadSequentially(mfilesViewModel.readAllData.value ?: emptyList())
 
@@ -806,6 +823,8 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
                     }, 300)
                 } else {
+                    Log.d("GRAB_FAILED_URL", "$folderName/$fileName")
+
                     binding.textRemainging.visibility = View.VISIBLE
                     binding.textPercentageCompleted.visibility = View.VISIBLE
 
@@ -1498,6 +1517,8 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
     }
 
     private fun copyFilesToFailedDownloads() {
+
+
         dnFailedViewModel.getAllFiles()
             .observe(this@DownloadApisFilesActivityParsing) { filesList ->
                 if (filesList.isNotEmpty()) {
@@ -1512,14 +1533,20 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
                     }
                     mfilesViewModel.addMultipleFiles(dnFailedList)
 
+                    showToastMessage("Copying files")
+
                 } else {
 
                     myHandler.postDelayed(Runnable {
                         stratMyACtivity()
+
+                        showToastMessage("Starting retry Activity")
                     }, 2000)
                 }
 
             }
+
+
     }
 
 

@@ -121,9 +121,23 @@ class RetryApiDownloadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRetryApiDownloadBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
         applyOritenation()
+
+        var isEmpty = true
+        mfilesViewModel.readAllData.observe(this@RetryApiDownloadActivity,
+            Observer { files ->
+                if (files.isEmpty()){
+                    if (isEmpty){
+                        isEmpty = false
+                        myHandler.postDelayed(Runnable {
+                            copyFilesToFailedDownloads()
+                        }, 2000)
+
+                    } }
+            })
+
+
+
 
         preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
@@ -603,6 +617,9 @@ class RetryApiDownloadActivity : AppCompatActivity() {
 
                     }, 300)
                 } else {
+
+                    Log.d("GRAB_FAILED_URL", "$folderName/$fileName")
+
                     binding.textRemainging.visibility = View.VISIBLE
                     binding.textPercentageCompleted.visibility = View.VISIBLE
 

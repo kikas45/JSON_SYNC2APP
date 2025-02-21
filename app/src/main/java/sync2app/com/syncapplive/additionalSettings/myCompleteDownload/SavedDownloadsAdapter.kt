@@ -29,6 +29,7 @@ class SavedDownloadsAdapter : RecyclerView.Adapter<SavedDownloadsAdapter.MyViewH
         val fileName = binding.fileName
         val filePath = binding.filePath
         val divider = binding.divider
+        val fileDownloadProgress = binding.fileDownloadProgress
         val mlayout = binding.mlayout
 
 
@@ -67,15 +68,16 @@ class SavedDownloadsAdapter : RecyclerView.Adapter<SavedDownloadsAdapter.MyViewH
         if (get_status.equals("true")) {
             holder.divider.setImageResource(R.drawable.ic_light_checked)
             holder.divider.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(holder.divider.context, R.color.deep_green))
+            holder.fileDownloadProgress.setBackgroundColor(ContextCompat.getColor(holder.divider.context, R.color.logo_blue))
 
         } else {
             // Set back color for the divider to be red
             holder.divider.setImageResource(R.drawable.ic_failed_circle)
             holder.divider.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(holder.divider.context, R.color.red))
+            holder.fileDownloadProgress.setBackgroundColor(ContextCompat.getColor(holder.divider.context, R.color.red))
         }
 
-
-        }
+    }
 
 
     @SuppressLint("NotifyDataSetChanged")

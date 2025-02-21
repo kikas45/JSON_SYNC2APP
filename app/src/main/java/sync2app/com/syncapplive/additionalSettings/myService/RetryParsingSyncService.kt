@@ -543,7 +543,7 @@ class RetryParsingSyncService : Service() {
     private fun copyFilesToNewFolder() {
         try {
             GlobalScope.launch {
-                if (downloadedFilesCount == totalFiles) {
+                if (downloadedFilesCount >= totalFiles) {
 
                     // Stop all Handlers
                     if (myHandler != null) {

@@ -130,6 +130,7 @@ import sync2app.com.syncapplive.additionalSettings.MaintenanceActivity
 import sync2app.com.syncapplive.additionalSettings.OnFileChange.Retro_On_Change
 import sync2app.com.syncapplive.additionalSettings.PasswordActivity
 import sync2app.com.syncapplive.additionalSettings.ReSyncActivity
+import sync2app.com.syncapplive.additionalSettings.SplashVideoActivity
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.cloudAppsync.api.RetrofitClient
 import sync2app.com.syncapplive.additionalSettings.cloudAppsync.models.AppSettings
@@ -6106,21 +6107,15 @@ class WebViewPage : AppCompatActivity() {
 
                     lifecycleScope.launch(Dispatchers.IO) {
 
-                        val saveDemoStorage =
-                            "/$Syn2AppLive/$Demo_Parsing_Folder/$getFolderClo/$getFolderSubpath/App/"
-                        val directoryParsing =
-                            Environment.getExternalStorageDirectory().absolutePath + "/Download/" + saveDemoStorage
+                        val saveDemoStorage = "/$Syn2AppLive/$Demo_Parsing_Folder/$getFolderClo/$getFolderSubpath/App/"
+                        val directoryParsing = Environment.getExternalStorageDirectory().absolutePath + "/Download/" + saveDemoStorage
                         val myFileParsing = File(directoryParsing)
                         delete(myFileParsing)
 
 
-                        val parsingStorage_second =
-                            "/$Syn2AppLive/$Demo_Parsing_Folder/$getFolderClo/$getFolderSubpath/"
+                        val parsingStorage_second = "/$Syn2AppLive/$Demo_Parsing_Folder/$getFolderClo/$getFolderSubpath/"
                         val fileNameParsing = "/App/"
-                        val dirParsing = File(
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                            parsingStorage_second
-                        )
+                        val dirParsing = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), parsingStorage_second)
                         val myFile_Parsing = File(dirParsing, fileNameParsing)
                         delete(myFile_Parsing)
 
@@ -8057,10 +8052,9 @@ class WebViewPage : AppCompatActivity() {
 
 
     private fun restartApp() {
-        // webView?.let { it-> it.clearHistory() }
 
         finishAffinity()
-        val intent = Intent(applicationContext, SplashKT::class.java)
+        val intent = Intent(applicationContext, SplashVideoActivity::class.java)
         startActivity(intent)
         //  Process.killProcess(Process.myTid())
 
@@ -8121,6 +8115,26 @@ class WebViewPage : AppCompatActivity() {
 
     }
 
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+
+        when (level) {
+            TRIM_MEMORY_COMPLETE -> {
+                showWarning("Memory is critically low. App may be terminated soon.")
+                restartApp()
+            }
+
+            TRIM_MEMORY_MODERATE,
+            TRIM_MEMORY_RUNNING_LOW,
+            TRIM_MEMORY_RUNNING_CRITICAL -> {
+                showWarning("Device is running low on memory. Please close unused apps.")
+            }
+        }
+    }
+
+    private fun showWarning(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
 
 
 }

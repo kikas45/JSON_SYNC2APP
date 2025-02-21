@@ -125,6 +125,22 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
         applyOritenation()
 
+
+        var isEmpty = true
+        mfilesViewModel.readAllData.observe(this@RetryApiDownloadActivityParsing,
+            Observer { files ->
+                if (files.isEmpty()){
+                    if (isEmpty){
+                        isEmpty = false
+                        myHandler.postDelayed(Runnable {
+                            copyFilesToFailedDownloads()
+                        }, 2000)
+
+                    } }
+            })
+
+
+
         preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         binding.apply {
@@ -434,8 +450,7 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
             if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == action) {
                 handler.postDelayed(Runnable {
 
-                    val imagUsemanualOrnotuseManual =
-                        sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "")
+                    val imagUsemanualOrnotuseManual = sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
 
                     if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
                         pre_Laucnh_Files_For_Manual()
@@ -604,6 +619,9 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
                     }, 300)
                 } else {
+
+                    Log.d("GRAB_FAILED_URL", "$folderName/$fileName")
+
                     binding.textRemainging.visibility = View.VISIBLE
                     binding.textPercentageCompleted.visibility = View.VISIBLE
 
@@ -1466,6 +1484,8 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
                 }, 2000)
             }
 
+        }else{
+            binding.textPercentageCompleted.text = "Something went wrong"
         }
 
     }

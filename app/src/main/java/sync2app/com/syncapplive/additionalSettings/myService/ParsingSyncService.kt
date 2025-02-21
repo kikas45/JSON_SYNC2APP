@@ -566,7 +566,7 @@ class ParsingSyncService : Service() {
 
         try {
             GlobalScope.launch {
-                if (downloadedFilesCount == totalFiles) {
+                if (downloadedFilesCount >= totalFiles) {
 
                     // Stop all Handlers
                     if (myHandlerParsing != null) {
