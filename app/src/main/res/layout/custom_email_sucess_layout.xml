@@ -11,19 +11,19 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/consMainAlert_sub_layout"
         style="@style/cardDesignAccountNumber"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center|top"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3">
@@ -31,8 +31,8 @@
         <TextView
             android:id="@+id/textEmailSendOkayBtn"
             style="@style/cardDesignBuyGift"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
@@ -51,7 +51,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+            app:layout_constraintTop_toBottomOf="@+id/textBodyMessage" />
 
         <TextView
             android:id="@+id/textSucessful"
@@ -67,17 +67,17 @@
 
         <ImageView
             android:id="@+id/imagSucessful"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="16dp"
+            android:src="@drawable/ic_email_read_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textSucessful"
-            app:srcCompat="@drawable/ic_email_read_24"
             app:tint="@color/deep_blue" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/textBodyMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -86,8 +86,8 @@
             android:gravity="center"
             android:text="Kindly check email to view password"
             android:textColor="@color/deep_blue"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toTopOf="@+id/textContinuPassword2"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/textEmailSendOkayBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imagSucessful" />

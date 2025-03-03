@@ -1,6 +1,7 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/preficon"
-    android:height="@dimen/preficon"
+    android:width="@dimen/powellDip"
+    android:height="@dimen/powellDip"
+    android:tint="@color/pref_icons_color"
     android:viewportWidth="45.917"
     android:viewportHeight="45.917">
   <path

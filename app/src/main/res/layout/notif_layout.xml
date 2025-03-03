@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_gravity="center"
+    android:background="#FBF5F5"
 
     android:orientation="vertical"
     android:layout_height="wrap_content">
@@ -37,7 +38,7 @@
 
     <ImageView
         android:id="@+id/notif_img"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/img_logo_icon"
         android:layout_gravity="center"
         android:padding="5dp"
         android:layout_width="match_parent"
@@ -54,6 +55,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+
     </LinearLayout>
 
 </ScrollView>

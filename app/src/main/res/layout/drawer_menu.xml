@@ -316,9 +316,8 @@
                 android:maxLines="1"
                 android:paddingStart="@dimen/drawer_imgright_padduing"
                 android:paddingEnd="@dimen/drawer_imgright_padduing"
-                android:text="@string/hello_navigation_drawer"
-
-                android:textColor="?android:colorAccent"
+                android:text="Scan QR Code"
+                android:textColor="#000000"
                 android:textSize="@dimen/drawer_items_textSize" />
 
         </LinearLayout>
