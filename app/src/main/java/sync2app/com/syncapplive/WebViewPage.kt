@@ -1256,14 +1256,6 @@ class WebViewPage : AppCompatActivity() {
     }
 
 
-    private fun showToastMessage(message: String) {
-        try {
-            runOnUiThread {
-                Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-            }
-        } catch (e: java.lang.Exception) {
-        }
-    }
 
 
     private fun getFilePath(CLO: String, DEMO: String, filename: String): String? {
@@ -1490,9 +1482,7 @@ class WebViewPage : AppCompatActivity() {
 
                 }
 
-                if (url.startsWith("http://") || url.startsWith("file:///") || url.startsWith("https://") || url.startsWith(
-                        "setup://"
-                    )
+                if (url.startsWith("http://") || url.startsWith("file:///") || url.startsWith("https://") || url.startsWith("setup://")
                 )
                     return false
                 try {
@@ -2123,7 +2113,6 @@ class WebViewPage : AppCompatActivity() {
 
     private fun ConfigureRemoteImageData(url: String?, view: ImageView) {
 
-//        showToast(mContext,view.toString()+" "+url);
         try {
             if ((url == null) or (url == "null")) return
         } catch (e: java.lang.Exception) {
@@ -2559,7 +2548,7 @@ class WebViewPage : AppCompatActivity() {
                 val isSavedEmail =
                     simpleSavedPassword.getString(Constants.isSavedEmail, "").toString()
                 hideKeyBoard(editTextText2)
-                if (isSavedEmail.isNotEmpty() && isValidEmail(isSavedEmail)) {
+                if (isSavedEmail.isNotEmpty() && Utility.isValidEmail(isSavedEmail)) {
 
                     showPopChangePassowrdDialog()
                     alertDialog.dismiss()
@@ -2726,7 +2715,7 @@ class WebViewPage : AppCompatActivity() {
                 val simpleAdminPassword =
                     simpleSavedPassword.getString(Constants.mySimpleSavedPassword, "").toString()
                 val editTextText = bindingCM.editTextEmail.text.toString().trim { it <= ' ' }
-                if (editTextText.isNotEmpty() && isValidEmail(editTextText)) {
+                if (editTextText.isNotEmpty() && Utility.isValidEmail(editTextText)) {
                     val editor = simpleSavedPassword.edit()
                     editor.remove(Constants.Did_User_Input_PassWord)
                     editor.putString(Constants.isSavedEmail, editTextText)
@@ -2891,7 +2880,7 @@ class WebViewPage : AppCompatActivity() {
         }
 
         textContinuPassword.setOnClickListener {
-            if (isSavedEmail.isNotEmpty() && isValidEmail(isSavedEmail)) {
+            if (isSavedEmail.isNotEmpty() && Utility.isValidEmail(isSavedEmail)) {
                 if (isConnected()) {
 
                     val editor = simpleSavedPassword.edit()
@@ -3160,13 +3149,6 @@ class WebViewPage : AppCompatActivity() {
         }
     }
 
-
-    private fun isValidEmail(email: String?): Boolean {
-        val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})?"
-        val pattern = Pattern.compile(emailPattern)
-        val matcher = pattern.matcher(email)
-        return matcher.matches()
-    }
 
 
     @SuppressLint("MissingInflatedId")
@@ -3461,8 +3443,8 @@ class WebViewPage : AppCompatActivity() {
 
             }, 500)
 
-
             showToastMessage("Please wait..")
+
         } catch (e: Exception) {
             Log.d(TAG, "navigateBackTosetting: " + e.message.toString())
         }
@@ -3691,10 +3673,6 @@ class WebViewPage : AppCompatActivity() {
 
                 textContinue.setOnClickListener {
 
-                    //  if (get_AppMode == Constants.TV_Mode || jsonUrl == null) {
-                    //     showToastMessage("Tap The Back Button to Go Settings Page")}
-
-
                     // get input paths to device storage
                     val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
                     val fil_DEMO =
@@ -3712,8 +3690,6 @@ class WebViewPage : AppCompatActivity() {
                     alertDialog!!.dismiss()
                 }
                 imgCloseDialog.setOnClickListener {
-                    //if (get_AppMode == Constants.TV_Mode || jsonUrl == null) {
-                    //    showToastMessage("Tap The Back Button to Go Settings Page") }
 
                     // get input paths to device storage
                     val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
@@ -3737,9 +3713,6 @@ class WebViewPage : AppCompatActivity() {
                 Log.d(TAG, "showPopForTVConfiguration: " + e.message.toString())
             }
 
-
-            //  handler.postDelayed(Runnable {
-            //  },1000)
         } catch (e: Exception) {
             Log.d(TAG, "showPopForTVConfiguration: Eroor ${e.message}")
         }
@@ -3899,7 +3872,7 @@ class WebViewPage : AppCompatActivity() {
 
 
                         } else {
-                            showToastMessage("Sync in Progress")
+                            showWarning("Sync in Progress")
                         }
 
 
@@ -4248,7 +4221,7 @@ class WebViewPage : AppCompatActivity() {
                                 } else {
                                     textStatusProcess!!.text = "PR: Running"
                                 }
-                                showToastMessage("Sync Already in Progress")
+                                showWarning("Sync Already in Progress")
                             }
 
                         } else {
@@ -4272,7 +4245,7 @@ class WebViewPage : AppCompatActivity() {
 
 
                             } else {
-                                showToastMessage("Sync in Progress")
+                                showWarning("Sync in Progress")
                             }
 
 
@@ -4345,7 +4318,7 @@ class WebViewPage : AppCompatActivity() {
                                         textStatusProcess?.text = "PR: Running"
 
                                     }
-                                    showToastMessage("Sync Already in Progress")
+                                    showWarning("Sync Already in Progress")
 
                                 }
 
@@ -4372,7 +4345,7 @@ class WebViewPage : AppCompatActivity() {
 
                                 } else {
 
-                                    showToastMessage("Sync in Progress")
+                                    showWarning("Sync in Progress")
 
                                 }
 
@@ -4472,7 +4445,7 @@ class WebViewPage : AppCompatActivity() {
                     showToastMessage("No Internet Connection")
                 }
             } else {
-                showToastMessage("Sync Already Running")
+                showWarning("Sync Already Running")
             }
         } catch (e: java.lang.Exception) {
         }
@@ -4723,10 +4696,10 @@ class WebViewPage : AppCompatActivity() {
                     manage_Zip_Download()
 
                 } else {
-                    showToastMessage("No Internet Connection")
+                    showWarning("No Internet Connection")
                 }
             } else {
-                showToastMessage("Sync Already Running")
+                showWarning("Sync Already Running")
             }
         } catch (e: java.lang.Exception) {
         }
@@ -6280,7 +6253,7 @@ class WebViewPage : AppCompatActivity() {
                 isdDownloadApi = true
                 initProgressParsingSyncFilesDownload = true
                 if (isScheduleRunning) {
-                    showToastMessage("Schedule Media Already Running")
+                    showWarning("Schedule Media Already Running")
                     binding.textStatusProcess.text = Constants.PR_running
                     binding.progressBarPref.progress = 100
                     binding.progressBarPref.visibility = View.INVISIBLE
@@ -7092,7 +7065,7 @@ class WebViewPage : AppCompatActivity() {
                     }
                 }, 7000)
             } else {
-                // showToastMessage("USB Live Stream not found");
+                 showToastMessage("USB Live Stream not found");
                 textNoCameraAvaliable?.visibility = View.VISIBLE
             }
         } catch (e: java.lang.Exception) {
@@ -7867,8 +7840,7 @@ class WebViewPage : AppCompatActivity() {
 
             }
 
-            val get_imagEnableDownloadStatus =
-                sharedBiometric.getString(Constants.showDownloadSyncStatus, "").toString()
+            val get_imagEnableDownloadStatus = sharedBiometric.getString(Constants.showDownloadSyncStatus, "").toString()
             val getToHideQRCode = preferences.getBoolean(Constants.hideQRCode, false)
             val get_drawer_icon = preferences.getBoolean(Constants.hide_drawer_icon, false)
 
@@ -8236,7 +8208,24 @@ class WebViewPage : AppCompatActivity() {
     }
 
     private fun showWarning(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+      try {
+          runOnUiThread {
+              Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+          }
+      }catch (e:Exception){
+          Log.d(TAG, "showWarning: ${e.message}")
+      }
+    }
+    private fun showToastMessage(message: String) {
+        try {
+            runOnUiThread {
+                val get_imagEnableDownloadStatus = sharedBiometric.getString(Constants.showDownloadSyncStatus, "").toString()
+                if (get_imagEnableDownloadStatus == Constants.showDownloadSyncStatus) {
+                    Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        } catch (e: java.lang.Exception) {
+        }
     }
 
 

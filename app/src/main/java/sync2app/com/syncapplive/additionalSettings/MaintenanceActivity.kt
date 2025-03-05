@@ -374,7 +374,7 @@ class MaintenanceActivity : AppCompatActivity() {
             imagEnableDownloadStatus.setOnCheckedChangeListener { compoundButton, isValued -> // we are putting the values into SHARED PREFERENCE
                 if (compoundButton.isChecked) {
 
-                    editor.putString(Constants.showDownloadSyncStatus, "showDownloadSyncStatus")
+                    editor.putString(Constants.showDownloadSyncStatus, Constants.showDownloadSyncStatus)
                     editor.apply()
                     binding.textCheckDownloadStatus2.text = "Show Download Status"
 
@@ -383,6 +383,7 @@ class MaintenanceActivity : AppCompatActivity() {
                     editor.apply()
                     binding.textCheckDownloadStatus2.text = "Hide Download Status"
                 }
+
             }
 
 

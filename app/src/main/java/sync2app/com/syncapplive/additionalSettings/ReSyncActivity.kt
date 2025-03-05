@@ -488,14 +488,10 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
             if (!getSavedEditTextInputSynUrlZip.isNullOrEmpty()) {
                 editTextInputSynUrlZip.setText(getSavedEditTextInputSynUrlZip)
-            }else{
-                editTextInputSynUrlZip.setText("https://cp.cloudappserver.co.uk/david/david.zip")
             }
 
             if (!getSaved_manaul_index_edit_url_Input.isNullOrEmpty()) {
                 editTextInputIndexManual.setText(getSaved_manaul_index_edit_url_Input)
-            }else{
-                editTextInputIndexManual.setText("https://cp.cloudappserver.co.uk/david/")
             }
 
 
