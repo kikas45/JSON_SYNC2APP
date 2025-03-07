@@ -97,9 +97,11 @@
 
         <TextView
             android:id="@+id/textDescription"
-            android:layout_width="310dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
             android:elegantTextHeight="true"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
@@ -107,10 +109,28 @@
             android:text="User"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/textLaunchMyOnline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/action_bar_root" />
+
+        <TextView
+            android:id="@+id/textErrorUnableTo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:elegantTextHeight="true"
+            android:gravity="center"
+            android:fontFamily="sans-serif-medium"
+            android:text="Note: Index file not found, Kindly Launch Online"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textDescription"
+            tools:visibility="visible" />
 
 
         <TextView
@@ -129,13 +149,14 @@
             android:paddingTop="8dp"
             android:paddingRight="18dp"
             android:paddingBottom="8dp"
-            android:text="Launch\nOnline"
+            android:text="Online"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textLaunchMyOffline"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/textErrorUnableTo"
+            app:layout_constraintVertical_bias="0.0" />
 
 
         <TextView
@@ -152,7 +173,9 @@
             android:paddingTop="8dp"
             android:paddingRight="18dp"
             android:paddingBottom="8dp"
-            android:text="launch\nOffline"
+            android:text="Offline"
+            tools:visibility="visible"
+            android:visibility="gone"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/textLaunchMyOnline"
             app:layout_constraintEnd_toEndOf="parent"

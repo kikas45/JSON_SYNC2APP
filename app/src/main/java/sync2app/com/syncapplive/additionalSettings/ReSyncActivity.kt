@@ -194,7 +194,9 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
     private var wakeLock: PowerManager.WakeLock? = null
 
 
-    var isCompltedAndReady = false
+    private var isCompltedAndReady = false
+
+    private var isIndexFileAvaliable = false
 
 
     var manager: DownloadManager? = null
@@ -5319,10 +5321,70 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
             binding.textLauncheSaveDownload.visibility = View.VISIBLE
         }
 
+        handler.postDelayed(Runnable {
+            InitWebviewIndexFileState()
+        },200)
 
 
         customSavedDownloadDialog.dismiss()
     }
+
+
+
+
+    private fun InitWebviewIndexFileState() {
+        val filename = "/index.html"
+        lifecycleScope.launch {
+            loadIndexFileIfExist(fil_CLO, fil_DEMO, filename)
+        }
+
+    }
+
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun loadIndexFileIfExist(
+        CLO: String,
+        DEMO: String,
+        fileName: String
+    ) {
+        lifecycleScope.launch {
+            try {
+
+                val filePath = withContext(Dispatchers.IO) {
+                    try {
+                        getFilePath(CLO, DEMO, fileName)
+                    } catch (e: Exception) {
+                        showToastMessage("You need to Sync Files for Offline Usage")
+                        null
+                    }
+                }
+
+                // Now back on the main thread to update the UI
+                isIndexFileAvaliable = filePath != null
+
+
+            } catch (e: Exception) {
+                showToastMessage("You need to Sync Files for Offline Usage")
+            }
+        }
+    }
+
+    private fun getFilePath(CLO: String, DEMO: String, filename: String): String? {
+
+        val finalFolderPathDesired = "/" + CLO + "/" + DEMO + "/" + Constants.App
+        val destinationFolder =
+            Environment.getExternalStorageDirectory().absolutePath + "/Download/${Constants.Syn2AppLive}/" + finalFolderPathDesired
+        val filePath = "file://$destinationFolder$filename"
+        val myFile = File(destinationFolder, File.separator + filename)
+
+        return if (myFile.exists()) {
+            filePath
+        } else {
+            null
+        }
+    }
+
+
 
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
@@ -5342,6 +5404,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
         val textLaunchMyOnline: TextView = bindingCM.textLaunchMyOnline
         val textLaunchMyOffline: TextView = bindingCM.textLaunchMyOffline
+        val textErrorUnableTo: TextView = bindingCM.textErrorUnableTo
         val imgCloseDialog: ImageView = bindingCM.imageCrossClose
         val close_bs: ImageView = bindingCM.closeBs
 
@@ -5349,13 +5412,22 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
         bindingCM.textDescription.text = userPath
 
+        if (isIndexFileAvaliable){
+            textErrorUnableTo.visibility = View.GONE
+            textLaunchMyOnline.visibility = View.VISIBLE
+            textLaunchMyOffline.visibility = View.VISIBLE
+        }else{
+            textLaunchMyOffline.visibility = View.GONE
+            textErrorUnableTo.visibility = View.VISIBLE
+            textLaunchMyOnline.visibility = View.VISIBLE
+        }
 
         textLaunchMyOnline.setOnClickListener {
 
 
             binding.apply {
 
-                textLunchOnline.text = "Launch online"
+                textLunchOnline.text = "Online"
 
 
                 val editor = myDownloadClass.edit()
@@ -5474,7 +5546,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
             binding.apply {
 
-                textLunchOnline.text = "Launch offline"
+                textLunchOnline.text = "Offline"
 
                 val editor = myDownloadClass.edit()
 

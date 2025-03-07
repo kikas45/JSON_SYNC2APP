@@ -90,6 +90,7 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
 
     private var isDialogPermissionShown = false
+    private var isInitPermissionOnNetworkCall  = false
 
     /// for branindg
     private var downloadId: Long = -1
@@ -379,6 +380,7 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
                 editorPref.putBoolean(Constants.fullscreen, false)
                 editorPref.putBoolean(Constants.immersive_mode, false)
                 editorPref.putBoolean(Constants.shwoFloatingButton, false)
+                editorPref.putBoolean(Constants.swiperefresh, true)
                 editorPref.apply()
 
 
@@ -431,6 +433,7 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
                 editorPref.putBoolean(Constants.fullscreen, true)
                 editorPref.putBoolean(Constants.immersive_mode, true)
                 editorPref.putBoolean(Constants.shwoFloatingButton, true)
+                editorPref.putBoolean(Constants.swiperefresh, false)
                 editorPref.apply()
 
 
@@ -957,8 +960,13 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
                 var isCallingStart = true
 
+
                 handler.postDelayed(Runnable {
-                    binding.texttConnection.visibility = View.VISIBLE
+                    if (isInitPermissionOnNetworkCall){
+                        binding.texttConnection.visibility = View.GONE
+                    }else{
+                        binding.texttConnection.visibility = View.VISIBLE
+                    }
 
                     if (customProgressDialog != null) {
                         customProgressDialog.dismiss()
@@ -1189,6 +1197,8 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 /// later use the permission required of it
 
     private fun startPermissionProcess() {
+
+         isInitPermissionOnNetworkCall = true
 
         if (Build.VERSION.SDK_INT >= 30) {
             when {

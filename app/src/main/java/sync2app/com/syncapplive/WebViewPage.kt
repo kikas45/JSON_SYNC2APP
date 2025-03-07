@@ -2058,7 +2058,6 @@ class WebViewPage : AppCompatActivity() {
             /// End of continue with previous JSon
             /// End of continue with previous JSon
 
-
             if (preferences.getBoolean("swiperefresh", false)) {
                 EnableSwipeRefresh = true
             }
@@ -4615,6 +4614,7 @@ class WebViewPage : AppCompatActivity() {
                     iswebViewRefreshingOnApiSync = true
                 }
 
+                Log.d("MADNNESSS", "getFilesDownloads: $sn/$folderName/$fileName")
                 // Create directory and delete existing file if necessary
                 val saveMyFileToStorage = constructFilePath(folderName)
                 val dir = File(
@@ -4642,7 +4642,11 @@ class WebViewPage : AppCompatActivity() {
 
                 fetch!!.enqueue(request, { updatedRequest: Request? -> }) { error: Error ->
                     Log.e("onRequest", "Error: $error")
+
+                    Log.d("CloseError", "getFilesDownloads: $error")
+
                 }
+                
 
                 // Save file number
                 val editor = myDownloadClass.edit()
@@ -5314,10 +5318,12 @@ class WebViewPage : AppCompatActivity() {
 
 
 
-                    Log.d(
-                        KoloLog,
-                        "onError:  An error cocured trying o download from path/url" + error.httpResponse?.code
-                    )
+                    Log.d(KoloLog, "onError:  An error cocured trying o download from path/url" + error.httpResponse?.code)
+
+
+                    Log.d("FDNNDHGHDHHHD", "onError:  An error cocured trying o download from path/url" + error.httpResponse?.code)
+
+
                 }
 
                 override fun onDownloadBlockUpdated(
@@ -5360,7 +5366,9 @@ class WebViewPage : AppCompatActivity() {
                 ) {
                 }
 
-                override fun onWaitingNetwork(download: Download) {}
+                override fun onWaitingNetwork(download: Download) {
+                    Log.d("onWaitingNetwork", "$download: ")
+                }
 
                 override fun onCancelled(download: Download) {}
                 override fun onRemoved(download: Download) {}

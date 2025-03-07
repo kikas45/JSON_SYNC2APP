@@ -82,7 +82,9 @@ class SplashKT : AppCompatActivity() {
 
     var handler: Handler? = null
     private var connectivityReceiver: ConnectivityReceiver? = null
-    var preferences: SharedPreferences? = null
+    private val preferences: SharedPreferences by lazy {
+        androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
 
     private lateinit var binding: ActivitySplashBinding
 
@@ -502,11 +504,19 @@ class SplashKT : AppCompatActivity() {
                                         editText88.putString(Constants.get_Launching_State_Of_WebView, Constants.launch_WebView_Offline)
                                         editText88.apply()
 
+                                        val editor = preferences.edit()
+                                        editor.putBoolean(Constants.swiperefresh, false)
+                                        editor.apply()
+
                                     } else {
                                         // saving launch state
                                         val editText88 = sharedBiometric.edit()
                                         editText88.putString(Constants.get_Launching_State_Of_WebView, Constants.launch_Default_WebView_url)
                                         editText88.apply()
+
+                                        val editor = preferences.edit()
+                                        editor.putBoolean(Constants.swiperefresh, true)
+                                        editor.apply()
 
                                     }
                                 }
@@ -841,7 +851,6 @@ class SplashKT : AppCompatActivity() {
                     InitWebviewIndexFileState()
                     isCallingStart = false
 
-
                     // No internet Connection
                     try {
                         infotext?.setText("No Internet Connection")
@@ -1073,6 +1082,8 @@ class SplashKT : AppCompatActivity() {
             null
         }
     }
+
+
     private fun showToastMessage(message: String) {
         try {
             runOnUiThread {
