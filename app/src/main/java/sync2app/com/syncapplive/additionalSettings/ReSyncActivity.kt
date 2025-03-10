@@ -490,10 +490,16 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
             if (!getSavedEditTextInputSynUrlZip.isNullOrEmpty()) {
                 editTextInputSynUrlZip.setText(getSavedEditTextInputSynUrlZip)
+            }else{
+               // val url = "https://cp.cloudappserver.co.uk/app_base/public/CLO/NG_EN_2025022117/App/index.html"
+               // editTextInputSynUrlZip.setText(url)
             }
 
             if (!getSaved_manaul_index_edit_url_Input.isNullOrEmpty()) {
                 editTextInputIndexManual.setText(getSaved_manaul_index_edit_url_Input)
+            }else{
+               // val url = "https://cp.cloudappserver.co.uk/app_base/public/CLO/NG_EN_2025022117/App/index.html"
+              //  editTextInputIndexManual.setText(url)
             }
 
 
@@ -1459,8 +1465,9 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
 
     private fun saveTheInputPaths(getFolderClo:String, getFolderSubpath:String){
-        val editor = myDownloadClass.edit()
         httpNetworkTester(getFolderClo, getFolderSubpath)
+
+         val editor = myDownloadClass.edit()
         editor.putString(Constants.getSavedCLOImPutFiled, getFolderClo)
         editor.putString(Constants.getSaveSubFolderInPutFiled, getFolderSubpath)
         editor.apply()
@@ -1473,11 +1480,9 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
         handler.postDelayed(Runnable {
             showCustomProgressDialog("Testing connection")
             val myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
-            val CP_AP_MASTER_DOMAIN =
-                myDownloadClass.getString(Constants.CP_OR_AP_MASTER_DOMAIN, "").toString()
+            val CP_AP_MASTER_DOMAIN = myDownloadClass.getString(Constants.CP_OR_AP_MASTER_DOMAIN, "").toString()
 
-            val getSyncMethods =
-                sharedBiometric.getString(Constants.IMG_SELECTED_SYNC_METHOD, "").toString()
+            val getSyncMethods = sharedBiometric.getString(Constants.IMG_SELECTED_SYNC_METHOD, "").toString()
 
             if (getSyncMethods == Constants.USE_ZIP_SYNC) {
                 val baseUrl = "${CP_AP_MASTER_DOMAIN}/$getFolderClo/$getFolderSubpath/Zip/App.zip"
@@ -3603,9 +3608,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                             savePathServerUrl(CP_AP_MASTER_DOMAIN, getFolderClo, getFolderSubpath)
 
                         } else {
-                            showPopsForMyConnectionTest(
-                                getFolderClo, getFolderSubpath, "Failed!"
-                            )
+                            showPopsForMyConnectionTest(getFolderClo, getFolderSubpath, "Failed!")
 
                             customProgressDialog.dismiss()
                         }
@@ -3923,9 +3926,10 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                         }
                     }
                 }
+
             } else if (getSyncMethods == Constants.USE_PARSING_SYNC) {
 
-                lifecycleScope.launch {
+/*                lifecycleScope.launch {
                     try {
                         val result = checkUrlExistence(editInputUrl)
                         if (result) {
@@ -3951,7 +3955,43 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                             customProgressDialog.dismiss()
                         }
                     }
+                }*/
+
+
+
+                lifecycleScope.launch {
+                    try {
+                        val result = checkUrlExistence(editInputUrl)
+                        if (result) {
+                            startDownloadSingles(
+                                editInputUrl, Constants.Zip, Constants.fileNmae_App_Zip
+                            )
+                            val user = User(
+                                CLO = "",
+                                DEMO = "",
+                                EditUrl = editInputUrl,
+                                EditUrlIndex = editInputAppIndex
+                            )
+                            mUserViewModel.addUser(user)
+                        } else {
+
+                            showPopsForMyConnectionTest(
+                                "CLO", fileNameWithoutExtension, "Failed!"
+                            )
+
+                            if (customProgressDialog != null){
+                                customProgressDialog.dismiss()
+                            }
+                        }
+                    } catch (e:Exception){
+                        if (customProgressDialog != null){
+                            customProgressDialog.dismiss()
+                        }
+                    }
                 }
+
+
+
 
 
             } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
@@ -4491,7 +4531,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     )
 
                 }else if (getSyncMethods == Constants.USE_DRIVE_SYNC){
-
 
 
                     download(baseUrl, getFolderClo, getFolderSubpath, Zip, fileName, Extracted, threeFolderPath)

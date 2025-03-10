@@ -51,6 +51,7 @@ import sync2app.com.syncapplive.additionalSettings.myFailedDownloadfiles.DnFaile
 import sync2app.com.syncapplive.additionalSettings.myFailedDownloadfiles.DnFailedViewModel
 import sync2app.com.syncapplive.additionalSettings.urlchecks.checkUrlExistence
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityDownloadTheApisBinding
 import sync2app.com.syncapplive.databinding.CustomFailedDownloadsLayoutBinding
 import sync2app.com.syncapplive.databinding.ProgressDialogLayoutBinding
@@ -233,7 +234,7 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
         //add exception
         Methods.addExceptionHandler(this)
 
-        startMyCSVApiDownload()
+        startParsringDownload()
 
         binding.textRetryBtn.setOnClickListener {
 
@@ -300,16 +301,12 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
     }
 
 
-    private fun startMyCSVApiDownload() {
+    private fun startParsringDownload() {
         remove_download_key()
         binding.apply {
-            val connectivityManager22: ConnectivityManager =
-                applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo22: NetworkInfo? = connectivityManager22.activeNetworkInfo
 
-            if (networkInfo22 != null && networkInfo22.isConnected) {
-                val imagUsemanualOrnotuseManual =
-                    sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
+            if (Utility.isNetworkAvailable(applicationContext)) {
+                val imagUsemanualOrnotuseManual = sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
 
                 if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
                     handler.postDelayed(Runnable {
@@ -469,8 +466,7 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
             if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == action) {
                 handler.postDelayed(Runnable {
 
-                    val imagUsemanualOrnotuseManual =
-                        sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "")
+                    val imagUsemanualOrnotuseManual = sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
 
                     if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
                         pre_Laucnh_Files_For_Manual()
@@ -735,16 +731,13 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
         var replacedUrl = getSavedEditTextInputSynUrlZip // Initialize it with original value
 
 
-        if (getSavedEditTextInputSynUrlZip.contains("/Start/start1.csv")) {
+
+        if (getSavedEditTextInputSynUrlZip.contains("/App/index.html")) {
             replacedUrl = getSavedEditTextInputSynUrlZip.replace(
-                "/Start/start1.csv",
+                "/App/index.html",
                 "/$folderName/$fileName"
             )
 
-        } else if (getSavedEditTextInputSynUrlZip.contains("/Api/update1.csv")) {
-            replacedUrl = getSavedEditTextInputSynUrlZip.replace(
-                "/Api/update1.csv", "/$folderName/$fileName"
-            )
         } else {
 
             Log.d("getZipDownloadsManually", "Unable to replace this url")

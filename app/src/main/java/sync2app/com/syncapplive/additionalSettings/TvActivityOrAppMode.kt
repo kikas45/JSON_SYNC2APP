@@ -49,6 +49,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.SplashKT
+import sync2app.com.syncapplive.WebViewPage
 import sync2app.com.syncapplive.additionalSettings.ApiUrls.ApiUrlViewModel
 import sync2app.com.syncapplive.additionalSettings.ApiUrls.DomainUrl
 import sync2app.com.syncapplive.additionalSettings.ApiUrls.SavedApiAdapter
@@ -103,6 +104,7 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
     private var isCalledToast = false
     private var isBrandindImagesFound = false
 
+    private var isMyActivityRunning = false
 
     /// for internet
     private var connectivityReceiver: ConnectivityReceiver? = null
@@ -238,13 +240,10 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
         }
 
 
-        val sharedBiometric: SharedPreferences =
-            applicationContext.getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
+        val sharedBiometric: SharedPreferences = applicationContext.getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
 
-        val get_useOfflineOrOnline =
-            sharedBiometric.getString(Constants.imgAllowLunchFromOnline, "").toString()
-        val get_TV_or_App_Mode =
-            sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "").toString()
+        val get_useOfflineOrOnline = sharedBiometric.getString(Constants.imgAllowLunchFromOnline, "").toString()
+        val get_TV_or_App_Mode = sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "").toString()
 
 
         val editor = sharedBiometric.edit()
@@ -254,8 +253,9 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
         ) {
             editor.putString(Constants.FIRST_TIME_APP_START, Constants.FIRST_TIME_APP_START)
             editor.apply()
-            startActivity(Intent(applicationContext, SplashKT::class.java))
-            finish()
+
+            InitWebviewIndexFileState()
+
         }
 
 
@@ -1170,6 +1170,7 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
     override fun onResume() {
         super.onResume()
+       isMyActivityRunning = true
         if (btnisClicked) {
             if (prefs.getBoolean("button_clicked", false)) {
                 startPermissionProcess()
@@ -1974,11 +1975,92 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
     }
 
 
+
+    private fun InitWebviewIndexFileState() {
+
+        // get input paths to device storage
+        val myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
+        val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
+        val fil_DEMO = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
+
+        val filename = "/index.html"
+        lifecycleScope.launch {
+            loadIndexFileIfExist(fil_CLO, fil_DEMO, filename)
+        }
+
+    }
+
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun loadIndexFileIfExist(
+        CLO: String,
+        DEMO: String,
+        fileName: String
+    ) {
+        lifecycleScope.launch {
+            try {
+
+                val filePath = withContext(Dispatchers.IO) {
+                    try {
+                        getFilePath(CLO, DEMO, fileName)
+                    } catch (e: Exception) {
+                        showToastMessage("You need to Sync Files for Offline Usage")
+                        null
+                    }
+                }
+
+                // Now back on the main thread to update the UI
+                if (filePath != null) {
+                    if (isMyActivityRunning){
+                        val myActivity = Intent(applicationContext, WebViewPage::class.java)
+                        myActivity.putExtra(Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE, Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE)
+                        startActivity(myActivity)
+                        finish()
+
+                        val editText88 = sharedBiometric.edit()
+                        editText88.putString(Constants.get_Launching_State_Of_WebView, Constants.launch_WebView_Offline)
+                        editText88.apply()
+
+                    }
+                } else {
+                    startActivity(Intent(applicationContext, SplashKT::class.java))
+                    finish()
+                }
+
+            } catch (e: Exception) {
+                showToastMessage("You need to Sync Files for Offline Usage")
+            }
+        }
+    }
+
+    private fun getFilePath(CLO: String, DEMO: String, filename: String): String? {
+
+        val finalFolderPathDesired = "/" + CLO + "/" + DEMO + "/" + Constants.App
+        val destinationFolder =
+            Environment.getExternalStorageDirectory().absolutePath + "/Download/${Constants.Syn2AppLive}/" + finalFolderPathDesired
+        val filePath = "file://$destinationFolder$filename"
+        val myFile = File(destinationFolder, File.separator + filename)
+
+        return if (myFile.exists()) {
+            filePath
+        } else {
+            null
+        }
+    }
+
+
+
+
+
+
     override fun onDestroy() {
         super.onDestroy()
 
 
         try {
+
+            isMyActivityRunning = false
+
             if (downloadReceiver != null) {
                 unregisterReceiver(downloadReceiver)
             }

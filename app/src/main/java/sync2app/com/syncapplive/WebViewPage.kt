@@ -124,6 +124,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import sync2app.com.syncapplive.QrPages.QRSanActivity
+import sync2app.com.syncapplive.additionalSettings.DownloadApisFilesActivityParsing
 import sync2app.com.syncapplive.additionalSettings.InformationActivity
 import sync2app.com.syncapplive.additionalSettings.MainHelpers.GMailSender
 import sync2app.com.syncapplive.additionalSettings.MaintenanceActivity
@@ -1256,8 +1257,6 @@ class WebViewPage : AppCompatActivity() {
     }
 
 
-
-
     private fun getFilePath(CLO: String, DEMO: String, filename: String): String? {
 
         val finalFolderPathDesired = "/" + CLO + "/" + DEMO + "/" + Constants.App
@@ -1482,7 +1481,9 @@ class WebViewPage : AppCompatActivity() {
 
                 }
 
-                if (url.startsWith("http://") || url.startsWith("file:///") || url.startsWith("https://") || url.startsWith("setup://")
+                if (url.startsWith("http://") || url.startsWith("file:///") || url.startsWith("https://") || url.startsWith(
+                        "setup://"
+                    )
                 )
                     return false
                 try {
@@ -3149,7 +3150,6 @@ class WebViewPage : AppCompatActivity() {
     }
 
 
-
     @SuppressLint("MissingInflatedId")
     private fun show_Pop_Up_Email_Sent_Sucessful(title: String, body: String) {
         // Inflate the custom layout
@@ -3916,6 +3916,12 @@ class WebViewPage : AppCompatActivity() {
             val myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
             val sharedBiometric = getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
 
+            val imagUsemanualOrnotuseManual =
+                sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
+            val getSavedEditTextInputSynUrlZip =
+                myDownloadClass.getString(Constants.getSavedEditTextInputSynUrlZip, "").toString()
+
+
             val get_tMaster: String =
                 myDownloadClass.getString(Constants.get_ModifiedUrl, "").toString()
             val get_UserID: String =
@@ -3927,25 +3933,35 @@ class WebViewPage : AppCompatActivity() {
             val CP_AP_MASTER_DOMAIN =
                 myDownloadClass.getString(Constants.CP_OR_AP_MASTER_DOMAIN, "").toString()
 
+            
+            if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
 
+                if (getSavedEditTextInputSynUrlZip.contains("/App/index.html")) {
+                   /// cleanTempFolder(getSavedEditTextInputSynUrlZip)
 
-            if (imagSwtichPartnerUrl == Constants.imagSwtichPartnerUrl) {
-                val urlPath = "${CP_AP_MASTER_DOMAIN}/$get_UserID/$get_LicenseKey/App/index.html"
-                cleanTempFolder(urlPath)
+                    Log.d("TO_USE_MANUAL_PATRSING", "initParsingUrlMethods: TO_USE_MANUAL_PATRSING")
+                    
+                } else {
+                    showToastMessage(Constants.Error_IndexFile_Message)
+
+                }
 
             } else {
-                val urlPath = "$get_tMaster/$get_UserID/$get_LicenseKey/App/index.html"
-                cleanTempFolder(urlPath)
+                if (imagSwtichPartnerUrl == Constants.imagSwtichPartnerUrl) {
+                    val urlPath = "${CP_AP_MASTER_DOMAIN}/$get_UserID/$get_LicenseKey/App/index.html"
+                    cleanTempFolder(urlPath)
 
+                } else {
+                    val urlPath = "$get_tMaster/$get_UserID/$get_LicenseKey/App/index.html"
+                    cleanTempFolder(urlPath)
+                }
             }
-
         } else {
             showToastMessage("No internet Connection")
 
 
         }
-
-
+        
     }
 
 
@@ -4646,7 +4662,7 @@ class WebViewPage : AppCompatActivity() {
                     Log.d("CloseError", "getFilesDownloads: $error")
 
                 }
-                
+
 
                 // Save file number
                 val editor = myDownloadClass.edit()
@@ -5318,10 +5334,16 @@ class WebViewPage : AppCompatActivity() {
 
 
 
-                    Log.d(KoloLog, "onError:  An error cocured trying o download from path/url" + error.httpResponse?.code)
+                    Log.d(
+                        KoloLog,
+                        "onError:  An error cocured trying o download from path/url" + error.httpResponse?.code
+                    )
 
 
-                    Log.d("FDNNDHGHDHHHD", "onError:  An error cocured trying o download from path/url" + error.httpResponse?.code)
+                    Log.d(
+                        "FDNNDHGHDHHHD",
+                        "onError:  An error cocured trying o download from path/url" + error.httpResponse?.code
+                    )
 
 
                 }
@@ -7073,7 +7095,7 @@ class WebViewPage : AppCompatActivity() {
                     }
                 }, 7000)
             } else {
-                 showToastMessage("USB Live Stream not found");
+                showToastMessage("USB Live Stream not found");
                 textNoCameraAvaliable?.visibility = View.VISIBLE
             }
         } catch (e: java.lang.Exception) {
@@ -7848,7 +7870,8 @@ class WebViewPage : AppCompatActivity() {
 
             }
 
-            val get_imagEnableDownloadStatus = sharedBiometric.getString(Constants.showDownloadSyncStatus, "").toString()
+            val get_imagEnableDownloadStatus =
+                sharedBiometric.getString(Constants.showDownloadSyncStatus, "").toString()
             val getToHideQRCode = preferences.getBoolean(Constants.hideQRCode, false)
             val get_drawer_icon = preferences.getBoolean(Constants.hide_drawer_icon, false)
 
@@ -8102,10 +8125,7 @@ class WebViewPage : AppCompatActivity() {
 
             if (Utility.foregroundParsingServiceClass(applicationContext)) {
                 applicationContext.stopService(
-                    Intent(
-                        applicationContext,
-                        ParsingSyncService::class.java
-                    )
+                    Intent(applicationContext, ParsingSyncService::class.java)
                 )
             }
 
@@ -8216,18 +8236,20 @@ class WebViewPage : AppCompatActivity() {
     }
 
     private fun showWarning(message: String) {
-      try {
-          runOnUiThread {
-              Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-          }
-      }catch (e:Exception){
-          Log.d(TAG, "showWarning: ${e.message}")
-      }
+        try {
+            runOnUiThread {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "showWarning: ${e.message}")
+        }
     }
+
     private fun showToastMessage(message: String) {
         try {
             runOnUiThread {
-                val get_imagEnableDownloadStatus = sharedBiometric.getString(Constants.showDownloadSyncStatus, "").toString()
+                val get_imagEnableDownloadStatus =
+                    sharedBiometric.getString(Constants.showDownloadSyncStatus, "").toString()
                 if (get_imagEnableDownloadStatus == Constants.showDownloadSyncStatus) {
                     Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
                 }
