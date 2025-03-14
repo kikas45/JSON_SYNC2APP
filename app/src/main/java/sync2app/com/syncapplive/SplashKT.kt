@@ -36,6 +36,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.HttpException
+import io.paperdb.Paper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,6 +47,7 @@ import sync2app.com.syncapplive.additionalSettings.ApITVorAppMode.RetrofitInstan
 import sync2app.com.syncapplive.additionalSettings.InformationActivity
 import sync2app.com.syncapplive.additionalSettings.ReSyncActivity
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
+import sync2app.com.syncapplive.additionalSettings.cloudAppsync.util.Common
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
 import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivitySplashBinding
@@ -914,6 +916,8 @@ class SplashKT : AppCompatActivity() {
 
                             val use_local_schedule = it.use_local_schedule
 
+                            val show_local_schedule_label = it.show_local_schedule_label
+
 
                             Log.d("USE_DAVID", "fetchApiSettings: $use_local_schedule")
 
@@ -937,11 +941,22 @@ class SplashKT : AppCompatActivity() {
 
                             // newly added
                             editor.putBoolean(Constants.use_local_schedule_APP, use_local_schedule)
+                            editor.putBoolean(Constants.show_local_schedule_label, show_local_schedule_label)
                             editor.apply()
 
                             if (installTVMode) {
                                 should_My_App_Use_TV_Mode = true
                             }
+
+                            // use Paper Book to Save Use online CSv or Local CSv
+                            if (use_local_schedule) {
+                                // se to use local schedule if true
+                                Paper.book().write(Common.set_schedule_key, Common.schedule_offline)
+                            } else {
+                                // se to use online  schedule if false
+                                Paper.book().write(Common.set_schedule_key, Common.schedule_online)
+                            }
+
 
                             isTvModeSettingsReady = true
 
@@ -1047,14 +1062,20 @@ class SplashKT : AppCompatActivity() {
                 // Now back on the main thread to update the UI
                 if (filePath != null) {
                     if (!isCallingStart && isMyActivityRunning){
-                        val myActivity = Intent(applicationContext, WebViewPage::class.java)
-                        myActivity.putExtra(Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE, Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE)
-                        startActivity(myActivity)
-                        finish()
 
-                        val editText88 = sharedBiometric.edit()
-                        editText88.putString(Constants.get_Launching_State_Of_WebView, Constants.launch_WebView_Offline)
-                        editText88.apply()
+                        val sharedBiometric: SharedPreferences = applicationContext.getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
+                        val get_TV_or_App_Mode = sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "").toString()
+                        if (get_TV_or_App_Mode.equals(Constants.TV_Mode)
+                        ) {
+                            val myActivity = Intent(applicationContext, WebViewPage::class.java)
+                            myActivity.putExtra(Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE, Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE)
+                            startActivity(myActivity)
+                            finish()
+
+                            val editText88 = sharedBiometric.edit()
+                            editText88.putString(Constants.get_Launching_State_Of_WebView, Constants.launch_WebView_Offline)
+                            editText88.apply()
+                        }
 
                     }
                 } else {

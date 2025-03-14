@@ -221,22 +221,22 @@ public class ScheduleMediaActivity extends AppCompatActivity {
 
 
         /// Init Only Local Schedule or Online Scheldule
-
         SharedPreferences SHARED_TV_APP_MODE = getSharedPreferences(Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE);
-        boolean  getScheduleVisibilityToggle = SHARED_TV_APP_MODE.getBoolean(Constants.use_local_schedule_APP, false);
+        boolean  getToggleScheduleVisibility = SHARED_TV_APP_MODE.getBoolean(Constants.show_local_schedule_label, false);
 
+        // to show schedule toggle
+        if (getToggleScheduleVisibility){
+            binding.textScheduleIndicator.setVisibility(View.VISIBLE);
+            binding.scheduleSwitch.setVisibility(View.VISIBLE);
+            binding.imageView46.setVisibility(View.VISIBLE);
+            binding.divider32.setVisibility(View.VISIBLE);
 
-        if (getScheduleVisibilityToggle){
-            textScheduleIndicator.setText("Use Local Schedule");
-            Paper.book().write(Common.set_schedule_key, Common.schedule_offline);
-
+        }else {
             binding.textScheduleIndicator.setVisibility(View.GONE);
             binding.scheduleSwitch.setVisibility(View.GONE);
             binding.imageView46.setVisibility(View.GONE);
             binding.divider32.setVisibility(View.GONE);
-
         }
-
 
 
 

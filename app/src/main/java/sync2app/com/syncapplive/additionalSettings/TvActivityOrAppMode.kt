@@ -241,20 +241,20 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
 
         val sharedBiometric: SharedPreferences = applicationContext.getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
-
         val get_useOfflineOrOnline = sharedBiometric.getString(Constants.imgAllowLunchFromOnline, "").toString()
         val get_TV_or_App_Mode = sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "").toString()
 
 
         val editor = sharedBiometric.edit()
-        if (get_useOfflineOrOnline.equals(Constants.imgAllowLunchFromOnline) || get_TV_or_App_Mode.equals(
-                Constants.TV_Mode
-            )
+        if (get_useOfflineOrOnline.equals(Constants.imgAllowLunchFromOnline) || get_TV_or_App_Mode.equals(Constants.TV_Mode)
         ) {
             editor.putString(Constants.FIRST_TIME_APP_START, Constants.FIRST_TIME_APP_START)
             editor.apply()
 
-            InitWebviewIndexFileState()
+           // InitWebviewIndexFileState()
+
+            startActivity(Intent(applicationContext, SplashKT::class.java))
+            finish()
 
         }
 
@@ -1258,7 +1258,6 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
 /// later use the permission required of it
 
-
     /*
 
         private fun startPermissionProcess() {
@@ -2012,14 +2011,15 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
                 // Now back on the main thread to update the UI
                 if (filePath != null) {
                     if (isMyActivityRunning){
+                        val editText88 = sharedBiometric.edit()
+                        editText88.putString(Constants.get_Launching_State_Of_WebView, Constants.launch_WebView_Offline)
+                        editText88.apply()
+
                         val myActivity = Intent(applicationContext, WebViewPage::class.java)
                         myActivity.putExtra(Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE, Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE)
                         startActivity(myActivity)
                         finish()
 
-                        val editText88 = sharedBiometric.edit()
-                        editText88.putString(Constants.get_Launching_State_Of_WebView, Constants.launch_WebView_Offline)
-                        editText88.apply()
 
                     }
                 } else {

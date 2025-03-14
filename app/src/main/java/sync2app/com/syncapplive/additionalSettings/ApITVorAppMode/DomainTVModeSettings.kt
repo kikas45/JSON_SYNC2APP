@@ -15,7 +15,8 @@ data class DomainTVModeSettings(
     val hide_Floating_Button_Label: Boolean,
 
     /// newly added
-    val use_local_schedule: Boolean
+    val use_local_schedule: Boolean,
+    val show_local_schedule_label: Boolean
 )
 
 data class ApiResponse(
