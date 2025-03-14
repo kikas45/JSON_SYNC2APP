@@ -944,8 +944,14 @@ class SplashKT : AppCompatActivity() {
                             editor.putBoolean(Constants.show_local_schedule_label, show_local_schedule_label)
                             editor.apply()
 
+                            val  editorrr = sharedBiometric.edit()
                             if (installTVMode) {
                                 should_My_App_Use_TV_Mode = true
+                                editorrr.putString(Constants.MY_TV_OR_APP_MODE, Constants.TV_Mode)
+                                editorrr.apply()
+                            }else{
+                                editorrr.putString(Constants.MY_TV_OR_APP_MODE, Constants.App)
+                                editorrr.apply()
                             }
 
                             // use Paper Book to Save Use online CSv or Local CSv

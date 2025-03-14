@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -200,12 +201,16 @@ public class ScheduleMediaActivity extends AppCompatActivity {
             textScheduleIndicator.setText("Use Online Schedule");
             scheduleSwitch.setChecked(true);
             Paper.book().write(Common.set_schedule_key, Common.schedule_online);
+            Toast.makeText(getApplicationContext(), "App Use Online Schedule", Toast.LENGTH_SHORT).show();
 
         } else {
             textScheduleIndicator.setText("Use Local Schedule");
             scheduleSwitch.setChecked(false);
             Paper.book().write(Common.set_schedule_key, Common.schedule_offline);
+            Toast.makeText(getApplicationContext(), "App Use Local Schedule", Toast.LENGTH_SHORT).show();
         }
+
+
 
         scheduleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
