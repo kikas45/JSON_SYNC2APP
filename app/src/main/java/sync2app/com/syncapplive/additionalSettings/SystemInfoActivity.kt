@@ -34,6 +34,7 @@ import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.additionalSettings.HardwareModel.RetrofitInstance
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivitySystemInfoPowellBinding
 import sync2app.com.syncapplive.databinding.CustomHardwareApprovedBinding
 import sync2app.com.syncapplive.databinding.CustomHardwareFailedBinding
@@ -44,7 +45,10 @@ class SystemInfoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySystemInfoPowellBinding
 
-    private var preferences: SharedPreferences? = null
+
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
 
     private val handler: Handler by lazy {
         Handler(Looper.getMainLooper())
@@ -92,7 +96,7 @@ class SystemInfoActivity : AppCompatActivity() {
 
         applyOritenation()
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
 
         binding.apply {
             if (preferences!!.getBoolean("darktheme", false)) {

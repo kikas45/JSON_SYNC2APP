@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.SplashKT
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 
 import sync2app.com.syncapplive.databinding.ActivityRequiredBioBinding
 import java.io.File
@@ -47,8 +48,10 @@ class RequiredBioActivity : AppCompatActivity() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private lateinit var binding: ActivityRequiredBioBinding
-    private var preferences: SharedPreferences? = null
 
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
     @SuppressLint("SourceLockedOrientationActivity", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,11 @@ class RequiredBioActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d("InitWebvIewloadStates", "Requireb Bio: Page ")
         applyOritenation()
+
+
+        Utility.hideSystemBars(window)
+
+
 
 
         applyDarkTheme()
@@ -69,7 +77,7 @@ class RequiredBioActivity : AppCompatActivity() {
     }
 
     private fun applyDarkTheme() {
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
         if (preferences!!.getBoolean("darktheme", false)) {
             // Set status bar color
             window?.statusBarColor = Color.parseColor("#171616")

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -27,6 +28,7 @@ import sync2app.com.syncapplive.additionalSettings.urlchecks.openFile
 import sync2app.com.syncapplive.additionalSettings.urlchecks.renderItem
 import sync2app.com.syncapplive.additionalSettings.urlchecks.renderParentLink
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityFileExplorerBinding
 import java.io.File
 import java.util.Objects
@@ -66,7 +68,16 @@ class FileExplorerActivity : AppCompatActivity() {
     }
 
 
-    private var preferences: SharedPreferences? = null
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
+
+
+    private val sharedTVAPPModePreferences: SharedPreferences by lazy {
+        applicationContext.getSharedPreferences(
+            Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE
+        )
+    }
 
 
     @SuppressLint("CommitPrefEdits", "SourceLockedOrientationActivity")
@@ -79,9 +90,64 @@ class FileExplorerActivity : AppCompatActivity() {
         applyOritenation()
 
 
+        setUpDarkTheme()
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        setUpFullScreenWindows()
 
+
+        val get_imgToggleImageBackground = sharedBiometric.getString(Constants.imgToggleImageBackground, "")
+        val get_imageUseBranding = sharedBiometric.getString(Constants.imageUseBranding, "")
+        if (get_imgToggleImageBackground.equals(Constants.imgToggleImageBackground) && get_imageUseBranding.equals(Constants.imageUseBranding) ){
+            loadBackGroundImage()
+        }
+
+
+
+
+        setupUi()
+
+        //add exception
+        Methods.addExceptionHandler(this)
+
+
+        binding.closeBs.setOnClickListener {
+
+            val sharedPreferences = getSharedPreferences("file_explorer_prefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.clear()
+            editor.apply()
+
+            finish()
+
+        }
+    }
+
+    private fun setUpFullScreenWindows() {
+        val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
+        if (get_INSTALL_TV_JSON_USER_CLICKED != Constants.INSTALL_TV_JSON_USER_CLICKED) {
+            val img_imgImmesriveModeToggle = preferences.getBoolean(Constants.immersive_mode, false)
+            if (img_imgImmesriveModeToggle){
+                Utility.hideSystemBars(window)
+            }else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+
+        }else{
+
+            val immersive_Mode_APP = sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
+            if (immersive_Mode_APP) {
+                Utility.hideSystemBars(window)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+        }
+    }
+
+
+
+    private fun setUpDarkTheme() {
         binding.apply {
             if (preferences!!.getBoolean("darktheme", false)) {
 
@@ -118,36 +184,6 @@ class FileExplorerActivity : AppCompatActivity() {
         }
 
 
-
-
-
-
-
-        val get_imgToggleImageBackground = sharedBiometric.getString(Constants.imgToggleImageBackground, "")
-        val get_imageUseBranding = sharedBiometric.getString(Constants.imageUseBranding, "")
-        if (get_imgToggleImageBackground.equals(Constants.imgToggleImageBackground) && get_imageUseBranding.equals(Constants.imageUseBranding) ){
-            loadBackGroundImage()
-        }
-
-
-
-
-        setupUi()
-
-        //add exception
-        Methods.addExceptionHandler(this)
-
-
-        binding.closeBs.setOnClickListener {
-
-            val sharedPreferences = getSharedPreferences("file_explorer_prefs", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.clear()
-            editor.apply()
-
-            finish()
-
-        }
     }
 
 

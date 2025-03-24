@@ -22,6 +22,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -32,12 +33,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.hbb20.CountryCodePicker
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.SplashKT
 import sync2app.com.syncapplive.WebViewPage
 import sync2app.com.syncapplive.WelcomeSliderKT
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.constants
 import sync2app.com.syncapplive.databinding.ActivityInformationBinding
 import sync2app.com.syncapplive.databinding.CustomExitOrNotBinding
@@ -99,6 +102,11 @@ class InformationActivity : AppCompatActivity() {
     var codePicker: CountryCodePicker? = null
     var show_code: Button? = null
 
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
+
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +121,10 @@ class InformationActivity : AppCompatActivity() {
 
         performButtonClick()
 
+        setUpFullScreenWindows()
+
+
+
         binding.closeBs.setOnClickListener {
 
             show_Pop_Confirm_Exit("Attention!", "Are you sure you want to exit?")
@@ -121,6 +133,34 @@ class InformationActivity : AppCompatActivity() {
 
         Log.d("InitWebvIewloadStates", "InformationActivity: Page ")
     }
+
+
+
+    private fun setUpFullScreenWindows() {
+        val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
+        if (get_INSTALL_TV_JSON_USER_CLICKED != Constants.INSTALL_TV_JSON_USER_CLICKED) {
+            val img_imgImmesriveModeToggle = preferences.getBoolean(Constants.immersive_mode, false)
+            if (img_imgImmesriveModeToggle){
+                Utility.hideSystemBars(window)
+            }else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+
+        }else{
+
+            val immersive_Mode_APP = sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
+            if (immersive_Mode_APP) {
+                Utility.hideSystemBars(window)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+        }
+    }
+
+
+
 
     private fun setUpPasswordToggle() {
         binding.apply {

@@ -180,7 +180,7 @@ dependencies {
 
 
     // kiosk scrollable broswer
-    // implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
+     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 
     // for phone country code
     implementation 'com.hbb20:ccp:2.6.0'

@@ -32,6 +32,7 @@ import sync2app.com.syncapplive.additionalSettings.ReSyncActivity
 import sync2app.com.syncapplive.additionalSettings.RequiredBioActivity
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import java.io.File
 import java.util.Objects
 
@@ -123,9 +124,9 @@ class WelcomeSliderKT : AppCompatActivity() {
         Methods.addExceptionHandler(this)
 
         // Making notification bar transparent
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+      //  window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
-
+        Utility.hideSystemBars(window)
 
 
         viewPager = findViewById(R.id.view_pager)

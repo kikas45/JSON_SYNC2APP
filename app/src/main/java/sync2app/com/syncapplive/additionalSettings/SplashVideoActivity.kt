@@ -20,6 +20,7 @@ import sync2app.com.syncapplive.MyApplication
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivitySplashVideoBinding
 import java.io.File
 
@@ -65,15 +66,14 @@ class SplashVideoActivity : AppCompatActivity() {
 
 
 
-        window.decorView.systemUiVisibility =
-            (View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+       /// window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+
+        // to make app full screen
+        Utility.hideSystemBars(window)
+
 
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
 
-      //  startActivity(Intent(this, TvActivityOrAppMode::class.java))
-       // finish()
 
 
         val get_State_Imge_or_Video = sharedBiometric.getString(Constants.imgToggleImageSplashOrVideoSplash, "").toString()

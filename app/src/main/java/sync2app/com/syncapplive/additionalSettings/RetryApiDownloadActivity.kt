@@ -51,6 +51,7 @@ import sync2app.com.syncapplive.additionalSettings.myFailedDownloadfiles.DnFaile
 import sync2app.com.syncapplive.additionalSettings.myFailedDownloadfiles.DnFailedViewModel
 import sync2app.com.syncapplive.additionalSettings.urlchecks.checkUrlExistence
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityRetryApiDownloadBinding
 import sync2app.com.syncapplive.databinding.CustomFailedDownloadsLayoutBinding
 import sync2app.com.syncapplive.databinding.ProgressDialogLayoutBinding
@@ -114,7 +115,15 @@ class RetryApiDownloadActivity : AppCompatActivity() {
     private  var isSystemActive = true
 
 
-    private var preferences: SharedPreferences? = null
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
+
+    private val sharedTVAPPModePreferences: SharedPreferences by lazy {
+        applicationContext.getSharedPreferences(
+            Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE
+        )
+    }
 
     @SuppressLint("WakelockTimeout", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,6 +131,7 @@ class RetryApiDownloadActivity : AppCompatActivity() {
         binding = ActivityRetryApiDownloadBinding.inflate(layoutInflater)
         setContentView(binding.root)
         applyOritenation()
+
 
         var isEmpty = true
         mfilesViewModel.readAllData.observe(this@RetryApiDownloadActivity,
@@ -139,62 +149,9 @@ class RetryApiDownloadActivity : AppCompatActivity() {
 
 
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        setUpDarkTheme()
 
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-                actionBarRoot.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-                textTitle.setTextColor(resources.getColor(R.color.white))
-
-
-                textDownloadSieze.setTextColor(resources.getColor(R.color.white))
-                textPercentageCompleted.setTextColor(resources.getColor(R.color.white))
-                textRemainging.setTextColor(resources.getColor(R.color.white))
-                textCsvStatus.setTextColor(resources.getColor(R.color.white))
-
-
-                // test connection buttons and connect buttons
-                textCancelBtn.setTextColor(resources.getColor(R.color.white))
-                textCancelBtn.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textLaunchApplication.setTextColor(resources.getColor(R.color.white))
-                textLaunchApplication.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textRetryBtn.setTextColor(resources.getColor(R.color.white))
-                textRetryBtn.setBackgroundResource(R.drawable.card_design_darktheme)
-
-                //  round_edit_text_design_outline_dark_theme
-
-
-                // fir back button
-                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                closeBs.setImageDrawable(drawable)
-
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-
-
-            }
-        }
-
-
+        setUpFullScreenWindows()
 
 
 
@@ -266,6 +223,88 @@ class RetryApiDownloadActivity : AppCompatActivity() {
                 })
             }, 300)
         }
+
+    }
+
+
+    private fun setUpFullScreenWindows() {
+        val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
+        if (get_INSTALL_TV_JSON_USER_CLICKED != Constants.INSTALL_TV_JSON_USER_CLICKED) {
+            val img_imgImmesriveModeToggle = preferences.getBoolean(Constants.immersive_mode, false)
+            if (img_imgImmesriveModeToggle){
+                Utility.hideSystemBars(window)
+            }else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+
+        }else{
+
+            val immersive_Mode_APP = sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
+            if (immersive_Mode_APP) {
+                Utility.hideSystemBars(window)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+        }
+    }
+
+
+    private fun setUpDarkTheme() {
+        binding.apply {
+            if (preferences!!.getBoolean("darktheme", false)) {
+
+                // Set status bar color
+                window?.statusBarColor = Color.parseColor("#171616")
+                // Set navigation bar color
+                window?.navigationBarColor = Color.parseColor("#171616")
+
+                // Ensure the text and icons are white
+                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
+                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
+
+
+                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
+                actionBarRoot.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
+
+                // set text view
+                textTitle.setTextColor(resources.getColor(R.color.white))
+
+
+                textDownloadSieze.setTextColor(resources.getColor(R.color.white))
+                textPercentageCompleted.setTextColor(resources.getColor(R.color.white))
+                textRemainging.setTextColor(resources.getColor(R.color.white))
+                textCsvStatus.setTextColor(resources.getColor(R.color.white))
+
+
+                // test connection buttons and connect buttons
+                textCancelBtn.setTextColor(resources.getColor(R.color.white))
+                textCancelBtn.setBackgroundResource(R.drawable.card_design_darktheme_outline)
+
+                textLaunchApplication.setTextColor(resources.getColor(R.color.white))
+                textLaunchApplication.setBackgroundResource(R.drawable.card_design_darktheme_outline)
+
+                textRetryBtn.setTextColor(resources.getColor(R.color.white))
+                textRetryBtn.setBackgroundResource(R.drawable.card_design_darktheme)
+
+                //  round_edit_text_design_outline_dark_theme
+
+
+                // fir back button
+                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
+                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
+                closeBs.setImageDrawable(drawable)
+
+
+
+                //  for divider i..n
+                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
+
+
+            }
+        }
+
 
     }
 
@@ -1095,8 +1134,6 @@ class RetryApiDownloadActivity : AppCompatActivity() {
             val progressBar2 = bindingDN.progressBar2
 
 
-
-            preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
             val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
                 applicationContext

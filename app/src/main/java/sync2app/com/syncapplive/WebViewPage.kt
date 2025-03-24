@@ -56,6 +56,7 @@ import android.view.WindowManager
 import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import android.webkit.CookieManager
 import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceResponse
@@ -81,6 +82,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -885,12 +887,17 @@ class WebViewPage : AppCompatActivity() {
         handler.postDelayed(Runnable { CheckUpdate() }, 8000)
 
 
+        // init web view
         InitializeWebSettings()
+
+
         InitializeRemoteData()
         InitiatePreferences()
         InitiateComponents()
         IntClikListnerOnWebView()
-        InitWebvIewloadStates()
+
+
+
         /// to control error button
         InitWebviewIndexFileState()
 
@@ -955,6 +962,8 @@ class WebViewPage : AppCompatActivity() {
                 loadOffline_Saved_Path_Offline_Webview(fil_CLO, fil_DEMO, filename)
             }
         }
+
+
 
     }
 
@@ -1032,38 +1041,109 @@ class WebViewPage : AppCompatActivity() {
     }
 
 
-    @SuppressLint("SetJavaScriptEnabled")
+
+    @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     private fun InitializeWebSettings() {
-        val webSettings = webView!!.settings
-        webSettings.javaScriptEnabled = true
-        webSettings.setSupportZoom(true)
-        webSettings.allowFileAccess = true
-        webSettings.allowContentAccess = true
-        webSettings.supportMultipleWindows()
-        webSettings.setSupportMultipleWindows(true)
-        webSettings.domStorageEnabled = false
-        webSettings.databaseEnabled = false
-        webSettings.mediaPlaybackRequiresUserGesture = false
-        webSettings.javaScriptCanOpenWindowsAutomatically = true
-        webSettings.loadWithOverviewMode = true
-        webSettings.useWideViewPort = true
-        webSettings.loadsImagesAutomatically = true
-        webSettings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
-        webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
-        WebView.setWebContentsDebuggingEnabled(true)
+        webView!!.settings.apply {
+
+            loadsImagesAutomatically = true
+            builtInZoomControls = true
+            displayZoomControls = false
+
+            loadWithOverviewMode = false
+            useWideViewPort = false
+
+            databaseEnabled = true
+            domStorageEnabled = true
+            setSupportZoom(false)
+
+            setUserAgentString(userAgentString.replace("wv", ""))
+            val cookieManager = CookieManager.getInstance()
+            cookieManager.setAcceptCookie(true)
+            cookieManager.acceptThirdPartyCookies(webView!!)
+
+            javaScriptEnabled = true
+
+            allowFileAccess = true
+            allowContentAccess = true
+
+            setSupportMultipleWindows(true)
+            javaScriptCanOpenWindowsAutomatically = true
+
+            cacheMode = WebSettings.LOAD_NO_CACHE
+            webView!!.isSaveEnabled = true
+
+            mediaPlaybackRequiresUserGesture = false
+
+            layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
 
 
-        val get_imgSetUserAgent =
-            sharedBiometric.getString(Constants.ENABLE_USER_AGENT, "").toString()
+            WebView.setWebContentsDebuggingEnabled(true)
 
-        if (get_imgSetUserAgent.equals(Constants.ENABLE_USER_AGENT)) {
-            setWebViewToDesktop(binding.webview)
-        } else {
-            setWebViewToMobile(binding.webview)
+            val get_imgSetUserAgent = sharedBiometric.getString(Constants.ENABLE_USER_AGENT, "").toString()
+
+            if (get_imgSetUserAgent.equals(Constants.ENABLE_USER_AGENT)) {
+                setWebViewToDesktop(webView!!)
+            } else {
+                setWebViewToMobile(webView!!)
+            }
+
+            // init webview load state
+            InitWebvIewloadStates()
+
         }
 
-
     }
+
+
+
+/*
+        @SuppressLint("SetJavaScriptEnabled")
+        private fun InitializeWebSettings() {
+            val webSettings = binding.webview.settings
+            webSettings.setSupportZoom(true)
+            webSettings.allowFileAccess = true
+            webSettings.allowContentAccess = true
+            webSettings.supportMultipleWindows()
+            webSettings.setSupportMultipleWindows(true)
+            webSettings.domStorageEnabled = false
+            webSettings.databaseEnabled = false
+            webSettings.mediaPlaybackRequiresUserGesture = false
+            webSettings.javaScriptCanOpenWindowsAutomatically = true
+            webSettings.loadWithOverviewMode = true
+            webSettings.useWideViewPort = true
+            webSettings.loadsImagesAutomatically = true
+            webSettings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
+            webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
+
+
+            webSettings.setUserAgentString(webSettings.userAgentString.replace("wv", ""))
+            val cookieManager = CookieManager.getInstance()
+            cookieManager.setAcceptCookie(true)
+            cookieManager.acceptThirdPartyCookies(webView!!)
+            webSettings.javaScriptEnabled = true
+
+            WebView.setWebContentsDebuggingEnabled(true)
+
+            // Clear cache and history to ensure fresh content is loaded
+           // binding.webview.clearCache(true)
+           // binding.webview.clearHistory()
+
+
+            InitWebvIewloadStates()
+
+            val get_imgSetUserAgent = sharedBiometric.getString(Constants.ENABLE_USER_AGENT, "").toString()
+
+            if (get_imgSetUserAgent.equals(Constants.ENABLE_USER_AGENT)) {
+                setWebViewToDesktop(binding.webview)
+            } else {
+                setWebViewToMobile(binding.webview)
+            }
+
+
+        }
+
+*/
 
 
     private fun setWebViewToMobile(webView: WebView) {
@@ -1106,81 +1186,59 @@ class WebViewPage : AppCompatActivity() {
     }
 
     private fun InitWebvIewloadStates() {
-
-        // get input paths to device storage
-        val myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
         val sharedBiometric = getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
+        val myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
+        val get_launching_state = sharedBiometric.getString(Constants.get_Launching_State_Of_WebView, "").toString()
         val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
         val fil_DEMO = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
 
+        Log.d("PETER", "InitWebvIewloadStates: $get_launching_state")
 
-        // get state for launch
-        val get_launching_state =
-            sharedBiometric.getString(Constants.get_Launching_State_Of_WebView, "").toString()
-
-
-        Log.d("initLAucngingSTaes", "WebviewPage: $get_launching_state")
-
-        if (get_launching_state.equals(Constants.launch_WebView_Offline)) {
-            val filename = "/index.html"
-            lifecycleScope.launch {
-                loadOffline_Saved_Path_Offline_Webview(fil_CLO, fil_DEMO, filename)
-            }
-
-
-        } else if (get_launching_state.equals(Constants.launch_WebView_Offline_Manual_Index)) {
-
-            val filename = "/index.html"
-            lifecycleScope.launch {
-                loadOffline_Saved_Path_Offline_Webview(fil_CLO, fil_DEMO, filename)
-            }
-
-            //  showToastMessage("Launch Offline")
-
-
-        } else if (get_launching_state.equals(Constants.launch_WebView_Online)) {
-
-            if (Utility.isNetworkAvailable(applicationContext)) {
-
-                load_live_Parther_url_Format()
-
-            } else {
-
-                showPopForTVConfiguration(Constants.Check_Inter_Connectivity)
-
-            }
-
-
-        } else if (get_launching_state.equals(Constants.launch_WebView_Online_Manual_Index)) {
-
-
-            if (Utility.isNetworkAvailable(applicationContext)) {
-
-                val getSaved_manaul_index_edit_url_Input =
-                    myDownloadClass.getString(Constants.getSaved_manaul_index_edit_url_Input, "")
-                        .toString()
-                loadOnlineLiveUrl(getSaved_manaul_index_edit_url_Input)
-                load_live_indicator()
-                //  showToastMessage("Launch Online")
-
-            } else {
-
-                showPopForTVConfiguration(Constants.Check_Inter_Connectivity)
-            }
-
-
-        } else if (get_launching_state.equals(Constants.launch_Default_WebView_url)) {
-
-            loadOnlineUrl()
-
-            //  showToastMessage("Launch Online")
+        if (get_launching_state.equals(Constants.launch_WebView_Online)) {
+            // launch online url
+            load_live_Parther_url_Format()
+            Log.d("PETER", "InitWebvIewloadStates: State 1")
 
         } else {
 
-            loadOnlineUrl()
-            // showToastMessage("Launch Online")
-        }
+            if (get_launching_state.equals(Constants.launch_WebView_Offline)) {
+                val filename = "/index.html"
+                lifecycleScope.launch {
+                    loadOffline_Saved_Path_Offline_Webview(fil_CLO, fil_DEMO, filename)
+                    Log.d("PETER", "InitWebvIewloadStates: State 2")
+                }
 
+
+            } else if (get_launching_state.equals(Constants.launch_WebView_Offline_Manual_Index)) {
+
+                val filename = "/index.html"
+                lifecycleScope.launch {
+                    loadOffline_Saved_Path_Offline_Webview(fil_CLO, fil_DEMO, filename)
+                    Log.d("PETER", "InitWebvIewloadStates: State 3")
+                }
+
+            } else if (get_launching_state.equals(Constants.launch_WebView_Online_Manual_Index)) {
+
+                val getSaved_manaul_index_edit_url_Input = myDownloadClass.getString(Constants.getSaved_manaul_index_edit_url_Input, "").toString()
+                loadOnlineLiveUrl(getSaved_manaul_index_edit_url_Input)
+                load_live_indicator()
+
+                Log.d("PETER", "InitWebvIewloadStates: State 4")
+
+            } else if (get_launching_state.equals(Constants.launch_Default_WebView_url)) {
+
+                loadOnlineUrl()
+
+                Log.d("PETER", "InitWebvIewloadStates: State 5")
+
+            } else {
+
+                loadOnlineUrl()
+
+                Log.d("PETER", "InitWebvIewloadStates: State 6")
+
+            }
+        }
 
     }
 
@@ -1191,28 +1249,25 @@ class WebViewPage : AppCompatActivity() {
             val sharedBiometric = getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
             val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
             val fil_DEMO = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
-            val CP_AP_MASTER_DOMAIN =
-                myDownloadClass.getString(Constants.CP_OR_AP_MASTER_DOMAIN, "").toString()
+            val CP_AP_MASTER_DOMAIN = myDownloadClass.getString(Constants.CP_OR_AP_MASTER_DOMAIN, "").toString()
 
-            val imagSwtichPartnerUrl =
-                sharedBiometric.getString(Constants.imagSwtichPartnerUrl, "").toString()
+            val imagSwtichPartnerUrl = sharedBiometric.getString(Constants.imagSwtichPartnerUrl, "").toString()
 
             // if allowed to use partner url
             if (imagSwtichPartnerUrl == Constants.imagSwtichPartnerUrl) {
+                val baseUrl = "${CP_AP_MASTER_DOMAIN}/$fil_CLO/$fil_DEMO/App/"
 
-                val vurl = "${CP_AP_MASTER_DOMAIN}/$fil_CLO/$fil_DEMO/App/index.html"
-                loadOnlineLiveUrl(vurl)
+                loadOnlineLiveUrl(baseUrl)
                 load_live_indicator()
-                //  showToastMessage("Launch Online")
 
                 // if NOT allowed to use partner url
             } else {
-                val get_custom_path_url =
-                    myDownloadClass.getString(Constants.get_ModifiedUrl, "").toString()
-                val appended_url = "$get_custom_path_url/$fil_CLO/$fil_DEMO/App/index.html"
+                val get_custom_path_url = myDownloadClass.getString(Constants.get_ModifiedUrl, "").toString()
+                val appended_url = "$get_custom_path_url/$fil_CLO/$fil_DEMO/App/"
+
                 loadOnlineLiveUrl(appended_url)
                 load_live_indicator()
-                //   showToastMessage("Launch Online")
+
             }
 
         } catch (e: Exception) {
@@ -1344,6 +1399,7 @@ class WebViewPage : AppCompatActivity() {
                     }
 
                 } else {
+                    Log.d("PETER", "InitWebvIewloadStates: THe Pop 1 ")
                     loadOnlineUrl()
                     load_live_indicator()
                 }
@@ -1351,7 +1407,7 @@ class WebViewPage : AppCompatActivity() {
 
             } catch (e: Exception) {
 
-                Log.d(TAG, "loadOffline_Saved_Path_Offline_Webview_For_Pop_Layout: ${e.message}")
+                Log.d("PETER", "InitWebvIewloadStates: THe Pop  error 1 ")
                 loadOnlineUrl()
                 load_live_indicator()
 
@@ -1363,30 +1419,39 @@ class WebViewPage : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadOnlineUrl() {
-
-        load_live_indicator()
+        Log.d("PETER", "InitWebvIewloadStates: caslling  loadOnlineUrl ")
 
         // Configure WebViewClient and WebChromeClient if not already configured
-        setupWebViewClients()
+        val sharedBiometric: SharedPreferences = applicationContext.getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
+        val JSON_MAIN_URL = sharedBiometric.getString(Constants.JSON_MAIN_URL, "").toString()
 
-        if (UrlIntent!!.hasExtra("url")) {
-            webView!!.loadUrl(intent.getStringExtra("url")!!)
+        if (MainUrl == null){
+            Log.d("PETER", "InitWebvIewloadStates: The Main Json Url Was null ")
+            MainUrl = JSON_MAIN_URL
+        }
 
-        } else if (data != null) {
-            webView!!.loadUrl(data.toString())
-        } else {
-            if (LoadLastWebPageOnAccidentalExit) {
-                val lurl = preferences.getString("lasturl", "")
-                if (lurl!!.startsWith("http") || lurl.startsWith("https")) {
-                    webView!!.loadUrl(lurl)
+
+            if (UrlIntent!!.hasExtra("url")) {
+                webView!!.loadUrl(intent.getStringExtra("url")!!)
+
+            } else if (data != null) {
+                webView!!.loadUrl(data.toString())
+            } else {
+                if (LoadLastWebPageOnAccidentalExit) {
+                    val lurl = preferences.getString("lasturl", "")
+                    if (lurl!!.startsWith("http") || lurl.startsWith("https")) {
+                        webView!!.loadUrl(lurl)
+                    } else {
+                        webView!!.loadUrl(MainUrl)
+                    }
                 } else {
                     webView!!.loadUrl(MainUrl)
                 }
-            } else {
-                webView!!.loadUrl(MainUrl)
             }
-        }
 
+
+        setupWebViewClients()
+        load_live_indicator()
 
     }
 
@@ -1980,15 +2045,10 @@ class WebViewPage : AppCompatActivity() {
 
         try {
 
-            val get_INSTALL_TV_JSON_USER_CLICKED =
-                sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "")
-                    .toString()
-            val show_BottomBar_APP =
-                sharedTVAPPModePreferences.getBoolean(Constants.hide_BottomBar_APP, false)
-            val fullScreen_APP =
-                sharedTVAPPModePreferences.getBoolean(Constants.hide_BottomBar_APP, false)
-            val immersive_Mode_APP =
-                sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
+            val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
+            val show_BottomBar_APP = sharedTVAPPModePreferences.getBoolean(Constants.hide_BottomBar_APP, false)
+            val fullScreen_APP = sharedTVAPPModePreferences.getBoolean(Constants.hide_BottomBar_APP, false)
+            val immersive_Mode_APP = sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
 
             if (get_INSTALL_TV_JSON_USER_CLICKED == Constants.INSTALL_TV_JSON_USER_CLICKED) {
 
@@ -3478,19 +3538,19 @@ class WebViewPage : AppCompatActivity() {
         @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                val connectivityManager =
-                    context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-                val activeNetworkInfo = connectivityManager.activeNetworkInfo
-                if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+                if (Utility.isNetworkAvailable(applicationContext)) {
                     try {
                         val SPLASH_TIME_OUT = 1000
                         textStatusProcess?.setText("Connecting..")
 
                         handler.postDelayed(Runnable {
                             try {
-                                imageWiFiOn?.visibility = View.GONE
-                                imageWiFiOFF?.visibility = View.VISIBLE
+
                                 myDownloadStatus()
+                                onAppRedirectToJsonPage()
+
+                                Log.d("HFHGHHH", "onAppRedirectToJsonPage: internet Connection")
+
                             } catch (e: java.lang.Exception) {
                             }
                         }, SPLASH_TIME_OUT.toLong())
@@ -3498,12 +3558,15 @@ class WebViewPage : AppCompatActivity() {
                     } catch (ignored: java.lang.Exception) {
                     }
                 } else {
-
+                    Log.d("HFHGHHH", "onAppRedirectToJsonPage: No internet Connection")
                     // No internet Connection
                     try {
-                        imageWiFiOn!!.visibility = View.VISIBLE
-                        imageWiFiOFF!!.visibility = View.GONE
-                        textStatusProcess!!.text = "No Internet"
+                        runOnUiThread {
+                            imageWiFiOn!!.visibility = View.VISIBLE
+                            imageWiFiOFF!!.visibility = View.GONE
+                            textStatusProcess!!.text = "No Internet"
+                        }
+
                     } catch (e: java.lang.Exception) {
                     }
                 }
@@ -3515,11 +3578,34 @@ class WebViewPage : AppCompatActivity() {
     }
 
 
+    private fun onAppRedirectToJsonPage(){
+        runOnUiThread {
+            val isSavedEmail = simpleSavedPassword.getString(Constants.isSavedEmail, "").toString()
+            val COUNTRY_NAME = simpleSavedPassword.getString(Constants.COUNTRY_NAME, "").toString()
+            val USER_NAME = simpleSavedPassword.getString(Constants.USER_NAME, "").toString()
+            val USER_COMPANY_NAME = simpleSavedPassword.getString(Constants.USER_COMPANY_NAME, "").toString()
+
+            if (!isSavedEmail.isEmpty() && !COUNTRY_NAME.isEmpty() && !USER_NAME.isEmpty() && !USER_COMPANY_NAME.isEmpty()  && jsonUrl == null) {
+                val intent = Intent(applicationContext, SplashKT::class.java)
+                startActivity(intent)
+                finish()
+            }
+
+        }
+    }
+
+
+
+
+
     private fun myDownloadStatus() {
         try {
             runOnUiThread {
-                val get_Api_state =
-                    sharedBiometric.getString(Constants.imagSwtichEnableSyncFromAPI, "").toString()
+
+                imageWiFiOn?.visibility = View.GONE
+                imageWiFiOFF?.visibility = View.VISIBLE
+
+                val get_Api_state = sharedBiometric.getString(Constants.imagSwtichEnableSyncFromAPI, "").toString()
                 if (Utility.isNetworkAvailable(applicationContext)) {
                     // if Zip is enabled
                     if (get_Api_state == Constants.imagSwtichEnableSyncFromAPI) {
@@ -3674,8 +3760,7 @@ class WebViewPage : AppCompatActivity() {
 
                     // get input paths to device storage
                     val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
-                    val fil_DEMO =
-                        myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
+                    val fil_DEMO = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
                     val filename = "/index.html"
                     lifecycleScope.launch {
                         loadOffline_Saved_Path_Offline_Webview_For_Pop_Layout(
@@ -3933,14 +4018,14 @@ class WebViewPage : AppCompatActivity() {
             val CP_AP_MASTER_DOMAIN =
                 myDownloadClass.getString(Constants.CP_OR_AP_MASTER_DOMAIN, "").toString()
 
-            
+
             if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
 
                 if (getSavedEditTextInputSynUrlZip.contains("/App/index.html")) {
-                   /// cleanTempFolder(getSavedEditTextInputSynUrlZip)
+                    /// cleanTempFolder(getSavedEditTextInputSynUrlZip)
 
                     Log.d("TO_USE_MANUAL_PATRSING", "initParsingUrlMethods: TO_USE_MANUAL_PATRSING")
-                    
+
                 } else {
                     showToastMessage(Constants.Error_IndexFile_Message)
 
@@ -3948,7 +4033,8 @@ class WebViewPage : AppCompatActivity() {
 
             } else {
                 if (imagSwtichPartnerUrl == Constants.imagSwtichPartnerUrl) {
-                    val urlPath = "${CP_AP_MASTER_DOMAIN}/$get_UserID/$get_LicenseKey/App/index.html"
+                    val urlPath =
+                        "${CP_AP_MASTER_DOMAIN}/$get_UserID/$get_LicenseKey/App/index.html"
                     cleanTempFolder(urlPath)
 
                 } else {
@@ -3961,7 +4047,7 @@ class WebViewPage : AppCompatActivity() {
 
 
         }
-        
+
     }
 
 
@@ -7865,6 +7951,11 @@ class WebViewPage : AppCompatActivity() {
                         val intent = Intent(applicationContext, SplashKT::class.java)
                         startActivity(intent)
                         finish()
+                    } else {
+                        val editText88 = sharedBiometric.edit()
+                        editText88.putString(Constants.JSON_MAIN_URL, jsonUrl)
+                        editText88.apply()
+
                     }
                 }
 

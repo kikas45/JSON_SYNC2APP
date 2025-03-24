@@ -27,6 +27,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -52,6 +56,7 @@ import sync2app.com.syncapplive.additionalSettings.ReSyncActivity
 import sync2app.com.syncapplive.additionalSettings.TvActivityOrAppMode
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivitySettingsBinding
 import sync2app.com.syncapplive.databinding.CustomConfirmExitDialogBinding
 import sync2app.com.syncapplive.databinding.CustomContactAdminBinding
@@ -75,6 +80,7 @@ class SettingsActivityKT : AppCompatActivity() {
     private val preferences: SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(applicationContext)
     }
+
     private val sharedBiometric: SharedPreferences by lazy {
         applicationContext.getSharedPreferences(
             Constants.SHARED_BIOMETRIC, Context.MODE_PRIVATE
@@ -121,8 +127,9 @@ class SettingsActivityKT : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         applyOritenation()
+
+        setUpFullScreenWindows()
 
         handlerMoveToWebviewPage.postDelayed(Runnable {
             val getInfoPageState = sharedBiometric.getString(Constants.FIRST_INFORMATION_PAGE_COMPLETED, "").toString()
@@ -222,6 +229,31 @@ class SettingsActivityKT : AppCompatActivity() {
 
 
     }
+
+    private fun setUpFullScreenWindows() {
+        val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
+        if (get_INSTALL_TV_JSON_USER_CLICKED != Constants.INSTALL_TV_JSON_USER_CLICKED) {
+            val img_imgImmesriveModeToggle = preferences.getBoolean(Constants.immersive_mode, false)
+            if (img_imgImmesriveModeToggle){
+                Utility.hideSystemBars(window)
+            }else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+
+        }else{
+
+            val immersive_Mode_APP = sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
+            if (immersive_Mode_APP) {
+                Utility.hideSystemBars(window)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+        }
+    }
+
+
 
     private fun controlToggleUIVisibilityForJson() {
         binding.apply {
@@ -504,10 +536,7 @@ class SettingsActivityKT : AppCompatActivity() {
             imgUseOfflineFolderOrNot.setOnCheckedChangeListener { compoundButton, isValued -> // we are putting the values into SHARED PREFERENCE
                 if (compoundButton.isChecked) {
                     textUseOfflineFolderOrNot.text = "Use local Files if Offline"
-                    editorShared.putString(
-                        Constants.USE_OFFLINE_FOLDER,
-                        Constants.USE_OFFLINE_FOLDER
-                    )
+                    editorShared.putString(Constants.USE_OFFLINE_FOLDER, Constants.USE_OFFLINE_FOLDER)
                     editor.apply()
 
                 } else {

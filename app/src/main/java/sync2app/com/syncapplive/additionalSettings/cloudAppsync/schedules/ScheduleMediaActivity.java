@@ -79,6 +79,162 @@ public class ScheduleMediaActivity extends AppCompatActivity {
 
 
         // set up dark theme
+        setuDarkTheme();
+
+        // Setup folder path
+
+        SharedPreferences myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, Context.MODE_PRIVATE);
+        String company = myDownloadClass.getString(Constants.getFolderClo, "");
+        String license = myDownloadClass.getString(Constants.getFolderSubpath, "");
+
+        /// String company = "CLO";
+        /// String license = "DE_MO_2021001";
+
+
+        String finalFolderPath = "/" + company + "/" + license;
+        String syn2AppLive = "Syn2AppLive";
+
+        File folder = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + syn2AppLive + finalFolderPath);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        // Setup click listeners for the cards
+        addScheduleCard.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), AddNewSchedule.class);
+            startActivity(intent);
+            finish();
+        });
+
+        allSchedulesCard.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), ScheduleList.class);
+            startActivity(intent);
+            finish();
+        });
+
+
+        closeBs.setOnClickListener(view -> {
+            funcloseActivity();
+        });
+
+
+        textGoTowebview.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), WebViewPage.class);
+            startActivity(intent);
+            finishAffinity();
+            finish();
+        });
+
+
+        /// Init Only Local Schedule or Online Scheldule
+        SharedPreferences SHARED_TV_APP_MODE = getSharedPreferences(Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE);
+        boolean  getToggleScheduleVisibility = SHARED_TV_APP_MODE.getBoolean(Constants.show_local_schedule_label, false);
+
+
+        // to show schedule toggle
+        if (getToggleScheduleVisibility){
+            binding.textScheduleIndicator.setVisibility(View.VISIBLE);
+            binding.scheduleSwitch.setVisibility(View.VISIBLE);
+            binding.imageView46.setVisibility(View.VISIBLE);
+            binding.divider32.setVisibility(View.VISIBLE);
+
+        }else {
+            binding.textScheduleIndicator.setVisibility(View.GONE);
+            binding.scheduleSwitch.setVisibility(View.GONE);
+            binding.imageView46.setVisibility(View.GONE);
+            binding.divider32.setVisibility(View.GONE);
+        }
+
+
+
+
+        String savedState = Paper.book().read(Common.set_schedule_key, "Offline");
+
+        if (Common.schedule_online.equals(savedState)) {
+            textScheduleIndicator.setText("Use Online Schedule");
+            scheduleSwitch.setChecked(true);
+            Paper.book().write(Common.set_schedule_key, Common.schedule_online);
+            Toast.makeText(getApplicationContext(), "App Use Online Schedule", Toast.LENGTH_SHORT).show();
+
+            // make this ui invisible
+            binding.addScheduleCard.setVisibility(View.GONE);
+            binding.imageView41.setVisibility(View.GONE);
+            binding.imageView40.setVisibility(View.GONE);
+            binding.divider49.setVisibility(View.GONE);
+
+
+            //make this Ui invisible
+            binding.textScheduleIndicator.setVisibility(View.GONE);
+            binding.imageView46.setVisibility(View.GONE);
+            binding.scheduleSwitch.setVisibility(View.GONE);
+            binding.divider32.setVisibility(View.GONE);
+
+
+        } else {
+            textScheduleIndicator.setText("Use Device Schedule");
+            scheduleSwitch.setChecked(false);
+            Paper.book().write(Common.set_schedule_key, Common.schedule_offline);
+            Toast.makeText(getApplicationContext(), "App Use Local Schedule", Toast.LENGTH_SHORT).show();
+
+
+            // make this ui invisible
+            binding.addScheduleCard.setVisibility(View.VISIBLE);
+            binding.imageView41.setVisibility(View.VISIBLE);
+            binding.imageView40.setVisibility(View.VISIBLE);
+            binding.divider49.setVisibility(View.VISIBLE);
+
+
+            //make this Ui invisible
+            if (getToggleScheduleVisibility) {
+                binding.textScheduleIndicator.setVisibility(View.VISIBLE);
+                binding.imageView46.setVisibility(View.VISIBLE);
+                binding.scheduleSwitch.setVisibility(View.VISIBLE);
+                binding.divider32.setVisibility(View.VISIBLE);
+
+            }
+
+
+        }
+
+
+
+        scheduleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Paper.book().write(Common.set_schedule_key, Common.schedule_online);
+                textScheduleIndicator.setText("Use Online Schedule");
+            } else {
+                // is there no way to remove the key
+                showPopChangePassowrdDialog();
+
+            }
+        });
+
+
+
+
+
+
+
+        // initialize schedule settings
+        MethodsSchedule.setPersistentDefaults();
+
+
+        //add exception
+        Methods.addExceptionHandler(this);
+
+
+        // set up background image
+        SharedPreferences sharedBiometric = getSharedPreferences(Constants.SHARED_BIOMETRIC, Context.MODE_PRIVATE);
+        String get_imgToggleImageBackground = sharedBiometric.getString(Constants.imgToggleImageBackground, "");
+        String get_imageUseBranding = sharedBiometric.getString(Constants.imageUseBranding, "");
+        if (get_imgToggleImageBackground.equals(Constants.imgToggleImageBackground) && get_imageUseBranding.equals(Constants.imageUseBranding)) {
+            loadBackGroundImage();
+        }
+
+
+    }
+
+    private void setuDarkTheme() {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (preferences.getBoolean("darktheme", false)) {
@@ -148,119 +304,6 @@ public class ScheduleMediaActivity extends AppCompatActivity {
 
 
         }
-
-
-        // Setup folder path
-
-        SharedPreferences myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, Context.MODE_PRIVATE);
-        String company = myDownloadClass.getString(Constants.getFolderClo, "");
-        String license = myDownloadClass.getString(Constants.getFolderSubpath, "");
-
-        /// String company = "CLO";
-        /// String license = "DE_MO_2021001";
-
-
-        String finalFolderPath = "/" + company + "/" + license;
-        String syn2AppLive = "Syn2AppLive";
-
-        File folder = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + syn2AppLive + finalFolderPath);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-
-        // Setup click listeners for the cards
-        addScheduleCard.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), AddNewSchedule.class);
-            startActivity(intent);
-            finish();
-        });
-
-        allSchedulesCard.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), ScheduleList.class);
-            startActivity(intent);
-            finish();
-        });
-
-
-        closeBs.setOnClickListener(view -> {
-            funcloseActivity();
-        });
-
-
-        textGoTowebview.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), WebViewPage.class);
-            startActivity(intent);
-            finishAffinity();
-            finish();
-        });
-
-
-        String savedState = Paper.book().read(Common.set_schedule_key, "Offline");
-
-        if (Common.schedule_online.equals(savedState)) {
-            textScheduleIndicator.setText("Use Online Schedule");
-            scheduleSwitch.setChecked(true);
-            Paper.book().write(Common.set_schedule_key, Common.schedule_online);
-            Toast.makeText(getApplicationContext(), "App Use Online Schedule", Toast.LENGTH_SHORT).show();
-
-        } else {
-            textScheduleIndicator.setText("Use Local Schedule");
-            scheduleSwitch.setChecked(false);
-            Paper.book().write(Common.set_schedule_key, Common.schedule_offline);
-            Toast.makeText(getApplicationContext(), "App Use Local Schedule", Toast.LENGTH_SHORT).show();
-        }
-
-
-
-        scheduleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                Paper.book().write(Common.set_schedule_key, Common.schedule_online);
-                textScheduleIndicator.setText("Use Online Schedule");
-            } else {
-                // is there no way to remove the key
-                showPopChangePassowrdDialog();
-
-            }
-        });
-
-
-
-        /// Init Only Local Schedule or Online Scheldule
-        SharedPreferences SHARED_TV_APP_MODE = getSharedPreferences(Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE);
-        boolean  getToggleScheduleVisibility = SHARED_TV_APP_MODE.getBoolean(Constants.show_local_schedule_label, false);
-
-        // to show schedule toggle
-        if (getToggleScheduleVisibility){
-            binding.textScheduleIndicator.setVisibility(View.VISIBLE);
-            binding.scheduleSwitch.setVisibility(View.VISIBLE);
-            binding.imageView46.setVisibility(View.VISIBLE);
-            binding.divider32.setVisibility(View.VISIBLE);
-
-        }else {
-            binding.textScheduleIndicator.setVisibility(View.GONE);
-            binding.scheduleSwitch.setVisibility(View.GONE);
-            binding.imageView46.setVisibility(View.GONE);
-            binding.divider32.setVisibility(View.GONE);
-        }
-
-
-
-        // initialize schedule settings
-        MethodsSchedule.setPersistentDefaults();
-
-
-        //add exception
-        Methods.addExceptionHandler(this);
-
-
-        // set up background image
-        SharedPreferences sharedBiometric = getSharedPreferences(Constants.SHARED_BIOMETRIC, Context.MODE_PRIVATE);
-        String get_imgToggleImageBackground = sharedBiometric.getString(Constants.imgToggleImageBackground, "");
-        String get_imageUseBranding = sharedBiometric.getString(Constants.imageUseBranding, "");
-        if (get_imgToggleImageBackground.equals(Constants.imgToggleImageBackground) && get_imageUseBranding.equals(Constants.imageUseBranding)) {
-            loadBackGroundImage();
-        }
-
 
     }
 
@@ -408,7 +451,7 @@ public class ScheduleMediaActivity extends AppCompatActivity {
                 if (editTextText.equals(simpleAdminPassword)) {
 
                     Paper.book().write(Common.set_schedule_key, Common.schedule_offline);
-                    binding.textScheduleIndicator.setText("Use Local Schedule");
+                    binding.textScheduleIndicator.setText("Use Device Schedule");
                     binding.scheduleSwitch.setChecked(false);
 
                     alertDialog.dismiss();

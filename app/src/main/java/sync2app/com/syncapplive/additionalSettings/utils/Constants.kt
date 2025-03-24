@@ -69,6 +69,8 @@ class Constants {
         const val launch_WebView_Offline_Manual_Index = "launch_WebView_Offline_Manual_Index"
         const val launch_Default_WebView_url = "launch_Default_WebView_url"
 
+        const val JSON_MAIN_URL = "JSON_MAIN_URL"
+
 
         const val compleConfiguration = "You are yet to complete your App configuration"
         const val UnableToFindIndex = "Launch file Not Found"

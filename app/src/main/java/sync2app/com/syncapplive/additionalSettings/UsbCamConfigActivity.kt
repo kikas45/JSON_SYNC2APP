@@ -31,6 +31,7 @@ import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.additionalSettings.USBCamera.CamModel.CamRetrofitInstance
 import sync2app.com.syncapplive.additionalSettings.usdbCamera.InputFilterMinMax
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityUsbCamConfigBinding
 import sync2app.com.syncapplive.databinding.CustomDefinedTimeIntervalsBinding
 import java.io.File
@@ -92,8 +93,9 @@ class UsbCamConfigActivity : AppCompatActivity() {
     private val MIN_H_W = 0
     private val MAX_H_W = 100
 
-    private var preferences: SharedPreferences? = null
-
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -105,7 +107,7 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
         applyOritenation()
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
 
         binding.apply {
             if (preferences!!.getBoolean("darktheme", false)) {

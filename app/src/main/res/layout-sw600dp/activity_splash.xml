@@ -8,6 +8,8 @@
     android:background="?colorPrimary"
     android:orientation="vertical"
     tools:context=".SplashKT"
+    android:visibility="invisible"
+    tools:visibility="visible"
     tools:ignore="ExtraText">
 
     <ImageView

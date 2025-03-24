@@ -15,6 +15,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
@@ -33,6 +34,7 @@ import sync2app.com.syncapplive.SettingsActivityKT
 import sync2app.com.syncapplive.WebViewPage
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityPasswordBinding
 import sync2app.com.syncapplive.databinding.CustomDefaultEmailSavedLayoutBinding
 import sync2app.com.syncapplive.databinding.CustomDefineRefreshTimeBinding
@@ -78,7 +80,16 @@ class PasswordActivity : AppCompatActivity() {
     private var newPassworEnabled = false;
     private var isEmailReady = false;
 
-    private var preferences: SharedPreferences? = null
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
+
+    private val sharedTVAPPModePreferences: SharedPreferences by lazy {
+        applicationContext.getSharedPreferences(
+            Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE
+        )
+    }
+
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -93,7 +104,7 @@ class PasswordActivity : AppCompatActivity() {
 
         setUpdarkTheme()
 
-
+        setUpFullScreenWindows()
 
         //add exception
         Methods.addExceptionHandler(this)
@@ -340,10 +351,35 @@ class PasswordActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun setUpFullScreenWindows() {
+        val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
+        if (get_INSTALL_TV_JSON_USER_CLICKED != Constants.INSTALL_TV_JSON_USER_CLICKED) {
+            val img_imgImmesriveModeToggle = preferences.getBoolean(Constants.immersive_mode, false)
+            if (img_imgImmesriveModeToggle){
+                Utility.hideSystemBars(window)
+            }else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+
+        }else{
+
+            val immersive_Mode_APP = sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
+            if (immersive_Mode_APP) {
+                Utility.hideSystemBars(window)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+        }
+    }
+
+
+
     private fun setUpdarkTheme() {
 
         // write code for dark theme
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         binding.apply {
             if (preferences!!.getBoolean("darktheme", false)) {
 

@@ -30,6 +30,7 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -55,6 +56,7 @@ import sync2app.com.syncapplive.additionalSettings.devicelock.MyDeviceAdminRecei
 import sync2app.com.syncapplive.additionalSettings.scanutil.CustomShortcuts
 import sync2app.com.syncapplive.additionalSettings.scanutil.DefaultCustomShortCut
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityAppAdminBinding
 import sync2app.com.syncapplive.databinding.CustomServerUrlLayoutBinding
 import sync2app.com.syncapplive.databinding.CustomShortCutLayoutBinding
@@ -92,7 +94,16 @@ class AdditionalSettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAppAdminBinding
 
-    private var preferences: SharedPreferences? = null
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
+
+
+    private val sharedTVAPPModePreferences: SharedPreferences by lazy {
+        applicationContext.getSharedPreferences(
+            Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE
+        )
+    }
 
     private val handler: Handler by lazy {
         Handler(Looper.getMainLooper())
@@ -114,7 +125,6 @@ class AdditionalSettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
         binding.textTitle.setOnClickListener {
            /// startActivity(Intent(applicationContext, Kolo_ConfigDOwwnload::class.java))
           //  startActivity(Intent(applicationContext, Kolo_Download_Grab_files_Manager::class.java))
@@ -125,6 +135,31 @@ class AdditionalSettingsActivity : AppCompatActivity() {
 
         initView()
 
+        setUpFullScreenWindows()
+
+    }
+
+    private fun setUpFullScreenWindows() {
+        val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
+        if (get_INSTALL_TV_JSON_USER_CLICKED != Constants.INSTALL_TV_JSON_USER_CLICKED) {
+            val img_imgImmesriveModeToggle = preferences.getBoolean(Constants.immersive_mode, false)
+            if (img_imgImmesriveModeToggle){
+                Utility.hideSystemBars(window)
+            }else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+
+        }else{
+
+            val immersive_Mode_APP = sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
+            if (immersive_Mode_APP) {
+                Utility.hideSystemBars(window)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+        }
     }
 
 
@@ -170,8 +205,6 @@ class AdditionalSettingsActivity : AppCompatActivity() {
 
         }
 
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         binding.apply {
             if (preferences!!.getBoolean("darktheme", false)) {

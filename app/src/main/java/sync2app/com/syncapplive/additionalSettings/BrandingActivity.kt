@@ -10,6 +10,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -19,6 +20,7 @@ import sync2app.com.syncapplive.MyApplication
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityBrandingBinding
 import java.io.File
 
@@ -44,6 +46,14 @@ class BrandingActivity : AppCompatActivity() {
         PreferenceManager.getDefaultSharedPreferences(applicationContext)
     }
 
+    private val sharedTVAPPModePreferences: SharedPreferences by lazy {
+        applicationContext.getSharedPreferences(
+            Constants.SHARED_TV_APP_MODE, Context.MODE_PRIVATE
+        )
+    }
+
+
+
     @SuppressLint("SuspiciousIndentation", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,108 +61,14 @@ class BrandingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+
         applyOritenation()
 
         // set up drak theme layout
+        setUpDarkThemeLayout()
 
-        binding.apply {
-            if (preferences.getBoolean("darktheme", false)) {
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
-
-
-
-
-
-                textView42.setTextColor(resources.getColor(R.color.white))
-                textUseBranding.setTextColor(resources.getColor(R.color.white))
-                textUseImageOrVideoSplashScreen.setTextColor(resources.getColor(R.color.white))
-                textUseImageForBranding.setTextColor(resources.getColor(R.color.white))
-
-
-                // fir back button
-                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                closeBs.setImageDrawable(drawable)
-
-
-
-
-
-
-                // for nav icons
-                val drawable_imageView1 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_branding)
-                drawable_imageView1?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView41.setImageDrawable(drawable_imageView1)
-                imageView41.setImageDrawable(drawable_imageView1)
-                imageView38.setImageDrawable(drawable_imageView1)
-                imageView42.setImageDrawable(drawable_imageView1)
-
-
-
-
-
-                // Define colors for different states
-                val thumbColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_checked),
-                        intArrayOf(-android.R.attr.state_checked)
-                    ),
-                    intArrayOf(
-                        Color.LTGRAY,  // Color when checked
-                        Color.LTGRAY   // Color when unchecked
-                    )
-                )
-
-                val trackColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_enabled),
-                        intArrayOf(-android.R.attr.state_enabled)
-                    ),
-                    intArrayOf(
-                        Color.DKGRAY,  // Color when enabled
-                        Color.LTGRAY   // Color when disabled
-                    )
-                )
-
-                // Apply the color state lists
-                imageUseBranding.thumbTintList = thumbColorStateList
-                imageUseBranding.trackTintList = trackColorStateList
-
-                imgToggleImageSplashOrVideoSplash.thumbTintList = thumbColorStateList
-                imgToggleImageSplashOrVideoSplash.trackTintList = trackColorStateList
-
-                imgToggleImageBackground.thumbTintList = thumbColorStateList
-                imgToggleImageBackground.trackTintList = trackColorStateList
-
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider43.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider44.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider46.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider47.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider45.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-
-
-
-
-
-            }
-        }
-
-
-
+        // set up
+        setUpFullScreenWindows()
 
 
         //add exception
@@ -354,6 +270,132 @@ class BrandingActivity : AppCompatActivity() {
 
 
 
+
+    }
+
+    private fun setUpFullScreenWindows() {
+        val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
+        if (get_INSTALL_TV_JSON_USER_CLICKED != Constants.INSTALL_TV_JSON_USER_CLICKED) {
+            val img_imgImmesriveModeToggle = preferences.getBoolean(Constants.immersive_mode, false)
+            if (img_imgImmesriveModeToggle){
+                Utility.hideSystemBars(window)
+            }else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+
+        }else{
+
+            val immersive_Mode_APP = sharedTVAPPModePreferences.getBoolean(Constants.immersive_Mode_APP, false)
+            if (immersive_Mode_APP) {
+                Utility.hideSystemBars(window)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+        }
+    }
+
+
+
+
+
+    private fun setUpDarkThemeLayout() {
+        binding.apply {
+            if (preferences.getBoolean("darktheme", false)) {
+
+                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
+
+                // Set status bar color
+                window?.statusBarColor = Color.parseColor("#171616")
+                // Set navigation bar color
+                window?.navigationBarColor = Color.parseColor("#171616")
+
+                // Ensure the text and icons are white
+                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
+                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
+
+
+
+
+
+                textView42.setTextColor(resources.getColor(R.color.white))
+                textUseBranding.setTextColor(resources.getColor(R.color.white))
+                textUseImageOrVideoSplashScreen.setTextColor(resources.getColor(R.color.white))
+                textUseImageForBranding.setTextColor(resources.getColor(R.color.white))
+
+
+                // fir back button
+                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
+                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
+                closeBs.setImageDrawable(drawable)
+
+
+
+
+
+
+                // for nav icons
+                val drawable_imageView1 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_branding)
+                drawable_imageView1?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
+                imageView41.setImageDrawable(drawable_imageView1)
+                imageView41.setImageDrawable(drawable_imageView1)
+                imageView38.setImageDrawable(drawable_imageView1)
+                imageView42.setImageDrawable(drawable_imageView1)
+
+
+
+
+
+                // Define colors for different states
+                val thumbColorStateList = ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_checked),
+                        intArrayOf(-android.R.attr.state_checked)
+                    ),
+                    intArrayOf(
+                        Color.LTGRAY,  // Color when checked
+                        Color.LTGRAY   // Color when unchecked
+                    )
+                )
+
+                val trackColorStateList = ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_enabled),
+                        intArrayOf(-android.R.attr.state_enabled)
+                    ),
+                    intArrayOf(
+                        Color.DKGRAY,  // Color when enabled
+                        Color.LTGRAY   // Color when disabled
+                    )
+                )
+
+                // Apply the color state lists
+                imageUseBranding.thumbTintList = thumbColorStateList
+                imageUseBranding.trackTintList = trackColorStateList
+
+                imgToggleImageSplashOrVideoSplash.thumbTintList = thumbColorStateList
+                imgToggleImageSplashOrVideoSplash.trackTintList = trackColorStateList
+
+                imgToggleImageBackground.thumbTintList = thumbColorStateList
+                imgToggleImageBackground.trackTintList = trackColorStateList
+
+
+
+                //  for divider i..n
+                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
+                divider43.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
+                divider44.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
+                divider46.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
+                divider47.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
+                divider45.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
+
+
+
+
+
+            }
+        }
 
     }
 
