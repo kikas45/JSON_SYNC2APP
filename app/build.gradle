@@ -189,6 +189,9 @@ dependencies {
     // for parsing
     implementation 'org.jsoup:jsoup:1.14.3'
 
+    //File utils
+    implementation 'commons-io:commons-io:2.16.1'
+
 
 }
 

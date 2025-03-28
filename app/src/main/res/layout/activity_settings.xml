@@ -411,7 +411,7 @@
                 android:gravity="start|center"
                 android:maxLines="1"
                 android:paddingStart="65dp"
-                android:text="Enable Cache Mode"
+                android:text="Clear Cache"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -750,6 +750,17 @@
                 app:tint="#494646" />
 
             <ImageView
+                android:id="@+id/imageView60"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="32dp"
+                android:src="@drawable/ic_arrow_move_front"
+                app:layout_constraintBottom_toBottomOf="@+id/text_enableCacheMode"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_useOfflineFolderOrNot"
+                app:tint="#494646" />
+
+            <ImageView
                 android:id="@+id/imageView_app_name"
                 style="@style/imageStyleColorTint"
                 android:layout_width="25dp"
@@ -933,16 +944,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/text_useOfflineFolderOrNot"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/text_useOfflineFolderOrNot" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/img_enableCacheMode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:alpha="1"
-                app:layout_constraintBottom_toBottomOf="@+id/text_enableCacheMode"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/text_enableCacheMode" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/img_blockAds"

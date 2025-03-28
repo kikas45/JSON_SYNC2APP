@@ -74,6 +74,10 @@ class SplashVideoActivity : AppCompatActivity() {
 
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
 
+        binding.textSkipVideo.setOnClickListener {
+            startActivity(Intent(this, TvActivityOrAppMode::class.java))
+            finish()
+        }
 
 
         val get_State_Imge_or_Video = sharedBiometric.getString(Constants.imgToggleImageSplashOrVideoSplash, "").toString()
@@ -99,7 +103,7 @@ class SplashVideoActivity : AppCompatActivity() {
         binding.splashImage.visibility = View.VISIBLE
 
         val currentOrientation = resources.configuration.orientation
-        val get_TV_or_App_Mode = sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "")
+        val get_TV_or_App_Mode = sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "").toString()
 
         if (currentOrientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE || get_TV_or_App_Mode.equals(
                 Constants.TV_Mode

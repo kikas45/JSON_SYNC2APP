@@ -44,9 +44,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.apache.commons.io.FileUtils
 import sync2app.com.syncapplive.additionalSettings.AdditionalSettingsActivity
 import sync2app.com.syncapplive.additionalSettings.InformationActivity
 import sync2app.com.syncapplive.additionalSettings.MainHelpers.GMailSender
@@ -68,6 +70,7 @@ import sync2app.com.syncapplive.databinding.CustomServerUrlLayoutBinding
 import sync2app.com.syncapplive.databinding.ProgressDialogLayoutBinding
 import java.io.File
 import java.security.SecureRandom
+import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -228,7 +231,57 @@ class SettingsActivityKT : AppCompatActivity() {
         controlToggleUIVisibilityForJson()
 
 
+        initializeCache()
+
+        binding.textEnableCacheMode.setOnClickListener {
+            clearCache()
+        }
+
+
     }
+
+
+
+    private fun clearCache() {
+        val builder = AlertDialog.Builder(this@SettingsActivityKT)
+        builder.setMessage("Are you sure want to clear cache?")
+        builder.setPositiveButton("Yes") { dialog, which ->
+            FileUtils.deleteQuietly(cacheDir)
+            FileUtils.deleteQuietly(externalCacheDir)
+            binding.textEnableCacheMode.text = "Free up" + " 0 Bytes " + "of space"
+            Snackbar.make(findViewById(android.R.id.content),
+                "cache has been cleared",
+                Snackbar.LENGTH_SHORT).show()
+        }
+        builder.setNegativeButton("Cancel", null)
+        builder.show()
+    }
+
+    private fun initializeCache() {
+        val totalSize = 0 + getDirSize(cacheDir) + getDirSize(externalCacheDir!!)
+        binding.textEnableCacheMode.text = "Free up" + " " + readableFileSize(totalSize) + " " + "of space"
+    }
+
+    fun getDirSize(dir: File): Long {
+        var size: Long = 0
+        dir.listFiles()?.forEach { file ->
+            size += if (file.isDirectory) getDirSize(file)
+            else if (file.isFile) file.length() else 0
+        }
+        return size
+    }
+
+    fun readableFileSize(size: Long): String {
+        if (size <= 0) return "0 Bytes"
+        val units = arrayOf("Bytes", "KB", "MB", "GB", "TB")
+        val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
+        val formattedSize = DecimalFormat("#,##0.#").format(size / Math.pow(1024.0, digitGroups.toDouble()))
+        return "$formattedSize ${units[digitGroups]}"
+    }
+
+
+
+
 
     private fun setUpFullScreenWindows() {
         val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
@@ -1050,34 +1103,11 @@ class SettingsActivityKT : AppCompatActivity() {
 
 
         // Enable Cache   Mode
-        binding.apply {
+        // Enable Cache   Mode
+        // Enable Cache   Mode
+        // Enable Cache   Mode
+        // Enable Cache   Mode
 
-            imgEnableCacheMode.setOnCheckedChangeListener { compoundButton, isValued ->
-                if (compoundButton.isChecked) {
-                    textEnableCacheMode.text = "Disable Cache Mode"
-                    editor.putBoolean(Constants.enableCacheMode, true)
-                    editor.apply()
-
-
-                } else {
-                    textEnableCacheMode.text = "Enable Cache Mode"
-                    editor.putBoolean(Constants.enableCacheMode, false)
-                    editor.apply()
-
-                }
-            }
-
-            val img_imgEnableCacheMode = preferences.getBoolean(Constants.enableCacheMode, false)
-            imgEnableCacheMode.isChecked = img_imgEnableCacheMode == true
-
-            if (img_imgEnableCacheMode) {
-                textEnableCacheMode.text = "Disable Cache Mode"
-            } else {
-                textEnableCacheMode.text = "Enable Cache Mode"
-            }
-
-
-        }
 
 
         // 1 permissions_switch Mode
@@ -1228,6 +1258,12 @@ class SettingsActivityKT : AppCompatActivity() {
 
 
     }
+
+
+
+
+
+
 
 
     @SuppressLint("MissingInflatedId")

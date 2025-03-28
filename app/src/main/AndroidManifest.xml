@@ -281,6 +281,7 @@
             android:launchMode="singleTop" />
 
         <activity
+
             android:name=".additionalSettings.SplashVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:exported="true"

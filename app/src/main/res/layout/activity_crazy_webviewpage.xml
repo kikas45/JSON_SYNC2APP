@@ -24,11 +24,27 @@
         android:id="@+id/btnLoadWeb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="load"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Re- load"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
 
+
+    <Button
+        android:id="@+id/btnMove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="load"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
+
+    <Button
+        android:id="@+id/btnLoadSite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="load Site"
+        app:layout_constraintEnd_toStartOf="@+id/btnMove"
+        app:layout_constraintStart_toEndOf="@+id/btnLoadWeb"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
 
     <WebView
         android:id="@+id/myWebViewer"

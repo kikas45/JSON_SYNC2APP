@@ -991,6 +991,8 @@ class WebViewPage : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         errorSyncFiles!!.visibility = View.VISIBLE
                         linearLine5!!.visibility = View.VISIBLE
+
+                      //  webView!!.stopLoading()
                     }
                 } else {
                     withContext(Dispatchers.Main) {
@@ -1540,6 +1542,8 @@ class WebViewPage : AppCompatActivity() {
                             return true
                         }
                     }
+
+                    Log.d("shouldOverrideUrlLoading", "shouldOverrideUrlLoading Exception: THE OEERIDING..")
 
                 } catch (e: java.lang.Exception) {
                     Log.i(TAG, "shouldOverrideUrlLoading Exception:" + e.message)
