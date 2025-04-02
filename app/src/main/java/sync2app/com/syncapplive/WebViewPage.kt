@@ -1958,13 +1958,16 @@ class WebViewPage : AppCompatActivity() {
                     if (Utility.isNetworkAvailable(applicationContext)) {
                         // webView!!.reload()
 
-                        if (lasturl.toString() != null){
-                            webView!!.loadUrl(lasturl.toString())
+                        if (lasturl.toString() == "http://null/"  || lasturl.toString() == "https://null/"){
+
+                            loadOnlineUrl()
+                            showSnackBar("This Url is bad, system return to main json url")
+
                         }else{
-                            // show offline uurl
-                            simpleProgressbar!!.visibility = View.GONE
-                            webView!!.loadUrl("about:blank")
-                            showSnackBar("This Url is bad")
+                         //   webView!!.loadUrl(lasturl.toString())
+                            webView!!.reload()
+
+                            showSnackBar("This Url is bad,lasturl,  system return to main json url")
                         }
 
                     } else {
