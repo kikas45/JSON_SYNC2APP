@@ -159,9 +159,10 @@ class RequiredBioActivity : AppCompatActivity() {
     private fun displayMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         if (message == "Authentication succeeded!") {
+            finish()
             val intent = Intent(this, SplashKT::class.java)
             startActivity(intent)
-            finish()
+
         }
     }
 

@@ -365,7 +365,7 @@ class SettingsActivityKT : AppCompatActivity() {
                 imgHideDrawerIcon.visibility = View.GONE
                 textHideDrawerIcon.visibility = View.GONE
                 imageViewHideDrawerIcon.visibility = View.GONE
-                divider62.visibility = View.GONE
+               // divider62.visibility = View.GONE
                 }
 
 
@@ -588,12 +588,12 @@ class SettingsActivityKT : AppCompatActivity() {
             // set up offline toggle
             imgUseOfflineFolderOrNot.setOnCheckedChangeListener { compoundButton, isValued -> // we are putting the values into SHARED PREFERENCE
                 if (compoundButton.isChecked) {
-                    textUseOfflineFolderOrNot.text = "Use local Files if Offline"
+                    textUseOfflineFolderOrNot.text = "Use local Files if Offline (ON)"
                     editorShared.putString(Constants.USE_OFFLINE_FOLDER, Constants.USE_OFFLINE_FOLDER)
-                    editor.apply()
+                    editorShared.apply()
 
                 } else {
-                    textUseOfflineFolderOrNot.text = "Use local Files if Offline"
+                    textUseOfflineFolderOrNot.text = "Use local Files if Offline (OFF)"
                     editorShared.remove(Constants.USE_OFFLINE_FOLDER)
                     editorShared.apply()
 

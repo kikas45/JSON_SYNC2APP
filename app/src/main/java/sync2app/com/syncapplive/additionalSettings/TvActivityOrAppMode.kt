@@ -251,10 +251,9 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
             editor.putString(Constants.FIRST_TIME_APP_START, Constants.FIRST_TIME_APP_START)
             editor.apply()
 
-           // InitWebviewIndexFileState()
-
-            startActivity(Intent(applicationContext, SplashKT::class.java))
             finish()
+            startActivity(Intent(applicationContext, SplashKT::class.java))
+
 
         }
 
@@ -1972,85 +1971,6 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
             }
         }
     }
-
-
-
-    private fun InitWebviewIndexFileState() {
-
-        // get input paths to device storage
-        val myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
-        val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
-        val fil_DEMO = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
-
-        val filename = "/index.html"
-        lifecycleScope.launch {
-            loadIndexFileIfExist(fil_CLO, fil_DEMO, filename)
-        }
-
-    }
-
-
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun loadIndexFileIfExist(
-        CLO: String,
-        DEMO: String,
-        fileName: String
-    ) {
-        lifecycleScope.launch {
-            try {
-
-                val filePath = withContext(Dispatchers.IO) {
-                    try {
-                        getFilePath(CLO, DEMO, fileName)
-                    } catch (e: Exception) {
-                        showToastMessage("You need to Sync Files for Offline Usage")
-                        null
-                    }
-                }
-
-                // Now back on the main thread to update the UI
-                if (filePath != null) {
-                    if (isMyActivityRunning){
-                        val editText88 = sharedBiometric.edit()
-                        editText88.putString(Constants.get_Launching_State_Of_WebView, Constants.launch_WebView_Offline)
-                        editText88.apply()
-
-                        val myActivity = Intent(applicationContext, WebViewPage::class.java)
-                        myActivity.putExtra(Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE, Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE)
-                        startActivity(myActivity)
-                        finish()
-
-
-                    }
-                } else {
-                    startActivity(Intent(applicationContext, SplashKT::class.java))
-                    finish()
-                }
-
-            } catch (e: Exception) {
-                showToastMessage("You need to Sync Files for Offline Usage")
-            }
-        }
-    }
-
-    private fun getFilePath(CLO: String, DEMO: String, filename: String): String? {
-
-        val finalFolderPathDesired = "/" + CLO + "/" + DEMO + "/" + Constants.App
-        val destinationFolder =
-            Environment.getExternalStorageDirectory().absolutePath + "/Download/${Constants.Syn2AppLive}/" + finalFolderPathDesired
-        val filePath = "file://$destinationFolder$filename"
-        val myFile = File(destinationFolder, File.separator + filename)
-
-        return if (myFile.exists()) {
-            filePath
-        } else {
-            null
-        }
-    }
-
-
-
-
 
 
     override fun onDestroy() {

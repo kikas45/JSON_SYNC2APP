@@ -172,9 +172,9 @@ class WelcomeSliderKT : AppCompatActivity() {
 
     override fun onResume() {
         if (jsonUrl == null) {
+            finish()
             val intent = Intent(this@WelcomeSliderKT, SplashKT::class.java)
             startActivity(intent)
-            finish()
         }
         super.onResume()
     }
