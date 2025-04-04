@@ -3769,9 +3769,9 @@ class WebViewPage : AppCompatActivity() {
                     simpleSavedPassword.getString(Constants.USER_COMPANY_NAME, "").toString()
 
                 if (!isSavedEmail.isEmpty() && !COUNTRY_NAME.isEmpty() && !USER_NAME.isEmpty() && !USER_COMPANY_NAME.isEmpty() && jsonUrl == null) {
-                    finish()
                     val intent = Intent(applicationContext, SplashKT::class.java)
                     startActivity(intent)
+                    finish()
 
                 }
             }
@@ -8235,9 +8235,8 @@ class WebViewPage : AppCompatActivity() {
 
             if (isSavedEmail.isEmpty() && COUNTRY_NAME.isEmpty() && USER_NAME.isEmpty() && USER_COMPANY_NAME.isEmpty()) {
 
-                finish()
                 startActivity(Intent(applicationContext, InformationActivity::class.java))
-
+                finish()
             } else {
 
                 // Retrieve the intent extra for offline usage
@@ -8247,10 +8246,10 @@ class WebViewPage : AppCompatActivity() {
                 } else {
                     if (jsonUrl == null) {
                         // jsonUrl is null, redirecting to SplashKT
-                        finish()
+
                         val intent = Intent(applicationContext, SplashKT::class.java)
                         startActivity(intent)
-
+                        finish()
                     } else {
                         val editText88 = sharedBiometric.edit()
                         editText88.putString(Constants.JSON_MAIN_URL, jsonUrl)

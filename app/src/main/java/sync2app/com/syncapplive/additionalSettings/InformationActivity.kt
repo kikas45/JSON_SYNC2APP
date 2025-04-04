@@ -36,7 +36,6 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.hbb20.CountryCodePicker
 import sync2app.com.syncapplive.R
-import sync2app.com.syncapplive.SplashKT
 import sync2app.com.syncapplive.WebViewPage
 import sync2app.com.syncapplive.WelcomeSliderKT
 import sync2app.com.syncapplive.additionalSettings.utils.Constants

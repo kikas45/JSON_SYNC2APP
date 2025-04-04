@@ -49,7 +49,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.SplashKT
-import sync2app.com.syncapplive.WebViewPage
 import sync2app.com.syncapplive.additionalSettings.ApiUrls.ApiUrlViewModel
 import sync2app.com.syncapplive.additionalSettings.ApiUrls.DomainUrl
 import sync2app.com.syncapplive.additionalSettings.ApiUrls.SavedApiAdapter
@@ -251,9 +250,8 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
             editor.putString(Constants.FIRST_TIME_APP_START, Constants.FIRST_TIME_APP_START)
             editor.apply()
 
-            finish()
             startActivity(Intent(applicationContext, SplashKT::class.java))
-
+            finish()
 
         }
 
