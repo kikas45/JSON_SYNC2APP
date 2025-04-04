@@ -75,24 +75,6 @@
         android:layout_height="54dp"
         android:contentDescription="TODO" />
 
-    <LinearLayout
-        android:id="@+id/linearLine5"
-        android:orientation="horizontal"
-        android:layout_width="15dp"
-        android:visibility="gone"
-        android:layout_height="match_parent"/>
-    <ImageButton
-        android:id="@+id/errorSyncFiles"
-        android:background="@drawable/round_bg"
-        android:src="@drawable/ic_download_24"
-        android:textAllCaps="false"
-        android:scaleType="fitXY"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:visibility="gone"
-        android:contentDescription="TODO"
-        app:tint="@color/pref_icons_color" />
-
 </LinearLayout>
 
     <TextView

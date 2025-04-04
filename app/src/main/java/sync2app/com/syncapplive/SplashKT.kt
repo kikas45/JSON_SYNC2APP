@@ -511,10 +511,7 @@ class SplashKT : AppCompatActivity() {
                             constants.jsonUrl = homeurl
 
 
-                            Log.d(
-                                "PETER",
-                                "InitWebvIewloadStates: Splash K  The JSON_MAIN_URl $homeurl"
-                            )
+                            Log.d("PETER", "InitWebvIewloadStates: Splash K  The JSON_MAIN_URl $homeurl")
 
                             try {
                                 val uri = URI(homeurl)
@@ -569,15 +566,9 @@ class SplashKT : AppCompatActivity() {
                                         finish()
 
                                     } else {
-
                                         /////
-                                        startActivity(
-                                            Intent(
-                                                applicationContext,
-                                                InformationActivity::class.java
-                                            )
-                                        )
                                         finish()
+                                        startActivity(Intent(applicationContext, InformationActivity::class.java))
 
                                     }
 
@@ -1222,10 +1213,8 @@ class SplashKT : AppCompatActivity() {
                                 Constants.SHARED_BIOMETRIC,
                                 MODE_PRIVATE
                             )
-                        val get_TV_or_App_Mode =
-                            sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "").toString()
-                        val JSON_MAIN_URL =
-                            sharedBiometric.getString(Constants.JSON_MAIN_URL, "").toString()
+                        val get_TV_or_App_Mode = sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "").toString()
+                        val JSON_MAIN_URL = sharedBiometric.getString(Constants.JSON_MAIN_URL, "").toString()
 
                         Log.d("MAMMA", "App_State  :::$get_TV_or_App_Mode")
 
@@ -1263,8 +1252,7 @@ class SplashKT : AppCompatActivity() {
                                 Constants.USE_TEMP_OFFLINE_WEB_VIEW_PAGE
                             )
 
-                            val urlPath =
-                                "${Constants.CUSTOM_CP_SERVER_DOMAIN}/$CLO/$DEMO/App/$fileName"
+                            val urlPath = "${Constants.CUSTOM_CP_SERVER_DOMAIN}/$CLO/$DEMO/App/$fileName"
 
                             if (JSON_MAIN_URL != null) {
                                 myActivity.putExtra("url", JSON_MAIN_URL)

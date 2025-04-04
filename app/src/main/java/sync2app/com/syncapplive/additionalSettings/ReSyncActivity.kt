@@ -682,7 +682,9 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     } else {
 
                         showPopsForMyConnectionTest("", "", Constants.Invalid_Config_Url)
-                        customProgressDialog.dismiss()
+                        if (customProgressDialog != null){
+                            customProgressDialog.dismiss()
+                        }
 
                     }
                 } finally {
@@ -703,7 +705,9 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
         get_LicenseKey: String,
         ServerUrl: String,
     ) {
-        customProgressDialog.dismiss()
+        if (customProgressDialog != null){
+            customProgressDialog.dismiss()
+        }
 
         val bindingCM: ContinueWithConfigDownloadBinding =
             ContinueWithConfigDownloadBinding.inflate(
@@ -1505,7 +1509,10 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                                 EditUrlIndex = ""
                             )
                             mUserViewModel.addUser(user)
-                            customProgressDialog.dismiss()
+
+                            if (customProgressDialog != null){
+                                customProgressDialog.dismiss()
+                            }
 
                             savePathServerUrl(CP_AP_MASTER_DOMAIN, getFolderClo, getFolderSubpath)
 
@@ -1513,7 +1520,9 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                             showPopsForMyConnectionTest(
                                 getFolderClo, getFolderSubpath, "Failed!"
                             )
-                            customProgressDialog.dismiss()
+                            if (customProgressDialog != null){
+                                customProgressDialog.dismiss()
+                            }
                         }
                     } finally {
                         //   customProgressDialog.dismiss()

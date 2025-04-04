@@ -21,6 +21,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.SurfaceTexture
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.hardware.camera2.CameraManager
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
@@ -123,6 +124,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import org.apache.commons.io.FileUtils
 import retrofit2.HttpException
 import sync2app.com.syncapplive.QrPages.QRSanActivity
 import sync2app.com.syncapplive.additionalSettings.InformationActivity
@@ -162,6 +164,7 @@ import sync2app.com.syncapplive.databinding.CustomContactAdminBinding
 import sync2app.com.syncapplive.databinding.CustomEmailSucessLayoutBinding
 import sync2app.com.syncapplive.databinding.CustomFailedLayoutBinding
 import sync2app.com.syncapplive.databinding.CustomForgetPasswordEmailLayoutBinding
+import sync2app.com.syncapplive.databinding.CustomLayoutWebInternetBinding
 import sync2app.com.syncapplive.databinding.CustomNotificationLayoutBinding
 import sync2app.com.syncapplive.databinding.CustomOfflinePopLayoutBinding
 import sync2app.com.syncapplive.databinding.CustomRedirectEmailLayoutBinding
@@ -478,25 +481,14 @@ class WebViewPage : AppCompatActivity() {
     private val mutex = Mutex()
 
 
-    private var filIst = ""
-
     private var processingJob: Job? = null
 
 
     private var initProgressParsingSyncFilesDownload = true
-    private var AllowToTryOnceAgainFailedParsing = true
 
 
     private var KoloLog = "ParsingSyncService"
 
-
-    private val handlerParsing: Handler by lazy {
-        Handler(Looper.getMainLooper())
-    }
-
-    private val myHandlerParsing: Handler by lazy {
-        Handler(Looper.getMainLooper())
-    }
 
 
     //  private WebView mWebviewPop;
@@ -524,6 +516,7 @@ class WebViewPage : AppCompatActivity() {
     private var mydialog: Dialog? = null
     private val ratingbar: RatingBar? = null
     private var lasturl: String? = null
+    private var hasWebviewPageLoadedBefore = false
     private var web_button: ImageView? = null
     private var imageCirclGreenOnline: ImageView? = null
     private var imageCircleBlueOffline: ImageView? = null
@@ -536,8 +529,6 @@ class WebViewPage : AppCompatActivity() {
 
 
     private var errorReloadButton: ImageButton? = null
-    private var errorSyncFiles: ImageButton? = null
-    private var linearLine5: LinearLayout? = null
     private var errorLayout: LinearLayout? = null
     // private var powerManager: PowerManager? = null
     // private var wakeLock: PowerManager.WakeLock? = null
@@ -565,7 +556,7 @@ class WebViewPage : AppCompatActivity() {
 
     private var initialHeight: Int = 0
 
-    private var isSystemRunning = false
+    private var isSystemRunning = true
 
 
     private var mUSBCameraHeight = 200.0
@@ -643,6 +634,13 @@ class WebViewPage : AppCompatActivity() {
 
     private var customProgressDialog: Dialog? = null
 
+    private var customInternetWebviewPage: Dialog? = null
+
+    private var countdownTimerForWebviewPage: CountDownTimer? = null
+    private var isCountDownDialogVisible = false
+    private var isErrorLayoutShown = true
+
+
     @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint(
         "SetJavaScriptEnabled",
@@ -686,8 +684,6 @@ class WebViewPage : AppCompatActivity() {
         errorCode = findViewById(R.id.errorinfo)
         errorautoConnect = findViewById(R.id.autoreconnect)
         errorReloadButton = findViewById(R.id.ErrorReloadButton)
-        errorSyncFiles = findViewById(R.id.errorSyncFiles)
-        linearLine5 = findViewById(R.id.linearLine5)
         errorLayout = findViewById(R.id.errorLayout)
         drawer_menu = findViewById(R.id.native_drawer_menu)
         drawer_menu_btn = findViewById(R.id.drawer_menu_Btn)
@@ -880,7 +876,11 @@ class WebViewPage : AppCompatActivity() {
 
 
 
-        handler.postDelayed(Runnable { CheckUpdate() }, 8000)
+        handler.postDelayed(Runnable {
+            if (isSystemRunning) {
+                CheckUpdate()
+            }
+        }, 8000)
 
 
         // init web view
@@ -959,6 +959,7 @@ class WebViewPage : AppCompatActivity() {
         fileName: String
     ) {
         lifecycleScope.launch {
+            if (isActive){
             try {
 
                 val filePath = withContext(Dispatchers.IO) {
@@ -973,14 +974,20 @@ class WebViewPage : AppCompatActivity() {
                 // Now back on the main thread to update the UI
                 handler.postDelayed(Runnable {
                     if (filePath != null) {
-                        lifecycleScope.launch {
-                            loadOffline_Saved_Path_Offline_Webview(CLO, DEMO, fileName)
-                            Log.d("PETER", "InitWebvIewloadStates:: loadOffline_Saved_Path_Offline_Webview ::: State ..Powe;;")
+                        if (isSystemRunning) {
+                            lifecycleScope.launch {
+                                loadOffline_Saved_Path_Offline_Webview(CLO, DEMO, fileName)
+                                Log.d(
+                                    "PETER",
+                                    " loadOffline_Saved_Path_Offline_Webview ::: State ..Powe;;"
+                                )
+                            }
                         }
-
                     } else {
-                        Log.d("PETER", "InitWebvIewloadStates:: loadOffline_Saved_Path_Offline_Webview ::: State ..")
-                        showPopForTVConfiguration(Constants.UnableToFindIndex)
+                        if (isSystemRunning) {
+                            Log.d("PETER", "loadOffline_Saved_Path_Offline_Webview ::: State ..")
+                            showPopInternetForWebPage(Constants.UnableToFindIndex)
+                        }
                     }
 
                 }, 1500)
@@ -988,13 +995,14 @@ class WebViewPage : AppCompatActivity() {
 
             } catch (e: Exception) {
                 handler.postDelayed(Runnable {
-                showToastMessage("You need to Sync Files for Offline Usage")
-                    simpleProgressbar!!.visibility = View.GONE
-                    webView!!.loadUrl("about:blank")
-                    showSnackBar("All failed, the Offline page wpould be used here")
-
+                    if (isSystemRunning) {
+                        showToastMessage("You need to Sync Files for Offline Usage")
+                        simpleProgressbar!!.visibility = View.GONE
+                        webView!!.loadUrl("about:blank")
+                    }
                 }, 1500)
             }
+        }
         }
     }
 
@@ -1138,24 +1146,18 @@ class WebViewPage : AppCompatActivity() {
         Log.d("PETER", "InitWebvIewloadStates: $get_launching_state")
 
         if (get_launching_state.equals(Constants.launch_WebView_Online)) {
-            Log.d("PETER", "InitWebvIewloadStates::::launch_WebView_Online :::   State 1")
 
             if (Utility.isNetworkAvailable(applicationContext)) {
-                Log.d("PETER", "InitWebvIewloadStates::::Internet :::   State 1")
+
                 load_live_Parther_url_Format()
             } else {
-                Log.d(
-                    "PETER",
-                    "InitWebvIewloadStates::::checkPathForFilesWhenOffline :::   State 1"
-                )
-                checkPathForFilesWhenOffline("1 was passed")
+                checkPathForFilesWhenOffline()
             }
 
 
         } else {
 
             if (get_launching_state.equals(Constants.launch_WebView_Offline)) {
-                Log.d("PETER", "InitWebvIewloadStates: State 2")
                 val filename = "/index.html"
                 lifecycleScope.launch {
                     loadOffline_Saved_Path_Offline_Webview(fil_CLO, fil_DEMO, filename)
@@ -1164,7 +1166,6 @@ class WebViewPage : AppCompatActivity() {
 
             } else if (get_launching_state.equals(Constants.launch_WebView_Offline_Manual_Index)) {
 
-                Log.d("PETER", "InitWebvIewloadStates: State 3")
                 val filename = "/index.html"
                 lifecycleScope.launch {
                     loadOffline_Saved_Path_Offline_Webview(fil_CLO, fil_DEMO, filename)
@@ -1172,60 +1173,65 @@ class WebViewPage : AppCompatActivity() {
 
             } else if (get_launching_state.equals(Constants.launch_WebView_Online_Manual_Index)) {
 
-                Log.d("PETER", "InitWebvIewloadStates: State 4")
                 if (Utility.isNetworkAvailable(applicationContext)) {
-                    val getSaved_manaul_index_edit_url_Input = myDownloadClass.getString(
-                        Constants.getSaved_manaul_index_edit_url_Input,
-                        ""
-                    ).toString()
+                    val getSaved_manaul_index_edit_url_Input = myDownloadClass.getString(Constants.getSaved_manaul_index_edit_url_Input, "").toString()
                     loadOnlineLiveUrl(getSaved_manaul_index_edit_url_Input)
                     load_live_indicator()
-                    Log.d("PETER", "InitWebvIewloadStates:: Internet ::: State 4")
 
                 } else {
-                    Log.d(
-                        "PETER",
-                        "InitWebvIewloadStates:: checkPathForFilesWhenOffline ::: State 4"
-                    )
-                    checkPathForFilesWhenOffline("4 was passed")
+                    checkPathForFilesWhenOffline()
                 }
 
 
             } else if (get_launching_state.equals(Constants.launch_Default_WebView_url)) {
-                Log.d("PETER", "InitWebvIewloadStates: State 5")
 
                 if (Utility.isNetworkAvailable(applicationContext)) {
-                    Log.d("PETER", "InitWebvIewloadStates:: Internet ::: State 5")
                     loadOnlineUrl()
                 } else {
-                    Log.d(
-                        "PETER",
-                        "InitWebvIewloadStates:: checkPathForFilesWhenOffline ::: State 5"
-                    )
-                    checkPathForFilesWhenOffline("5  was passed")
+                    checkPathForFilesWhenOffline()
                 }
 
 
             } else {
 
-                Log.d("PETER", "InitWebvIewloadStates: State 6")
 
                 if (Utility.isNetworkAvailable(applicationContext)) {
                     loadOnlineUrl()
 
-                    Log.d("PETER", "InitWebvIewloadStates:: Internet ::: State 6")
                 } else {
-                    Log.d(
-                        "PETER",
-                        "InitWebvIewloadStates:: checkPathForFilesWhenOffline ::: State 6"
-                    )
-                    checkPathForFilesWhenOffline("6  was passed")
+                    checkPathForFilesWhenOffline()
                 }
 
             }
         }
 
     }
+
+
+
+    private fun InitWebvIewloadStatesWhenPopUpIsOn() {
+        val sharedBiometric = getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
+        val myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
+        val get_launching_state = sharedBiometric.getString(Constants.get_Launching_State_Of_WebView, "").toString()
+
+        if (get_launching_state.equals(Constants.launch_WebView_Online)) {
+            load_live_Parther_url_Format()
+        } else {
+
+             if (get_launching_state.equals(Constants.launch_WebView_Online_Manual_Index)) {
+                 val getSaved_manaul_index_edit_url_Input = myDownloadClass.getString(Constants.getSaved_manaul_index_edit_url_Input, "").toString()
+                loadOnlineLiveUrl(getSaved_manaul_index_edit_url_Input)
+                load_live_indicator()
+
+            } else if (get_launching_state.equals(Constants.launch_Default_WebView_url)) {
+                loadOnlineUrl()
+            } else {
+                loadOnlineUrl()
+            }
+        }
+
+    }
+
 
     private fun load_live_Parther_url_Format() {
         try {
@@ -1324,6 +1330,9 @@ class WebViewPage : AppCompatActivity() {
         fileName: String
     ) {
         lifecycleScope.launch {
+
+            if (isActive){
+
             try {
 
                 val filePath = withContext(Dispatchers.IO) {
@@ -1337,24 +1346,29 @@ class WebViewPage : AppCompatActivity() {
 
                 // Now back on the main thread to update the UI
                 if (filePath != null) {
-                    webView?.apply {
+                    if (isSystemRunning) {
+                        webView?.apply {
 
-                        clearHistory()
-                        loadUrl(filePath.toString())
-                        setupWebViewClients()
-                        load_offline_indicator()
+                            clearHistory()
+                            loadUrl(filePath.toString())
+                            setupWebViewClients()
+                            load_offline_indicator()
+                        }
                     }
-
                 } else {
-                    showPopForTVConfiguration(Constants.compleConfiguration)
+                    if (isSystemRunning) {
+                        showPopForTVConfiguration(Constants.compleConfiguration)
+                    }
                 }
 
-
             } catch (e: Exception) {
-                Log.d(TAG, "loadOffline_Saved_Path_Offline_Webview: ${e.message}")
-                showPopForTVConfiguration(Constants.compleConfiguration)
+                if (isSystemRunning) {
+                    Log.d(TAG, "loadOffline_Saved_Path_Offline_Webview: ${e.message}")
+                    showPopForTVConfiguration(Constants.compleConfiguration)
+                }
             }
         }
+    }
     }
 
 
@@ -1365,6 +1379,9 @@ class WebViewPage : AppCompatActivity() {
         filename: String
     ) {
         lifecycleScope.launch {
+
+            if (isActive){
+
             try {
                 // Offload file I/O operation to a background thread
                 val filePath = withContext(Dispatchers.IO) {
@@ -1380,93 +1397,91 @@ class WebViewPage : AppCompatActivity() {
                 handler.postDelayed(Runnable {
 
                     if (filePath != null) {
-                        webView?.apply {
-                            Log.d("PETER", "InitWebvIewloadStates::Yes The  FILES ARE BEEN CHECK after The user click from pop up for a states")
-                            clearHistory()
-                            loadUrl(filePath.toString())
-                            setupWebViewClients()
-                            load_offline_indicator()
-
+                        if (isSystemRunning) {
+                            webView?.apply {
+                                Log.d("PETER", "Yes The  FILES ARE BEEN CHECK after The user click from pop up for a states")
+                                clearHistory()
+                                loadUrl(filePath.toString())
+                                setupWebViewClients()
+                                load_offline_indicator()
+                            }
                         }
-
                     } else {
+                        if (isSystemRunning) {
 
-                        Log.d("PETER", "InitWebvIewloadStates::No ohh The  FILES ARE BEEN CHECK after The user click from pop up for a states")
+                            if (Utility.isNetworkAvailable(applicationContext)) {
+                                loadOnlineUrl()
+                                load_live_indicator()
+                            } else {
+                                setUpTheFallingErrorLayout()
 
+                            }
+                        }
+                    }
+
+                }, 1500)
+
+            } catch (e: Exception) {
+                handler.postDelayed(Runnable {
+                    if (isSystemRunning) {
                         if (Utility.isNetworkAvailable(applicationContext)) {
-                            Log.d("PETER", "InitWebvIewloadStates: THe Pop 1 ")
                             loadOnlineUrl()
                             load_live_indicator()
                         } else {
                             // show the offline page
-                            simpleProgressbar!!.visibility = View.GONE
-                            webView!!.loadUrl("about:blank")
-                            showSnackBar("All failed, the Offline page wpould be used here")
+                            setUpTheFallingErrorLayout()
+
                         }
-
                     }
-
-                },1500)
-
-            } catch (e: Exception) {
-                handler.postDelayed(Runnable {
-                    if (Utility.isNetworkAvailable(applicationContext)) {
-                        Log.d("PETER", "InitWebvIewloadStates: THe Pop 1 ")
-                        loadOnlineUrl()
-                        load_live_indicator()
-                    } else {
-                        // show the offline page
-                        simpleProgressbar!!.visibility = View.GONE
-                        webView!!.loadUrl("about:blank")
-                        showSnackBar("All failed, the Offline page wpould be used here")
-                    }
-                },1500)
+                }, 1500)
 
 
             }
+        }
         }
     }
 
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadOnlineUrl() {
-        Log.d("PETER", "InitWebvIewloadStates: Call Main Json  loadOnlineUrl ")
+        if (isSystemRunning) {
+            Log.d("PETER", "InitWebvIewloadStates: Call Main Json  loadOnlineUrl ")
 
-        // Configure WebViewClient and WebChromeClient if not already configured
-        val sharedBiometric: SharedPreferences =
-            applicationContext.getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
-        val JSON_MAIN_URL = sharedBiometric.getString(Constants.JSON_MAIN_URL, "").toString()
+            // Configure WebViewClient and WebChromeClient if not already configured
+            val sharedBiometric: SharedPreferences =
+                applicationContext.getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
+            val JSON_MAIN_URL = sharedBiometric.getString(Constants.JSON_MAIN_URL, "").toString()
 
-        if (MainUrl == null) {
-            Log.d("PETER", "InitWebvIewloadStates: The Main Json Url Was null ")
-            MainUrl = JSON_MAIN_URL
-        }
+            if (MainUrl == null) {
+                Log.d("PETER", "InitWebvIewloadStates: The Main Json Url Was null ")
+                MainUrl = JSON_MAIN_URL
+            }
 
 
-        if (UrlIntent!!.hasExtra("url")) {
-            webView!!.loadUrl(intent.getStringExtra("url")!!)
+            if (UrlIntent!!.hasExtra("url")) {
+                webView!!.loadUrl(intent.getStringExtra("url")!!)
 
-        } else if (data != null) {
-            webView!!.loadUrl(data.toString())
-        } else {
-            if (LoadLastWebPageOnAccidentalExit) {
-                val lurl = preferences.getString("lasturl", "")
-                if (lurl!!.startsWith("http") || lurl.startsWith("https")) {
-                    webView!!.loadUrl(lurl)
+            } else if (data != null) {
+                webView!!.loadUrl(data.toString())
+            } else {
+                if (LoadLastWebPageOnAccidentalExit) {
+                    val lurl = preferences.getString("lasturl", "")
+                    if (lurl!!.startsWith("http") || lurl.startsWith("https")) {
+                        webView!!.loadUrl(lurl)
+                    } else {
+                        webView!!.loadUrl(MainUrl)
+                    }
                 } else {
                     webView!!.loadUrl(MainUrl)
                 }
-            } else {
-                webView!!.loadUrl(MainUrl)
             }
+
+
+            setupWebViewClients()
+            load_live_indicator()
+
         }
-
-
-        setupWebViewClients()
-        load_live_indicator()
-
     }
-
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadOnlineLiveUrl(url: String) {
@@ -1488,29 +1503,32 @@ class WebViewPage : AppCompatActivity() {
 
 
     private fun load_live_indicator() {
-        val get_imagShowOnlineStatus =
-            sharedBiometric.getString(Constants.imagShowOnlineStatus, "").toString()
-        if (get_imagShowOnlineStatus != Constants.imagShowOnlineStatus) {
-            imageCirclGreenOnline!!.visibility = View.VISIBLE
-            imageCircleBlueOffline!!.visibility = View.INVISIBLE
-        } else {
-            imageCirclGreenOnline!!.visibility = View.INVISIBLE
-            imageCircleBlueOffline!!.visibility = View.INVISIBLE
+        if (isSystemRunning) {
+            val get_imagShowOnlineStatus =
+                sharedBiometric.getString(Constants.imagShowOnlineStatus, "").toString()
+            if (get_imagShowOnlineStatus != Constants.imagShowOnlineStatus) {
+                imageCirclGreenOnline!!.visibility = View.VISIBLE
+                imageCircleBlueOffline!!.visibility = View.INVISIBLE
+            } else {
+                imageCirclGreenOnline!!.visibility = View.INVISIBLE
+                imageCircleBlueOffline!!.visibility = View.INVISIBLE
+            }
         }
-
     }
 
 
     private fun load_offline_indicator() {
-        val get_imagShowOnlineStatus = sharedBiometric.getString(Constants.imagShowOnlineStatus, "")
-        if (get_imagShowOnlineStatus != Constants.imagShowOnlineStatus) {
-            imageCirclGreenOnline!!.visibility = View.INVISIBLE
-            imageCircleBlueOffline!!.visibility = View.VISIBLE
-        } else {
-            imageCirclGreenOnline!!.visibility = View.INVISIBLE
-            imageCircleBlueOffline!!.visibility = View.INVISIBLE
+        if (isSystemRunning) {
+            val get_imagShowOnlineStatus =
+                sharedBiometric.getString(Constants.imagShowOnlineStatus, "")
+            if (get_imagShowOnlineStatus != Constants.imagShowOnlineStatus) {
+                imageCirclGreenOnline!!.visibility = View.INVISIBLE
+                imageCircleBlueOffline!!.visibility = View.VISIBLE
+            } else {
+                imageCirclGreenOnline!!.visibility = View.INVISIBLE
+                imageCircleBlueOffline!!.visibility = View.INVISIBLE
+            }
         }
-
     }
 
 
@@ -1522,78 +1540,113 @@ class WebViewPage : AppCompatActivity() {
                 view: WebView?,
                 url: String
             ): WebResourceResponse? {
-                if (BlockAds) {
-                    if (url.contains("googleads.g.doubleclick.net")) {
-                        val textStream: InputStream = ByteArrayInputStream("".toByteArray())
-                        return getTextWebResource(textStream)
+                if (isSystemRunning) {
+                    if (BlockAds) {
+                        if (url.contains("googleads.g.doubleclick.net")) {
+                            val textStream: InputStream = ByteArrayInputStream("".toByteArray())
+                            return getTextWebResource(textStream)
+                        }
                     }
                 }
                 return super.shouldInterceptRequest(view, url)
             }
+
 
             private fun getTextWebResource(data: InputStream): WebResourceResponse? {
                 return WebResourceResponse("text/plain", "UTF-8", data)
             }
 
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                try {
+                if (isSystemRunning) {
+                    try {
 
-                    if (constants.AllowOnlyHostUrlInApp) {
-                        if (!url.contains(constants.filterdomain)) {
-                            webView!!.stopLoading()
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                            return true
+                        if (constants.AllowOnlyHostUrlInApp) {
+                            if (!url.contains(constants.filterdomain)) {
+                                webView!!.stopLoading()
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                                return true
+                            }
                         }
+
+                        Log.d(
+                            "shouldOverrideUrlLoading",
+                            "shouldOverrideUrlLoading Exception: THE OEERIDING.."
+                        )
+
+                    } catch (e: java.lang.Exception) {
+                        Log.i(TAG, "shouldOverrideUrlLoading Exception:" + e.message)
+
                     }
 
-                    Log.d(
-                        "shouldOverrideUrlLoading",
-                        "shouldOverrideUrlLoading Exception: THE OEERIDING.."
+                    if (url.startsWith("http://") || url.startsWith("file:///") || url.startsWith("https://") || url.startsWith(
+                            "setup://"
+                        )
                     )
+                        return false
+                    try {
+                        val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)!!
+                        intent.addCategory("android.intent.category.BROWSABLE")
+                        // forbid explicit call
+                        intent.component = null
+                        // forbid Intent with selector Intent
+                        intent.selector = null
+                        // start the activity by the Intent
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        view.context.startActivity(intent)
+                    } catch (e: java.lang.Exception) {
+                        Log.i(TAG, "shouldOverrideUrlLoading Exception:" + e.message)
+                        showToastMessage("The app or ACTIVITY not found. Error Message:" + e.message)
 
-                } catch (e: java.lang.Exception) {
-                    Log.i(TAG, "shouldOverrideUrlLoading Exception:" + e.message)
-
-                }
-
-                if (url.startsWith("http://") || url.startsWith("file:///") || url.startsWith("https://") || url.startsWith(
-                        "setup://"
-                    )
-                )
-                    return false
-                try {
-                    val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)!!
-                    intent.addCategory("android.intent.category.BROWSABLE")
-                    // forbid explicit call
-                    intent.component = null
-                    // forbid Intent with selector Intent
-                    intent.selector = null
-                    // start the activity by the Intent
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    view.context.startActivity(intent)
-                } catch (e: java.lang.Exception) {
-                    Log.i(TAG, "shouldOverrideUrlLoading Exception:" + e.message)
-                    showToastMessage("The app or ACTIVITY not found. Error Message:" + e.message)
-
+                    }
                 }
                 return true
             }
 
 
+            var isTimeTakeToLoadTooLong = false
+
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                if (drawer_menu!!.visibility == View.VISIBLE) {
-                    drawer_menu!!.visibility = View.GONE
+                if (isSystemRunning) {
+
+                   /// errorLayout!!.visibility = View.GONE
+                    if (drawer_menu!!.visibility == View.VISIBLE) {
+                        drawer_menu!!.visibility = View.GONE
+                    }
+                    if (ShowSimpleProgressBar) {
+                        simpleProgressbar!!.visibility = View.VISIBLE
+                    }
+
+                    isTimeTakeToLoadTooLong = true
                 }
-                if (ShowSimpleProgressBar) {
-                    simpleProgressbar!!.visibility = View.VISIBLE
-                }
+
+                handler.postDelayed(kotlinx.coroutines.Runnable {
+                    if (isTimeTakeToLoadTooLong) {
+                        showSnackBarInternet("The page is taking too long to load. Please check your internet connection.")
+                        isTimeTakeToLoadTooLong = false
+                    }
+                }, 1 * 30 * 1000)
+
             }
 
             override fun onPageFinished(view: WebView?, url: String) {
                 try {
+
+                    if (customInternetWebviewPage != null){
+                        customInternetWebviewPage!!.dismiss()
+                        isCountDownDialogVisible = false
+                    }
+
+                    if (countdownTimerForWebviewPage != null){
+                        countdownTimerForWebviewPage?.cancel()
+                    }
+
+                    isTimeTakeToLoadTooLong = false
+
                     if (url != "about:blank") {
                         lasturl = url
+                        hasWebviewPageLoadedBefore = true
                     }
+
                     if (ShowSimpleProgressBar) {
                         simpleProgressbar!!.visibility = View.GONE
                     }
@@ -1643,9 +1696,11 @@ class WebViewPage : AppCompatActivity() {
             ) {
                 callback.invoke(origin, true, false)
                 if (AllowGPSLocationAccess) {
-                    checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    webView!!.settings.setGeolocationEnabled(true)
-                    displayLocationSettingsRequest(applicationContext)
+                    if (isSystemRunning) {
+                        checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        webView!!.settings.setGeolocationEnabled(true)
+                        displayLocationSettingsRequest(applicationContext)
+                    }
                 } else {
                     showToastMessage("Location requested, You can enable location in settings")
                 }
@@ -1654,58 +1709,59 @@ class WebViewPage : AppCompatActivity() {
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                if (ShowHorizontalProgress) {
-                    HorizontalProgressBar!!.progress = newProgress
-                }
-                val name = preferences!!.getString("proshow", "")
-                if (newProgress == 100) {
-                    if (name == "show") {
-                        windowProgressbar!!.visibility = View.GONE
+                if (isSystemRunning) {
+                    if (ShowHorizontalProgress) {
+                        HorizontalProgressBar!!.progress = newProgress
                     }
-                    try {
-                        if (ShowProgressDialogue) {
-                            progressDialog!!.cancel()
-                            progressDialog!!.dismiss()
-                            progressDialog!!.hide()
+                    val name = preferences!!.getString("proshow", "")
+                    if (newProgress == 100) {
+                        if (name == "show") {
+                            windowProgressbar!!.visibility = View.GONE
                         }
-                        if (ShowToolbarProgress) {
-                            tbarprogress!!.visibility = View.GONE
+                        try {
+                            if (ShowProgressDialogue) {
+                                progressDialog!!.cancel()
+                                progressDialog!!.dismiss()
+                                progressDialog!!.hide()
+                            }
+                            if (ShowToolbarProgress) {
+                                tbarprogress!!.visibility = View.GONE
+                            }
+                            if (ShowHorizontalProgress) {
+                                HorizontalProgressBar!!.visibility = View.GONE
+                            }
+                            if (ShowSimpleProgressBar) {
+                                simpleProgressbar!!.visibility = View.GONE
+                            }
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
                         }
-                        if (ShowHorizontalProgress) {
-                            HorizontalProgressBar!!.visibility = View.GONE
+                    } else {
+                        if (name == "show") {
+                            windowProgressbar!!.visibility = View.VISIBLE
                         }
-                        if (ShowSimpleProgressBar) {
-                            simpleProgressbar!!.visibility = View.GONE
+                        try {
+                            if (ShowHorizontalProgress) {
+                                HorizontalProgressBar!!.visibility = View.VISIBLE
+                            }
+                            if (ShowProgressDialogue) {
+                                progressDialog!!.setMessage("Loading")
+                                progressDialog!!.setCancelable(false)
+                                progressDialog!!.show()
+                            }
+                            if (ShowSimpleProgressBar) {
+                                simpleProgressbar!!.visibility = View.VISIBLE
+                            }
+                            if (ShowToolbarProgress) {
+                                tbarprogress!!.visibility = View.VISIBLE
+                            }
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
+                            Log.d(TAG, "HideErrorPage: " + e.message.toString())
                         }
-                    } catch (e: java.lang.Exception) {
-                        e.printStackTrace()
-                    }
-                } else {
-                    if (name == "show") {
-                        windowProgressbar!!.visibility = View.VISIBLE
-                    }
-                    try {
-                        if (ShowHorizontalProgress) {
-                            HorizontalProgressBar!!.visibility = View.VISIBLE
-                        }
-                        if (ShowProgressDialogue) {
-                            progressDialog!!.setMessage("Loading")
-                            progressDialog!!.setCancelable(false)
-                            progressDialog!!.show()
-                        }
-                        if (ShowSimpleProgressBar) {
-                            simpleProgressbar!!.visibility = View.VISIBLE
-                        }
-                        if (ShowToolbarProgress) {
-                            tbarprogress!!.visibility = View.VISIBLE
-                        }
-                    } catch (e: java.lang.Exception) {
-                        e.printStackTrace()
-                        Log.d(TAG, "HideErrorPage: " + e.message.toString())
                     }
                 }
             }
-
 
         })
 
@@ -1777,36 +1833,54 @@ class WebViewPage : AppCompatActivity() {
     private fun HideErrorPage(failingUrl: String, description: String) {
         try {
 
+            if (isSystemRunning) {
+                errorlayout?.visibility = View.VISIBLE
+                errorCode?.text = description
 
-            webView!!.loadUrl(failingUrl)
+                errorReloadButton!!.setOnClickListener {
+                if (isSystemRunning) {
+                    if (Utility.isNetworkAvailable(applicationContext)) {
+                        if (isSystemRunning) {
+                            webView!!.loadUrl(failingUrl)
+                            isErrorLayoutShown = true
+                        }
+                    } else {
+                        showToastMessage("Connect to an internet")
+                    }
+                }
+            }
 
+            handler.postDelayed(Runnable {
+                if (isSystemRunning) {
+                    handler.postDelayed(runnable!!, 4000)
+                    if (isSystemRunning) {
+                        if (errorautoConnect?.visibility == View.GONE) {
+                            errorautoConnect?.visibility = View.VISIBLE
+                        }
+                    }
+                    errorautoConnect?.text = "Auto Reconnect: Standby"
+                    if (AdvancedControls.checkInternetConnection(applicationContext)) {
+                        if (isSystemRunning) {
+                            errorautoConnect!!.text = "Auto Reconnect: Trying to connect.."
+                        }
+                    } else {
+                        if (isSystemRunning) {
+                            if (Utility.isNetworkAvailable(applicationContext)) {
+                            webView!!.loadUrl(failingUrl)
+                            errorlayout!!.visibility = View.GONE
+                            webView!!.clearHistory()
+                            handler.removeCallbacks(runnable!!)
 
-            /*     ///  webView?.loadUrl("about:blank")
-                 errorlayout?.visibility = View.VISIBLE
-                 errorCode?.text = description
-                 errorReloadButton!!.setOnClickListener { webView!!.loadUrl(failingUrl) }
-                 handler.postDelayed(Runnable {
-                     handler.postDelayed(runnable!!, 4000)
-                     if (errorautoConnect?.visibility == View.GONE) {
-                         errorautoConnect?.visibility = View.VISIBLE
-                     }
-                     errorautoConnect?.text = "Auto Reconnect: Standby"
-                     if (AdvancedControls.checkInternetConnection(applicationContext)) {
-                         errorautoConnect!!.text = "Auto Reconnect: Trying to connect.."
-                     } else {
-                         webView!!.loadUrl(failingUrl)
-                         errorlayout!!.visibility = View.GONE
-                         webView!!.clearHistory()
-                         handler.removeCallbacks(runnable!!)
-                     }
-                 }.also { runnable = it }, 4000)
-                 try {
-                 } catch (e: java.lang.Exception) {
-                     e.printStackTrace()
-                     Log.d(TAG, "HideErrorPage: " + e.message.toString())
-                 }
-                 */
+                             isErrorLayoutShown = true
 
+                            } else {
+                                showToastMessage("Connect to an internet")
+                            }
+
+                        }
+                    }
+                }
+            }.also { if (isSystemRunning) { runnable = it } }, 4000) }
 
         } catch (e: java.lang.Exception) {
             Log.d(TAG, "HideErrorPage: " + e.message.toString())
@@ -1876,9 +1950,7 @@ class WebViewPage : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun InitiateComponents() {
         try {
-            val preferences = PreferenceManager.getDefaultSharedPreferences(
-                applicationContext
-            )
+            val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
             val get_INSTALL_TV_JSON_USER_CLICKED =
                 sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "")
@@ -1953,32 +2025,32 @@ class WebViewPage : AppCompatActivity() {
                 swipeView!!.isEnabled = true
                 swipeView!!.setColorSchemeColors(resources.getColor(R.color.app_color_accent))
                 swipeView!!.setOnRefreshListener {
+                    if (isSystemRunning) {
+                        if (Utility.isNetworkAvailable(applicationContext)) {
 
-                    Log.d("PETER", "InitWebvIewloadStates: State 4")
-                    if (Utility.isNetworkAvailable(applicationContext)) {
-                        // webView!!.reload()
+                            if (hasWebviewPageLoadedBefore) {
+                                webView!!.clearHistory()
+                                webView!!.reload()
+                                showSnackBar("Refreshing, please wait...")
+                            } else {
+                                webView!!.clearHistory()
+                                InitWebvIewloadStatesWhenPopUpIsOn()
+                            }
 
-                        if (lasturl.toString() == "http://null/"  || lasturl.toString() == "https://null/"){
+                        } else {
 
-                            loadOnlineUrl()
-                            showSnackBar("This Url is bad, system return to main json url")
+                            handler.postDelayed(Runnable {
+                                if (isSystemRunning) {
+                                    //set up fooline settings
+                                    setUpTheFallingErrorLayout()
+                                    showSnackBar("Please turn on the internet or connect to WiFi.")
+                                }
+                            }, 1500)
 
-                        }else{
-                         //   webView!!.loadUrl(lasturl.toString())
-                            webView!!.reload()
-
-                            showSnackBar("This Url is bad,lasturl,  system return to main json url")
                         }
 
-                    } else {
-
-                        // show offline uurl
-                        simpleProgressbar!!.visibility = View.GONE
-                        webView!!.loadUrl("about:blank")
-                        showSnackBar("Please turn on internet or connect to Wifi")
+                        swipeView!!.isRefreshing = false
                     }
-
-                    swipeView!!.isRefreshing = false
                 }
             }
 
@@ -2013,68 +2085,101 @@ class WebViewPage : AppCompatActivity() {
 
 
             if (ShowDrawer) {
-                drawer_menu_btn!!.visibility = View.VISIBLE
-                drawer_menu_btn!!.setOnClickListener(imgClk)
-                drawerItem1!!.setOnClickListener(imgClk)
-                drawerItem2!!.setOnClickListener(imgClk)
-                drawerItem3!!.setOnClickListener(imgClk)
-                drawerItem4!!.setOnClickListener(imgClk)
-                drawerItem5!!.setOnClickListener(imgClk)
-                drawerItem6!!.setOnClickListener(imgClk)
-                drawer_header_img!!.setOnClickListener(imgClk)
-                try {
-                    if (constants.ChangeHeaderTextColor and (constants.drawerHeaderTextColor != null)) {
-                        if (preferences.getBoolean("darktheme", false)) {
-                            drawer_header_text!!.setTextColor(Color.WHITE)
-                        } else {
-                            drawer_header_text!!.setTextColor(Color.parseColor(constants.drawerHeaderTextColor))
+                if (isSystemRunning) {
+                    drawer_menu_btn!!.visibility = View.VISIBLE
+                    drawer_menu_btn!!.setOnClickListener(imgClk)
+                    drawerItem1!!.setOnClickListener(imgClk)
+                    drawerItem2!!.setOnClickListener(imgClk)
+                    drawerItem3!!.setOnClickListener(imgClk)
+                    drawerItem4!!.setOnClickListener(imgClk)
+                    drawerItem5!!.setOnClickListener(imgClk)
+                    drawerItem6!!.setOnClickListener(imgClk)
+                    drawer_header_img!!.setOnClickListener(imgClk)
+                    try {
+                        if (constants.ChangeHeaderTextColor and (constants.drawerHeaderTextColor != null)) {
+                            if (preferences.getBoolean("darktheme", false)) {
+                                drawer_header_text!!.setTextColor(Color.WHITE)
+                            } else {
+                                drawer_header_text!!.setTextColor(Color.parseColor(constants.drawerHeaderTextColor))
+                            }
                         }
-                    }
-                    if ((constants.drawerHeaderBgColor != null) and constants.ChangeDrawerHeaderBgColor) {
-                        if (preferences.getBoolean("darktheme", false)) {
-                            drawerHeaderBg!!.setBackgroundColor(resources.getColor(R.color.darkthemeColor))
-                        } else {
-                            drawerHeaderBg!!.setBackgroundColor(Color.parseColor(constants.drawerHeaderBgColor))
+                        if ((constants.drawerHeaderBgColor != null) and constants.ChangeDrawerHeaderBgColor) {
+                            if (preferences.getBoolean("darktheme", false)) {
+                                drawerHeaderBg!!.setBackgroundColor(resources.getColor(R.color.darkthemeColor))
+                            } else {
+                                drawerHeaderBg!!.setBackgroundColor(Color.parseColor(constants.drawerHeaderBgColor))
+                            }
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                    HandleRemoteDrawerText(drawerItemtext1!!, constants.drawerMenuItem1Text)
+                    HandleRemoteDrawerText(drawerItemtext2!!, constants.drawerMenuItem2Text)
+                    HandleRemoteDrawerText(drawerItemtext3!!, constants.drawerMenuItem3Text)
+                    HandleRemoteDrawerText(drawerItemtext4!!, constants.drawerMenuItem4Text)
+                    HandleRemoteDrawerText(drawerItemtext5!!, constants.drawerMenuItem5Text)
+                    HandleRemoteDrawerText(drawerItemtext6!!, constants.drawerMenuItem6Text)
+                    HandleRemoteDrawerText(drawer_header_text!!, constants.drawerHeaderText)
                 }
-                HandleRemoteDrawerText(drawerItemtext1!!, constants.drawerMenuItem1Text)
-                HandleRemoteDrawerText(drawerItemtext2!!, constants.drawerMenuItem2Text)
-                HandleRemoteDrawerText(drawerItemtext3!!, constants.drawerMenuItem3Text)
-                HandleRemoteDrawerText(drawerItemtext4!!, constants.drawerMenuItem4Text)
-                HandleRemoteDrawerText(drawerItemtext5!!, constants.drawerMenuItem5Text)
-                HandleRemoteDrawerText(drawerItemtext6!!, constants.drawerMenuItem6Text)
-                HandleRemoteDrawerText(drawer_header_text!!, constants.drawerHeaderText)
             }
         } catch (e: Exception) {
             Log.d(TAG, "InitiateComponents: " + e.message.toString())
         }
     }
 
+    private fun setUpTheFallingErrorLayout() {
+        // Configure WebViewClient and WebChromeClient if not already configured
+        val sharedBiometric: SharedPreferences = applicationContext.getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
+        val JSON_MAIN_URL = sharedBiometric.getString(Constants.JSON_MAIN_URL, "").toString()
 
-    private  fun showSnackBar(message: String){
-        val snackbar = Snackbar.make(binding.mainLayout,message , Snackbar.LENGTH_INDEFINITE)
-        snackbar.show()
+        if (MainUrl == null) {
+            Log.d("PETER", "InitWebvIewloadStates: The Main Json Url Was null ")
+            MainUrl = JSON_MAIN_URL
+        }
 
-        // Dismiss the Snackbar after 15 seconds
-        handler.postDelayed({ snackbar.dismiss() }, 15000)
+        // show off;ine page
+        simpleProgressbar!!.visibility = View.GONE
+        webView!!.loadUrl("about:blank")
+        webView!!.clearHistory()
+
+        if (isErrorLayoutShown){
+
+            HideErrorPage(MainUrl, "Failed to load page")
+
+            isErrorLayoutShown = false
+
+            Log.d("HideErrorPage", "InitWebvIewloadStates: HideErrorPage ")
+
+        }
     }
-    private fun checkPathForFilesWhenOffline(states: String) {
+
+
+
+    private fun showSnackBar(message: String) {
+        val snackbar = Snackbar.make(binding.mainLayout, message, Snackbar.LENGTH_LONG)
+        snackbar.show()
+    }
+
+    private fun showSnackBarInternet(message: String) {
+        val snackbar = Snackbar.make(binding.mainLayout, message, Snackbar.LENGTH_INDEFINITE)
+        snackbar.show()
+        if (isSystemRunning) {
+            handler.postDelayed({
+                if (isSystemRunning) {
+                    snackbar.dismiss()
+                }
+            }, 1 * 30 * 1000)
+        }
+    }
+
+    private fun checkPathForFilesWhenOffline() {
         val USE_OFFLINE_FOLDER =
             sharedBiometric.getString(Constants.USE_OFFLINE_FOLDER, "").toString()
         if (USE_OFFLINE_FOLDER == Constants.USE_OFFLINE_FOLDER) {
-            // remeber to go into it and use the word Ubake to  load index file
             InitWebviewIndexFileState()
-            Log.d("PETER", "InitWebvIewloadStates:: USE_OFFLINE_FOLDER ::: State ..$states")
-
         } else {
-            showPopForTVConfiguration(Constants.Check_Inter_Connectivity)
-            Log.d(
-                "PETER",
-                "InitWebvIewloadStates:: Check_Inter_Connectivity from checkPathForFilesWhenOffline ::: State ..$states"
-            )
+            showPopInternetForWebPage(Constants.Check_Inter_Connectivity)
+
         }
     }
 
@@ -3249,10 +3354,8 @@ class WebViewPage : AppCompatActivity() {
             customProgressDialog!!.setContentView(binding.getRoot())
             customProgressDialog!!.setCancelable(false)
             customProgressDialog!!.setCanceledOnTouchOutside(false)
-            customProgressDialog!!.getWindow()!!
-                .setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            customProgressDialog!!.window!!.attributes.windowAnimations =
-                R.style.PauseDialogAnimation
+            customProgressDialog!!.getWindow()!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            customProgressDialog!!.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
 
             binding.textLoading.setText(message)
             binding.imgCloseDialog.setVisibility(View.GONE)
@@ -3619,10 +3722,10 @@ class WebViewPage : AppCompatActivity() {
 
                         handler.postDelayed(Runnable {
                             try {
-
-                                myDownloadStatus()
-                                onAppRedirectToJsonPage()
-
+                                if (isSystemRunning) {
+                                    myDownloadStatus()
+                                    onAppRedirectToJsonPage()
+                                }
                                 Log.d("HFHGHHH", "onAppRedirectToJsonPage: internet Connection")
 
                             } catch (e: java.lang.Exception) {
@@ -3636,9 +3739,11 @@ class WebViewPage : AppCompatActivity() {
                     // No internet Connection
                     try {
                         runOnUiThread {
-                            imageWiFiOn!!.visibility = View.VISIBLE
-                            imageWiFiOFF!!.visibility = View.GONE
-                            textStatusProcess!!.text = "No Internet"
+                            if (isSystemRunning) {
+                                imageWiFiOn!!.visibility = View.VISIBLE
+                                imageWiFiOFF!!.visibility = View.GONE
+                                textStatusProcess!!.text = "No Internet"
+                            }
                         }
 
                     } catch (e: java.lang.Exception) {
@@ -3654,19 +3759,22 @@ class WebViewPage : AppCompatActivity() {
 
     private fun onAppRedirectToJsonPage() {
         runOnUiThread {
-            val isSavedEmail = simpleSavedPassword.getString(Constants.isSavedEmail, "").toString()
-            val COUNTRY_NAME = simpleSavedPassword.getString(Constants.COUNTRY_NAME, "").toString()
-            val USER_NAME = simpleSavedPassword.getString(Constants.USER_NAME, "").toString()
-            val USER_COMPANY_NAME =
-                simpleSavedPassword.getString(Constants.USER_COMPANY_NAME, "").toString()
+            if (isSystemRunning) {
+                val isSavedEmail =
+                    simpleSavedPassword.getString(Constants.isSavedEmail, "").toString()
+                val COUNTRY_NAME =
+                    simpleSavedPassword.getString(Constants.COUNTRY_NAME, "").toString()
+                val USER_NAME = simpleSavedPassword.getString(Constants.USER_NAME, "").toString()
+                val USER_COMPANY_NAME =
+                    simpleSavedPassword.getString(Constants.USER_COMPANY_NAME, "").toString()
 
-            if (!isSavedEmail.isEmpty() && !COUNTRY_NAME.isEmpty() && !USER_NAME.isEmpty() && !USER_COMPANY_NAME.isEmpty() && jsonUrl == null) {
-                finish()
-                val intent = Intent(applicationContext, SplashKT::class.java)
-                startActivity(intent)
+                if (!isSavedEmail.isEmpty() && !COUNTRY_NAME.isEmpty() && !USER_NAME.isEmpty() && !USER_COMPANY_NAME.isEmpty() && jsonUrl == null) {
+                    finish()
+                    val intent = Intent(applicationContext, SplashKT::class.java)
+                    startActivity(intent)
 
+                }
             }
-
         }
     }
 
@@ -3674,27 +3782,29 @@ class WebViewPage : AppCompatActivity() {
     private fun myDownloadStatus() {
         try {
             runOnUiThread {
+                if (isSystemRunning) {
+                    imageWiFiOn?.visibility = View.GONE
+                    imageWiFiOFF?.visibility = View.VISIBLE
 
-                imageWiFiOn?.visibility = View.GONE
-                imageWiFiOFF?.visibility = View.VISIBLE
-
-                val get_Api_state =
-                    sharedBiometric.getString(Constants.imagSwtichEnableSyncFromAPI, "").toString()
-                if (Utility.isNetworkAvailable(applicationContext)) {
-                    // if Zip is enabled
-                    if (get_Api_state == Constants.imagSwtichEnableSyncFromAPI) {
-                        val get_progress =
-                            myDownloadClass.getString(Constants.SynC_Status, "").toString()
-                        if (get_progress.isNotEmpty()) {
-                            textStatusProcess?.text = get_progress + ""
+                    val get_Api_state =
+                        sharedBiometric.getString(Constants.imagSwtichEnableSyncFromAPI, "")
+                            .toString()
+                    if (Utility.isNetworkAvailable(applicationContext)) {
+                        // if Zip is enabled
+                        if (get_Api_state == Constants.imagSwtichEnableSyncFromAPI) {
+                            val get_progress =
+                                myDownloadClass.getString(Constants.SynC_Status, "").toString()
+                            if (get_progress.isNotEmpty()) {
+                                textStatusProcess?.text = get_progress + ""
+                            } else {
+                                textStatusProcess?.text = "PR: Running"
+                            }
                         } else {
                             textStatusProcess?.text = "PR: Running"
                         }
                     } else {
-                        textStatusProcess?.text = "PR: Running"
+                        textStatusProcess?.text = "No Internet"
                     }
-                } else {
-                    textStatusProcess?.text = "No Internet"
                 }
             }
         } catch (e: java.lang.Exception) {
@@ -3759,10 +3869,7 @@ class WebViewPage : AppCompatActivity() {
                         val drawable_imageView24 =
                             ContextCompat.getDrawable(applicationContext, R.drawable.ic_folder_24)
                         if (drawable_imageView24 != null) {
-                            drawable_imageView24.setColorFilter(
-                                ContextCompat.getColor(
-                                    applicationContext,
-                                    R.color.dark_light_gray_pop
+                            drawable_imageView24.setColorFilter(ContextCompat.getColor(applicationContext, R.color.dark_light_gray_pop
                                 ), PorterDuff.Mode.SRC_IN
                             )
                             imageView24.setImageDrawable(drawable_imageView24)
@@ -3835,17 +3942,22 @@ class WebViewPage : AppCompatActivity() {
 
 
                 textContinue.setOnClickListener {
-                    Log.d("PETER", "InitWebvIewloadStates:: The user click from pop up for a states")
+                    Log.d(
+                        "PETER",
+                        "InitWebvIewloadStates:: The user click from pop up for a states"
+                    )
                     dailaogShowPopCallingWebview()
                     alertDialog!!.dismiss()
                 }
 
 
                 imgCloseDialog.setOnClickListener {
-                    Log.d("PETER", "InitWebvIewloadStates:: The user click from pop up for a states")
+                    Log.d("PETER", "The user click from pop up for a states")
                     dailaogShowPopCallingWebview()
                     alertDialog!!.dismiss()
                 }
+
+
                 alertDialog!!.show()
 
             } catch (e: java.lang.Exception) {
@@ -3858,20 +3970,142 @@ class WebViewPage : AppCompatActivity() {
     }
 
 
+    private fun showPopInternetForWebPage(message: String) {
+
+        customInternetWebviewPage = Dialog(this)
+        val bindingCP: CustomLayoutWebInternetBinding = CustomLayoutWebInternetBinding.inflate(LayoutInflater.from(this))
+        customInternetWebviewPage!!.setContentView(bindingCP.getRoot())
+        customInternetWebviewPage!!.setCancelable(false)
+        customInternetWebviewPage!!.setCanceledOnTouchOutside(false)
+        customInternetWebviewPage!!.getWindow()!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        customInternetWebviewPage!!.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
+
+        isCountDownDialogVisible  = true
+
+        if (!message.isEmpty()) {
+            bindingCP.textDescription.text = message
+        }
+
+
+        if (message == Constants.UnableToFindIndex) {
+            val drawable_imageView24 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_folder_24)
+            setUpDrawableImage(drawable_imageView24, bindingCP.imageView24)
+        }
+
+
+        if (message == Constants.Check_Inter_Connectivity) {
+            val drawable_imageView24 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_wifi_no_internet)
+            setUpDrawableImage(drawable_imageView24, bindingCP.imageView24)
+        }
+
+
+
+      bindingCP.textContinue.setOnClickListener {
+            Log.d("PETER", "InitWebvIewloadStates:: The user click from pop up for a states")
+            dailaogShowPopCallingWebview()
+
+            if (customInternetWebviewPage != null){
+                customInternetWebviewPage!!.dismiss()
+            }
+          isCountDownDialogVisible  = false
+        }
+
+
+        bindingCP.imgCloseDialog.setOnClickListener {
+            Log.d("PETER", "The user click from pop up for a states")
+            dailaogShowPopCallingWebview()
+
+            if (customInternetWebviewPage != null){
+                customInternetWebviewPage!!.dismiss()
+            }
+            isCountDownDialogVisible  = false
+        }
+
+
+        ///////////////
+
+        bindingCP.textCountDown.visibility = View.VISIBLE
+        val minutes = 1L
+        val milliseconds = minutes * 15 * 1000
+
+        countdownTimerForWebviewPage = object : CountDownTimer(milliseconds, 1000) {
+            @SuppressLint("SetTextI18n")
+            override fun onFinish() {
+                try {
+
+                    countdownTimerForWebviewPage!!.start()
+
+                if (isCountDownDialogVisible && isSystemRunning && Utility.isNetworkAvailable(applicationContext)){
+                    if (hasWebviewPageLoadedBefore) {
+                        webView!!.clearHistory()
+                        webView!!.reload()
+                        showSnackBar("Refreshing, please wait...")
+                    } else {
+                        webView!!.clearHistory()
+                        InitWebvIewloadStatesWhenPopUpIsOn()
+                    }
+                }
+                } catch (ignored: java.lang.Exception) {
+                }
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                try {
+
+                    val totalSecondsRemaining = millisUntilFinished / 1000
+                    var minutesUntilFinished = totalSecondsRemaining / 60
+                    var remainingSeconds = totalSecondsRemaining % 60
+
+                    // Adjusting minutes if seconds are in the range of 0-59
+                    if (remainingSeconds == 0L && minutesUntilFinished > 0) {
+                        minutesUntilFinished--
+                        remainingSeconds = 59
+                    }
+                    val displayText =
+                        String.format("Retry in... %d:%02d", minutesUntilFinished, remainingSeconds)
+                    bindingCP.textCountDown.text = displayText
+
+                } catch (ignored: java.lang.Exception) {
+                }
+            }
+        }
+
+        countdownTimerForWebviewPage?.start()
+
+        ///////////////
+
+
+        /// the pop of custom to show
+        customInternetWebviewPage!!.show()
+
+    }
+
+    private fun setUpDrawableImage(drawable_imageView24: Drawable?, imageView24: ImageView) {
+        if (drawable_imageView24 != null) {
+            drawable_imageView24.setColorFilter(
+                ContextCompat.getColor(
+                    applicationContext,
+                    R.color.deep_blue
+                ), PorterDuff.Mode.SRC_IN
+            )
+            imageView24.setImageDrawable(drawable_imageView24)
+        }
+    }
+
 
     private fun dailaogShowPopCallingWebview() {
 
         handler.postDelayed(Runnable {
-            Log.d("PETER", "InitWebvIewloadStates:: FILES ARE BEEN CHECK after The user click from pop up for a states")
+            if (isSystemRunning) {
+                Log.d("PETER", "FILES ARE BEEN CHECK after The user click from pop up for a states")
 
-            // get input paths to device storage
-            val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
-            val fil_DEMO = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
-            val filename = "/index.html"
-            loadOffline_Saved_Path_Offline_Webview_For_Pop_Layout(fil_CLO, fil_DEMO, filename)
+                // get input paths to device storage
+                val fil_CLO = myDownloadClass.getString(Constants.getFolderClo, "").toString()
+                val fil_DEMO = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
+                val filename = "/index.html"
+                loadOffline_Saved_Path_Offline_Webview_For_Pop_Layout(fil_CLO, fil_DEMO, filename)
+            }
         }, 2000)
-
-
 
 
     }
@@ -4001,65 +4235,71 @@ class WebViewPage : AppCompatActivity() {
         countdownTimer_Api_Sync = object : CountDownTimer(milliseconds, 1000) {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
-                startTimerApiSync(minutes)
+                if (isSystemRunning) {
+                    startTimerApiSync(minutes)
 
-                try {
-                    val sharedBiometric =
-                        getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
-                    val get_intervals =
-                        sharedBiometric.getString(Constants.imagSwtichEnableSyncOnFilecahnge, "")
-                            .toString()
+                    try {
+                        val sharedBiometric =
+                            getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
+                        val get_intervals =
+                            sharedBiometric.getString(
+                                Constants.imagSwtichEnableSyncOnFilecahnge,
+                                ""
+                            )
+                                .toString()
 
-                    // for sync on interval
-                    if (get_intervals == Constants.imagSwtichEnableSyncOnFilecahnge) {
-                        if (isZipSyncEnabled) {
+                        // for sync on interval
+                        if (get_intervals == Constants.imagSwtichEnableSyncOnFilecahnge) {
+                            if (isZipSyncEnabled) {
 
-                            // Sync on Interval for Zip
-                            init_Zip_Sync_Start()
-
-
-                        } else if (isApiSyncEnabled) {
-                            // Sync On interval API
-                            init_APi_Sync_Start()
+                                // Sync on Interval for Zip
+                                init_Zip_Sync_Start()
 
 
-                        } else if (isParsingEnable && initProgressParsingSyncFilesDownload) {
+                            } else if (isApiSyncEnabled) {
+                                // Sync On interval API
+                                init_APi_Sync_Start()
 
-                            // sync on interval for parsing
-                            initParsingUrlMethods()
+
+                            } else if (isParsingEnable && initProgressParsingSyncFilesDownload) {
+
+                                // sync on interval for parsing
+                                initParsingUrlMethods()
+
+
+                            } else {
+                                showWarning("Sync in Progress")
+                            }
 
 
                         } else {
-                            showWarning("Sync in Progress")
+                            //  sync on Change
+                            get_Index_Time_Stamp_Loaction()
+
                         }
 
 
-                    } else {
-                        //  sync on Change
-                        get_Index_Time_Stamp_Loaction()
-
+                    } catch (e: java.lang.Exception) {
                     }
 
-
-                } catch (e: java.lang.Exception) {
                 }
-
             }
 
             override fun onTick(millisUntilFinished: Long) {
                 try {
-                    val totalSecondsRemaining = millisUntilFinished / 1000
-                    var minutesUntilFinished = totalSecondsRemaining / 60
-                    var remainingSeconds = totalSecondsRemaining % 60
+                    if (isSystemRunning) {
+                        val totalSecondsRemaining = millisUntilFinished / 1000
+                        var minutesUntilFinished = totalSecondsRemaining / 60
+                        var remainingSeconds = totalSecondsRemaining % 60
 
-                    if (remainingSeconds == 0L && minutesUntilFinished > 0) {
-                        minutesUntilFinished--
-                        remainingSeconds = 59
+                        if (remainingSeconds == 0L && minutesUntilFinished > 0) {
+                            minutesUntilFinished--
+                            remainingSeconds = 59
+                        }
+                        val displayText =
+                            String.format("CD: %d:%02d", minutesUntilFinished, remainingSeconds)
+                        countDownTime!!.text = displayText
                     }
-                    val displayText =
-                        String.format("CD: %d:%02d", minutesUntilFinished, remainingSeconds)
-                    countDownTime!!.text = displayText
-
                 } catch (ignored: java.lang.Exception) {
                 }
             }
@@ -5207,27 +5447,29 @@ class WebViewPage : AppCompatActivity() {
             binding.textDownladByes.text = "100%"
 
             handler.postDelayed({
-                isdDownloadApi = true
+                if (isSystemRunning) {
+                    isdDownloadApi = true
 
-                if (isScheduleRunning) {
-                    showToastMessage("Schedule Media Already Running")
-                    binding.textStatusProcess.text = Constants.PR_running
-                    binding.progressBarPref.progress = 100
-                    binding.progressBarPref.visibility = View.INVISIBLE
-                    binding.textFilecount.text = "1/1"
-                } else {
-                    offline_Load_Webview_Logic()
-                    binding.textStatusProcess.text = Constants.PR_running
-                    binding.progressBarPref.progress = 100
-                    binding.progressBarPref.visibility = View.INVISIBLE
-                    binding.textFilecount.text = "1/1"
+                    if (isScheduleRunning) {
+                        showToastMessage("Schedule Media Already Running")
+                        binding.textStatusProcess.text = Constants.PR_running
+                        binding.progressBarPref.progress = 100
+                        binding.progressBarPref.visibility = View.INVISIBLE
+                        binding.textFilecount.text = "1/1"
+                    } else {
+                        offline_Load_Webview_Logic()
+                        binding.textStatusProcess.text = Constants.PR_running
+                        binding.progressBarPref.progress = 100
+                        binding.progressBarPref.visibility = View.INVISIBLE
+                        binding.textFilecount.text = "1/1"
 
-                    try {
-                        fetch?.let { it.removeAll() }
-                    } catch (e: Exception) {
-                        Log.d(TAG, "Refresh_WebView_After_Extraction: " + e.message.toString())
+                        try {
+                            fetch?.let { it.removeAll() }
+                        } catch (e: Exception) {
+                            Log.d(TAG, "Refresh_WebView_After_Extraction: " + e.message.toString())
+                        }
+
                     }
-
                 }
             }, 3000)
 
@@ -5275,7 +5517,9 @@ class WebViewPage : AppCompatActivity() {
                 val csvData = csvDownloader.downloadCSV(getSavedEditTextInputSynUrlZip, "", "", "")
                 saveURLPairs(csvData)
                 withContext(Dispatchers.Main) {
-                    handler.postDelayed({ handler.postDelayed(runnableManual, 500) }, 1000)
+                    if (isSystemRunning) {
+                        handler.postDelayed({ handler.postDelayed(runnableManual, 500) }, 1000)
+                    }
                 }
             }
 
@@ -5290,16 +5534,17 @@ class WebViewPage : AppCompatActivity() {
         override fun run() {
             mFilesViewModel.readAllData.observe(this@WebViewPage, Observer { files ->
                 handler.postDelayed({
-                    runOnUiThread {
-                        textFilecount!!.text = "DL-/-"
-                        totalFiles = files.size
-                        textFilecount!!.visibility = View.VISIBLE
-                        downloadSequentiallyManually(files)
+                    if (isSystemRunning) {
+                        runOnUiThread {
+                            textFilecount!!.text = "DL-/-"
+                            totalFiles = files.size
+                            textFilecount!!.visibility = View.VISIBLE
+                            downloadSequentiallyManually(files)
+                        }
                     }
                 }, 500)
             })
         }
-
     }
 
 
@@ -5307,7 +5552,11 @@ class WebViewPage : AppCompatActivity() {
         try {
             if (currentDownloadIndex < files.size) {
                 val (_, SN, FolderName, FileName) = files[currentDownloadIndex]
-                handler.postDelayed({ getZipDownloadsManually(SN, FolderName, FileName) }, 1000)
+                handler.postDelayed({
+                    if (isSystemRunning) {
+                        getZipDownloadsManually(SN, FolderName, FileName)
+                    }
+                }, 1000)
             }
         } catch (e: java.lang.Exception) {
         }
@@ -5384,88 +5633,6 @@ class WebViewPage : AppCompatActivity() {
             else -> null
         }
     }
-
-
-    /*
-        private fun initializeListener() {
-            try {
-                val fetchListener: FetchListener = object : FetchListener {
-                    override fun onCompleted(download: Download) {
-
-                        if (isAPISyncRunning) {
-                            funUnZipFile()
-                        } else {
-                            preLaunchFiles()
-                        }
-
-                    }
-
-
-                    @SuppressLint("SetTextI18n")
-                    override fun onError(download: Download, error: Error, throwable: Throwable?) {
-
-                        if (!isAPISyncRunning) {
-                            preLaunchFiles()
-                        }
-
-                        Log.d(
-                            TAG,
-                            "onError:  An error cocured trying o download from path/url" + error.httpResponse?.code
-                        )
-                    }
-
-                    override fun onDownloadBlockUpdated(
-                        download: Download,
-                        downloadBlock: DownloadBlock,
-                        i: Int
-                    ) {
-                    }
-
-                    override fun onAdded(download: Download) {}
-                    override fun onQueued(download: Download, waitingOnNetwork: Boolean) {}
-                    override fun onProgress(
-                        download: Download,
-                        etaInMilliSeconds: Long,
-                        downloadedBytesPerSecond: Long
-                    ) {
-                        try {
-                            if (isAPISyncRunning) {
-
-                                /// allowed to use only for Zip
-                                val progress = download.progress
-                                binding.progressBarPref.progress = progress
-                                binding.textDownladByes.visibility = View.VISIBLE
-                                binding.textDownladByes.text = "$progress%"
-                            }
-
-                        } catch (e: Exception) {
-                            Log.d(TAG, e.message.toString())
-                        }
-                    }
-
-                    override fun onPaused(download: Download) {}
-
-                    override fun onResumed(download: Download) {}
-
-                    override fun onStarted(
-                        download: Download,
-                        downloadBlocks: List<DownloadBlock>,
-                        totalBlocks: Int
-                    ) {
-                    }
-
-                    override fun onWaitingNetwork(download: Download) {}
-
-                    override fun onCancelled(download: Download) {}
-                    override fun onRemoved(download: Download) {}
-                    override fun onDeleted(download: Download) {}
-                }
-                fetch!!.addListener(fetchListener)
-            } catch (e: java.lang.Exception) {
-            }
-        }
-
-    */
 
 
     private fun initializeListener() {
@@ -5570,46 +5737,52 @@ class WebViewPage : AppCompatActivity() {
             val sn_number = myDownloadClass.getInt(Constants.fileNumber, 0)
 
             handler.postDelayed({
-                downloadSequentially(mFilesViewModel.readAllData.value ?: emptyList())
+                if (isSystemRunning) {
+                    downloadSequentially(mFilesViewModel.readAllData.value ?: emptyList())
 
-                runOnUiThread {
-                    textFilecount!!.text = "$sn_number / $totalFiles"
-                    val fileNum = sn_number.toDouble()
-                    val totalPercentage = (fileNum / totalFiles.toDouble() * 100).toInt()
-                    progressBarPref!!.progress = totalPercentage
-                    progressBarPref!!.visibility = View.VISIBLE
-                    textDownladByes!!.text = "$totalPercentage%"
-                    textDownladByes!!.visibility = View.VISIBLE
-                    textStatusProcess!!.text = Constants.PR_Downloading
-                    if (sn_number == totalFiles) {
-                        if (iswebViewRefreshingOnApiSync) {
-                            iswebViewRefreshingOnApiSync = false
-                            textStatusProcess!!.text = Constants.PR_Refresh
-                            handler.postDelayed({
-                                isdDownloadApi = true
-                                if (isScheduleRunning) {
-                                    showToastMessage("Schedule Media Already Running")
-                                    textStatusProcess!!.text = Constants.PR_running
-                                    progressBarPref!!.progress = 100
-                                    progressBarPref!!.visibility = View.INVISIBLE
-                                    textFilecount!!.text = "$totalFiles / $totalFiles"
-                                } else {
-                                    offline_Load_Webview_Logic()
-                                    textStatusProcess!!.text = Constants.PR_running
-                                    progressBarPref!!.progress = 100
-                                    progressBarPref!!.visibility = View.INVISIBLE
-                                    textFilecount!!.text = "$totalFiles / $totalFiles"
+                    runOnUiThread {
+                        textFilecount!!.text = "$sn_number / $totalFiles"
+                        val fileNum = sn_number.toDouble()
+                        val totalPercentage = (fileNum / totalFiles.toDouble() * 100).toInt()
+                        progressBarPref!!.progress = totalPercentage
+                        progressBarPref!!.visibility = View.VISIBLE
+                        textDownladByes!!.text = "$totalPercentage%"
+                        textDownladByes!!.visibility = View.VISIBLE
+                        textStatusProcess!!.text = Constants.PR_Downloading
+                        if (sn_number == totalFiles) {
+                            if (iswebViewRefreshingOnApiSync) {
+                                iswebViewRefreshingOnApiSync = false
+                                textStatusProcess!!.text = Constants.PR_Refresh
+                                handler.postDelayed({
+                                    if (isSystemRunning) {
+                                        isdDownloadApi = true
+                                        if (isScheduleRunning) {
+                                            showToastMessage("Schedule Media Already Running")
+                                            textStatusProcess!!.text = Constants.PR_running
+                                            progressBarPref!!.progress = 100
+                                            progressBarPref!!.visibility = View.INVISIBLE
+                                            textFilecount!!.text = "$totalFiles / $totalFiles"
+                                        } else {
+                                            offline_Load_Webview_Logic()
+                                            textStatusProcess!!.text = Constants.PR_running
+                                            progressBarPref!!.progress = 100
+                                            progressBarPref!!.visibility = View.INVISIBLE
+                                            textFilecount!!.text = "$totalFiles / $totalFiles"
 
 
-                                    try {
-                                        fetch?.let { it.removeAll() }
-                                    } catch (e: Exception) {
-                                        Log.d(TAG, "preLaunchFiles: " + e.message.toString())
+                                            try {
+                                                fetch?.let { it.removeAll() }
+                                            } catch (e: Exception) {
+                                                Log.d(
+                                                    TAG,
+                                                    "preLaunchFiles: " + e.message.toString()
+                                                )
+                                            }
+
+                                        }
                                     }
-
-
-                                }
-                            }, 3000)
+                                }, 3000)
+                            }
                         }
                     }
                 }
@@ -5783,7 +5956,9 @@ class WebViewPage : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 binding.textStatusProcess.text = Constants.PR_Change_Found
                 handler.postDelayed(Runnable {
-                    getAllIndexUrls(urlsss)
+                    if (isSystemRunning) {
+                        getAllIndexUrls(urlsss)
+                    }
                 }, 7000)
 
             }
@@ -5935,22 +6110,23 @@ class WebViewPage : AppCompatActivity() {
         binding.textStatusProcess.text = "All File Collected"
 
         handler.postDelayed(Runnable {
+            if (isSystemRunning) {
 
-            if (syncOnIntervalsAllowed) {
+                if (syncOnIntervalsAllowed) {
 
-                // proceed to consequential download
-                init_Parsing_Sync_Start()
+                    // proceed to consequential download
+                    init_Parsing_Sync_Start()
 
-            } else {
+                } else {
 
-                /// for sync on change locgic
+                    /// for sync on change locgic
 
-                /// process the files before download
-                initParsingSyncProcess()
+                    /// process the files before download
+                    initParsingSyncProcess()
+
+                }
 
             }
-
-
         }, 5000)
 
     }
@@ -5959,15 +6135,16 @@ class WebViewPage : AppCompatActivity() {
     private fun init_Parsing_Sync_Start() {
         handler.postDelayed(kotlinx.coroutines.Runnable {
             if (!Utility.foregroundParsingServiceClass(applicationContext)) {
-                applicationContext.startService(
-                    Intent(
-                        applicationContext,
-                        ParsingSyncService::class.java
+                if (isSystemRunning) {
+                    applicationContext.startService(
+                        Intent(
+                            applicationContext,
+                            ParsingSyncService::class.java
+                        )
                     )
-                )
-                binding.textDownladByes.visibility = View.VISIBLE
+                    binding.textDownladByes.visibility = View.VISIBLE
+                }
             }
-
         }, 2000)
 
     }
@@ -5983,9 +6160,12 @@ class WebViewPage : AppCompatActivity() {
             if (files.isNotEmpty()) {
                 if (ledFiles) {
                     handler.postDelayed(Runnable {
-                        Log.d("SyncProcess", "Fetched ${files.size} files.")
-                        ledFiles = false
-                        processingJob = lifecycleScope.launch { processFilesSequentially(files) }
+                        if (isSystemRunning) {
+                            Log.d("SyncProcess", "Fetched ${files.size} files.")
+                            ledFiles = false
+                            processingJob =
+                                lifecycleScope.launch { processFilesSequentially(files) }
+                        }
                     }, 1000)
                 }
             } else {
@@ -6163,15 +6343,16 @@ class WebViewPage : AppCompatActivity() {
                     Log.d("SyncProcess", "Process canceled.")
                     return@withContext
                 }
+                if (isSystemRunning) {
+                    processFile(file)
 
-                processFile(file)
+                    val percent = ((index + 1).toFloat() / files.size.toFloat() * 100).toInt()
+                    withContext(Dispatchers.Main) {
+                        Log.d("Progress", "processFilesSequentially: $percent")
+                        binding.textStatusProcess.text = "PR:$percent% Scan"
+                    }
 
-                val percent = ((index + 1).toFloat() / files.size.toFloat() * 100).toInt()
-                withContext(Dispatchers.Main) {
-                    Log.d("Progress", "processFilesSequentially: $percent")
-                    binding.textStatusProcess.text = "PR:$percent% Scan"
                 }
-
 
                 delay(500)
             }
@@ -6206,7 +6387,9 @@ class WebViewPage : AppCompatActivity() {
                     binding.textStatusProcess.text = status.toString()
 
                     handler.postDelayed(Runnable {
-                        startFilesCopy()
+                        if (isSystemRunning) {
+                            startFilesCopy()
+                        }
                     }, 1 * 5 * 1000)
 
 
@@ -6220,13 +6403,15 @@ class WebViewPage : AppCompatActivity() {
 
                 if (status == Constants.PR_Failed_Files_Number) {
                     handler.postDelayed(kotlinx.coroutines.Runnable {
-                        val getValue =
-                            myDownloadClass.getString(Constants.numberFailedFiles, "").toString()
-                        Log.d("ProgressReceiver", "failed files $getValue")
-                        if (getValue.isNotEmpty()) {
-                            binding.textStatusProcess.text = getValue.toString()
+                        if (isSystemRunning) {
+                            val getValue =
+                                myDownloadClass.getString(Constants.numberFailedFiles, "")
+                                    .toString()
+                            Log.d("ProgressReceiver", "failed files $getValue")
+                            if (getValue.isNotEmpty()) {
+                                binding.textStatusProcess.text = getValue.toString()
+                            }
                         }
-
                     }, 1000)
                 }
 
@@ -6274,7 +6459,9 @@ class WebViewPage : AppCompatActivity() {
 
     private fun startFilesCopy() {
         handler.postDelayed(Runnable {
-            copyFilesAndFolders()
+            if (isSystemRunning) {
+                copyFilesAndFolders()
+            }
         }, 700)
 
     }
@@ -6332,8 +6519,9 @@ class WebViewPage : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
 
                                 handler.postDelayed(Runnable {
-                                    Refresh_WebView_After_ParsingDownload()
-
+                                    if (isSystemRunning) {
+                                        Refresh_WebView_After_ParsingDownload()
+                                    }
                                 }, 4000)
 
                             }
@@ -6377,7 +6565,9 @@ class WebViewPage : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
 
                             handler.postDelayed(Runnable {
-                                Refresh_WebView_After_ParsingDownload()
+                                if (isSystemRunning) {
+                                    Refresh_WebView_After_ParsingDownload()
+                                }
                             }, 4000)
 
                         }
@@ -6420,7 +6610,9 @@ class WebViewPage : AppCompatActivity() {
 
                         withContext(Dispatchers.Main) {
                             handler.postDelayed(Runnable {
-                                Refresh_WebView_After_ParsingDownload()
+                                if (isSystemRunning) {
+                                    Refresh_WebView_After_ParsingDownload()
+                                }
                             }, 4000)
                         }
 
@@ -6440,24 +6632,26 @@ class WebViewPage : AppCompatActivity() {
             binding.textDownladByes.text = "100%"
 
             handler.postDelayed({
-                isdDownloadApi = true
-                initProgressParsingSyncFilesDownload = true
-                if (isScheduleRunning) {
-                    showWarning("Schedule Media Already Running")
-                    binding.textStatusProcess.text = Constants.PR_running
-                    binding.progressBarPref.progress = 100
-                    binding.progressBarPref.visibility = View.INVISIBLE
-                    binding.textFilecount.text = "1/1"
-                } else {
-                    offline_Load_Webview_Logic()
+                if (isSystemRunning) {
+                    isdDownloadApi = true
+                    initProgressParsingSyncFilesDownload = true
+                    if (isScheduleRunning) {
+                        showWarning("Schedule Media Already Running")
+                        binding.textStatusProcess.text = Constants.PR_running
+                        binding.progressBarPref.progress = 100
+                        binding.progressBarPref.visibility = View.INVISIBLE
+                        binding.textFilecount.text = "1/1"
+                    } else {
+                        offline_Load_Webview_Logic()
 
-                    //  startActivity(Intent(applicationContext, Kolo_Service_Manger::class.java))
+                        //  startActivity(Intent(applicationContext, Kolo_Service_Manger::class.java))
 
-                    binding.textStatusProcess.text = Constants.PR_running
-                    binding.progressBarPref.progress = 100
-                    binding.progressBarPref.visibility = View.INVISIBLE
-                    binding.textFilecount.text = "1/1"
+                        binding.textStatusProcess.text = Constants.PR_running
+                        binding.progressBarPref.progress = 100
+                        binding.progressBarPref.visibility = View.INVISIBLE
+                        binding.textFilecount.text = "1/1"
 
+                    }
                 }
             }, 3000)
 
@@ -6569,7 +6763,11 @@ class WebViewPage : AppCompatActivity() {
         }
 
         // Repeat the task using the Handler
-        handlerServerTime.postDelayed(Runnable { runServerTime() }
+        handlerServerTime.postDelayed(Runnable {
+            if (isSystemRunning) {
+                runServerTime()
+            }
+        }
             .also { runnableServerTime = it }, 32000)
     }
 
@@ -6828,7 +7026,11 @@ class WebViewPage : AppCompatActivity() {
                 // Repeat
                 if (!isScheduleCurrentlyRunning) {
                     withContext(Dispatchers.Main) {
-                        handlerSchedule.postDelayed(Runnable { runScheduleCheck() }
+                        handlerSchedule.postDelayed(Runnable {
+                            if (isSystemRunning) {
+                                runScheduleCheck()
+                            }
+                        }
                             .also { runnableSchedule = it }, 32000)
                     }
                 }
@@ -6867,7 +7069,9 @@ class WebViewPage : AppCompatActivity() {
                         // Schedule not yet finished, post delayed check
                         withContext(Dispatchers.Main) {
                             handlerRunningSchedule.postDelayed(Runnable {
-                                startEndTimeCheck(scheduleEndTime, scheduleId, position)
+                                if (isSystemRunning) {
+                                    startEndTimeCheck(scheduleEndTime, scheduleId, position)
+                                }
                             }.also { runnableRunningSchedule = it }, 32000)
                         }
                     }
@@ -6893,7 +7097,9 @@ class WebViewPage : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
 
                             handlerRunningSchedule.postDelayed(Runnable {
-                                startEndTimeCheck(scheduleEndTime, scheduleId, position)
+                                if (isSystemRunning) {
+                                    startEndTimeCheck(scheduleEndTime, scheduleId, position)
+                                }
                             }.also { runnableRunningSchedule = it }, 32000)
                         }
                     }
@@ -7198,7 +7404,9 @@ class WebViewPage : AppCompatActivity() {
             handler.postDelayed({
                 runOnUiThread {
                     try {
-                        doResizeUSBCameraView()
+                        if (isSystemRunning) {
+                            doResizeUSBCameraView()
+                        }
                     } catch (exception: java.lang.Exception) {
                     }
                 }
@@ -7212,7 +7420,9 @@ class WebViewPage : AppCompatActivity() {
             handler.postDelayed({
                 runOnUiThread {
                     try {
-                        checkUsbDevices();
+                        if (isSystemRunning) {
+                            checkUsbDevices();
+                        }
                     } catch (exception: java.lang.Exception) {
                     }
                 }
@@ -7282,18 +7492,22 @@ class WebViewPage : AppCompatActivity() {
                     audioHandler!!.endAudio()
                 }
                 reloadWebCam!!.setOnClickListener { v: View? ->
-                    try {
-                        toggleInvisibilityAndStopCamera()
-                        toggleVisibilityAndCameraStart()
-                    } catch (e: java.lang.Exception) {
-                        Log.d(TAG, "inliazeUSbCamVariables: " + e.message.toString())
-                        audioHandler!!.stopAudio()
-                        audioHandler!!.endAudio()
+                    if (isSystemRunning) {
+                        try {
+                            toggleInvisibilityAndStopCamera()
+                            toggleVisibilityAndCameraStart()
+                        } catch (e: java.lang.Exception) {
+                            Log.d(TAG, "inliazeUSbCamVariables: " + e.message.toString())
+                            audioHandler!!.stopAudio()
+                            audioHandler!!.endAudio()
+                        }
                     }
                 }
                 closeWebCam!!.setOnClickListener { view: View? ->
                     try {
-                        toggleInvisibilityAndStopCamera()
+                        if (isSystemRunning) {
+                            toggleInvisibilityAndStopCamera()
+                        }
                     } catch (e: java.lang.Exception) {
                         Log.d(TAG, "inliazeUSbCamVariables: " + e.message.toString())
                     }
@@ -7303,9 +7517,11 @@ class WebViewPage : AppCompatActivity() {
                 /// Hide the icons after a while
                 try {
                     showCameraIconhandler.postDelayed({
-                        reloadWebCam!!.visibility = View.INVISIBLE
-                        closeWebCam!!.visibility = View.INVISIBLE
-                        expandWebcam!!.visibility = View.INVISIBLE
+                        if (isSystemRunning) {
+                            reloadWebCam!!.visibility = View.INVISIBLE
+                            closeWebCam!!.visibility = View.INVISIBLE
+                            expandWebcam!!.visibility = View.INVISIBLE
+                        }
                     }, 10000)
                 } catch (e: java.lang.Exception) {
                 }
@@ -7646,7 +7862,6 @@ class WebViewPage : AppCompatActivity() {
 
     private fun start_Display_Timer() {
         try {
-
             val get_imgStreamAPIorDevice =
                 sharedBiometric.getString(Constants.imgStreamAPIorDevice, "").toString()
             if (get_imgStreamAPIorDevice != Constants.imgStreamAPIorDevice) {
@@ -7657,9 +7872,9 @@ class WebViewPage : AppCompatActivity() {
                     StartCameraHandler.postDelayed({
                         if (isSystemRunning) {
                             toggleInvisibilityAndStopCamera()
+                            stopTimer()
+                            star_Hide_Timer()
                         }
-                        stopTimer()
-                        star_Hide_Timer()
                     }, timeertaker)
                 } else {
                     showToastMessage("Invalid Display Camera Time")
@@ -7675,9 +7890,9 @@ class WebViewPage : AppCompatActivity() {
                     StartCameraHandler?.postDelayed({
                         if (isSystemRunning) {
                             toggleInvisibilityAndStopCamera()
+                            stopTimer()
+                            star_Hide_Timer()
                         }
-                        stopTimer()
-                        star_Hide_Timer()
                     }, timeertaker)
                 } else {
                     showToastMessage("Invalid Display Camera Time")
@@ -7758,34 +7973,35 @@ class WebViewPage : AppCompatActivity() {
             if (get_ShortCutStatus != Constants.Do_NO_SHOW_SHORT_CUT_AGAIN) {
 
                 handler.postDelayed(Runnable {
+                    if (isSystemRunning) {
 
-                    lifecycleScope.launch(Dispatchers.IO) {
+                        lifecycleScope.launch(Dispatchers.IO) {
 
-                        val myDownloadClass =
-                            getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
-                        val getFolderClo =
-                            myDownloadClass.getString(Constants.getFolderClo, "").toString()
-                        val getFolderSubpath =
-                            myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
-                        val pathFolder =
-                            "/" + getFolderClo + "/" + getFolderSubpath + "/" + Constants.App + "/" + "Config"
-                        val folder =
-                            Environment.getExternalStorageDirectory().absolutePath + "/Download/" + Constants.Syn2AppLive + "/" + pathFolder
-                        val fileTypes = "app_logo.png"
-                        val file = File(folder, fileTypes)
+                            val myDownloadClass =
+                                getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
+                            val getFolderClo =
+                                myDownloadClass.getString(Constants.getFolderClo, "").toString()
+                            val getFolderSubpath =
+                                myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
+                            val pathFolder =
+                                "/" + getFolderClo + "/" + getFolderSubpath + "/" + Constants.App + "/" + "Config"
+                            val folder =
+                                Environment.getExternalStorageDirectory().absolutePath + "/Download/" + Constants.Syn2AppLive + "/" + pathFolder
+                            val fileTypes = "app_logo.png"
+                            val file = File(folder, fileTypes)
 
-                        if (file.exists()) {
-                            withContext(Dispatchers.Main) {
-                                initShortCut()
-                            }
-                        } else {
-                            withContext(Dispatchers.Main) {
-                                Log.d(TAG, "CheckShortCutImage: No Short Image Found")
+                            if (file.exists()) {
+                                withContext(Dispatchers.Main) {
+                                    initShortCut()
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    Log.d(TAG, "CheckShortCutImage: No Short Image Found")
+                                }
                             }
                         }
+
                     }
-
-
                 }, 7000)
 
             }
@@ -7951,26 +8167,35 @@ class WebViewPage : AppCompatActivity() {
             if (drawer_menu?.visibility == View.VISIBLE) {
                 drawer_menu?.visibility = View.GONE
             }
-            if (isScheduleRunning) {
+
+            if (!hasWebviewPageLoadedBefore) {
+                ClearLastUrl()
                 navigateBackTosetting()
+
             } else {
-                if (webView!!.canGoBack()) {
-                    webView?.goBack()
+                if (isScheduleRunning) {
+                    navigateBackTosetting()
                 } else {
-                    if (ClearCacheOnExit) {
-                        webView!!.clearCache(true)
-                    }
-                    if (AskToExit) {
-                        ShowExitDialogue()
-                        if (LoadLastWebPageOnAccidentalExit) {
-                            ClearLastUrl()
-                        }
+                    if (webView!!.canGoBack()) {
+                        webView?.goBack()
                     } else {
-                        ClearLastUrl()
-                        navigateBackTosetting()
+                        if (ClearCacheOnExit) {
+                            webView!!.clearCache(true)
+                        }
+                        if (AskToExit) {
+                            ShowExitDialogue()
+                            if (LoadLastWebPageOnAccidentalExit) {
+                                ClearLastUrl()
+                            }
+                        } else {
+                            ClearLastUrl()
+                            navigateBackTosetting()
+                        }
                     }
                 }
             }
+
+            ///
         } catch (e: Exception) {
             Log.d(TAG, "onBackPressed: ${e.message.toString()}")
         }
@@ -8189,6 +8414,17 @@ class WebViewPage : AppCompatActivity() {
             }
 
 
+            if (customInternetWebviewPage != null){
+                customInternetWebviewPage!!.dismiss()
+                isCountDownDialogVisible = false
+            }
+
+            if ( countdownTimerForWebviewPage != null){
+                countdownTimerForWebviewPage?.cancel()
+            }
+
+
+
             receiver?.let { itpp ->
                 applicationContext.unregisterReceiver(itpp)
             }
@@ -8313,10 +8549,6 @@ class WebViewPage : AppCompatActivity() {
     }
 
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-        restartApp()
-    }
 
 
     private fun restartApp() {
@@ -8324,51 +8556,50 @@ class WebViewPage : AppCompatActivity() {
         finishAffinity()
         val intent = Intent(applicationContext, SplashVideoActivity::class.java)
         startActivity(intent)
-        //  Process.killProcess(Process.myTid())
 
     }
 
 
     private fun start_App_Refresh_Time(hours: Long) {
-        val milliseconds = hours * 60 * 60 * 1000 // Convert hours to milliseconds
-        countdownTimer_App_Refresh = object : CountDownTimer(milliseconds, 1000) {
-            @SuppressLint("SetTextI18n")
-            override fun onFinish() {
-                try {
-                    restartApp()
-                } catch (e: Exception) {
-                    // Handle exception if needed
+        if (isSystemRunning) {
+            val milliseconds = hours * 60 * 60 * 1000 // Convert hours to milliseconds
+            countdownTimer_App_Refresh = object : CountDownTimer(milliseconds, 1000) {
+                @SuppressLint("SetTextI18n")
+                override fun onFinish() {
+                    try {
+                        restartApp()
+                    } catch (e: Exception) {
+                        // Handle exception if needed
+                    }
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+                    try {
+                        val totalSecondsRemaining = millisUntilFinished / 1000
+                        val hoursUntilFinished = totalSecondsRemaining / 3600
+                        val minutesUntilFinished = (totalSecondsRemaining % 3600) / 60
+                        val remainingSeconds = totalSecondsRemaining % 60
+
+                        val displayText = String.format(
+                            "%d:%02d:%02d",
+                            hoursUntilFinished,
+                            minutesUntilFinished,
+                            remainingSeconds
+                        )
+                        binding.textRefreshTime.text = displayText
+
+                    } catch (ignored: Exception) {
+                        // Handle exception if needed
+                    }
                 }
             }
-
-            override fun onTick(millisUntilFinished: Long) {
-                try {
-                    val totalSecondsRemaining = millisUntilFinished / 1000
-                    val hoursUntilFinished = totalSecondsRemaining / 3600
-                    val minutesUntilFinished = (totalSecondsRemaining % 3600) / 60
-                    val remainingSeconds = totalSecondsRemaining % 60
-
-                    val displayText = String.format(
-                        "%d:%02d:%02d",
-                        hoursUntilFinished,
-                        minutesUntilFinished,
-                        remainingSeconds
-                    )
-                    binding.textRefreshTime.text = displayText
-
-                } catch (ignored: Exception) {
-                    // Handle exception if needed
-                }
-            }
+            countdownTimer_App_Refresh?.start()
         }
-        countdownTimer_App_Refresh?.start()
     }
-
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun applyOritenation() {
-        val getState =
-            sharedBiometric.getString(Constants.IMG_TOGGLE_FOR_ORIENTATION, "").toString()
+        val getState = sharedBiometric.getString(Constants.IMG_TOGGLE_FOR_ORIENTATION, "").toString()
 
         if (getState == Constants.USE_POTRAIT) {
             requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -8384,6 +8615,8 @@ class WebViewPage : AppCompatActivity() {
 
     }
 
+
+
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
 
@@ -8397,6 +8630,10 @@ class WebViewPage : AppCompatActivity() {
             TRIM_MEMORY_RUNNING_LOW,
             TRIM_MEMORY_RUNNING_CRITICAL -> {
                 showWarning("Device is running low on memory. Please close unused apps.")
+                lifecycleScope.launch(Dispatchers.IO) {
+                    FileUtils.deleteQuietly(cacheDir)
+                    FileUtils.deleteQuietly(externalCacheDir)
+                }
             }
         }
     }

@@ -337,7 +337,6 @@ class SettingsActivityKT : AppCompatActivity() {
                 }
 
 
-
                 if (hide_Immersive_ModeLabel) {
                     imgImmesriveModeToggle.visibility = View.GONE
                     textimmersiveMode.visibility = View.GONE
