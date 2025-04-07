@@ -4007,6 +4007,11 @@ class WebViewPage : AppCompatActivity() {
             if (customInternetWebviewPage != null){
                 customInternetWebviewPage!!.dismiss()
             }
+
+          if ( countdownTimerForWebviewPage != null){
+              countdownTimerForWebviewPage?.cancel()
+          }
+
           isCountDownDialogVisible  = false
         }
 
@@ -4018,6 +4023,11 @@ class WebViewPage : AppCompatActivity() {
             if (customInternetWebviewPage != null){
                 customInternetWebviewPage!!.dismiss()
             }
+
+            if ( countdownTimerForWebviewPage != null){
+                countdownTimerForWebviewPage?.cancel()
+            }
+
             isCountDownDialogVisible  = false
         }
 
