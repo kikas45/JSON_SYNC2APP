@@ -1111,6 +1111,7 @@ class WebViewPage : AppCompatActivity() {
 
 
     private fun registerNotificationBroadCast() {
+
         if (constants.Notifx_service) {
             isAppOpen = true
 
@@ -4033,7 +4034,6 @@ class WebViewPage : AppCompatActivity() {
 
 
         ///////////////
-
         bindingCP.textCountDown.visibility = View.VISIBLE
         val minutes = 1L
         val milliseconds = minutes * 15 * 1000
@@ -4042,7 +4042,6 @@ class WebViewPage : AppCompatActivity() {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 try {
-
                     countdownTimerForWebviewPage!!.start()
 
                 if (isCountDownDialogVisible && isSystemRunning && Utility.isNetworkAvailable(applicationContext)){
@@ -4081,9 +4080,7 @@ class WebViewPage : AppCompatActivity() {
         }
 
         countdownTimerForWebviewPage?.start()
-
         ///////////////
-
 
         /// the pop of custom to show
         customInternetWebviewPage!!.show()
@@ -4119,7 +4116,6 @@ class WebViewPage : AppCompatActivity() {
 
 
     }
-
 
     //////// The API SYNC
     //////// The API SYNC
