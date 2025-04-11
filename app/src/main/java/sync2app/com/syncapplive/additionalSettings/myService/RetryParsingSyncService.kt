@@ -28,12 +28,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sync2app.com.syncapplive.R
+import sync2app.com.syncapplive.additionalSettings.myApiDownload.FilesApi
 import sync2app.com.syncapplive.additionalSettings.myCompleteDownload.DnApi
 import sync2app.com.syncapplive.additionalSettings.myCompleteDownload.DnViewModel
 import sync2app.com.syncapplive.additionalSettings.myFailedDownloadfiles.DnFailedApi
 import sync2app.com.syncapplive.additionalSettings.myFailedDownloadfiles.DnFailedViewModel
 import sync2app.com.syncapplive.additionalSettings.urlchecks.checkUrlExistence
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
+import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import java.io.File
 import java.util.Objects
 
@@ -54,6 +56,12 @@ class RetryParsingSyncService : Service() {
         Handler(Looper.getMainLooper())
     }
 
+    private val sharedBiometric: SharedPreferences by lazy {
+        applicationContext.getSharedPreferences(
+            Constants.SHARED_BIOMETRIC,
+            Context.MODE_PRIVATE
+        )
+    }
 
     private var KoloLog = "ParsingSyncService"
 
@@ -75,7 +83,6 @@ class RetryParsingSyncService : Service() {
 
     private var isDnFailed = true
 
- //   private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
 
     override fun onCreate() {
         super.onCreate()
@@ -109,15 +116,51 @@ class RetryParsingSyncService : Service() {
             myHandler!!.removeCallbacks(runnableGetDownloadProgress)
         }
 
-        handler.postDelayed(Runnable {
-            myHandler.postDelayed(runnableGetApiStart, 500)
-
-        }, 5000)
-
+        startParsringDownload()
 
 
         return START_STICKY
     }
+
+
+
+    private fun startParsringDownload() {
+
+        if (Utility.isNetworkAvailable(applicationContext)) {
+            val imagUsemanualOrnotuseManual = sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
+
+            if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
+                handlerParsing.postDelayed(Runnable {
+
+                    val getSavedEditTextInputSynUrlZip = sharedP.getString(Constants.getSavedEditTextInputSynUrlZip, "").toString()
+
+                    if (getSavedEditTextInputSynUrlZip.contains("/App/index.html")) {
+                        myHandler.postDelayed(runnableManual, 500)
+                    } else {
+                        showToastMessage("Something went wrong, System Could not locate CSV or index file  from this Location")
+
+
+                    }
+
+                }, 1000)
+
+            } else {
+
+                handler.postDelayed(Runnable {
+                    myHandler.postDelayed(runnableGetApiStart, 500)
+
+                }, 5000)
+
+            }
+
+        } else {
+
+            Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -158,7 +201,6 @@ class RetryParsingSyncService : Service() {
 
 
     /////  Next step is to begin sequential download
-
     private val runnableGetApiStart: java.lang.Runnable = object : java.lang.Runnable {
         @SuppressLint("SetTextI18n")
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -181,18 +223,175 @@ class RetryParsingSyncService : Service() {
     }
 
 
+
+    // for manual
+    private val runnableManual: Runnable = object : Runnable {
+        @SuppressLint("SetTextI18n")
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        override fun run() {
+            dnViewModel.readAllData.observe(ProcessLifecycleOwner.get(),
+                Observer { files ->
+                    if (files.isNotEmpty()) {
+
+                        handler.postDelayed(Runnable {
+                            totalFiles = files.size.toInt()
+                            downloadSequentiallyManually(files)
+                        }, 2000)
+
+                    } else {
+                        /// showToastMessage("No files found")
+                    }
+                })
+        }
+
+    }
+
+
+
+
     @SuppressLint("SetTextI18n")
     private fun downloadSequentially(files: List<DnApi>) {
         if (currentDownloadIndex < files.size) {
             val file = files[currentDownloadIndex]
             handler.postDelayed(Runnable {
                 getZipDownloads(file.SN, file.FolderName, file.FileName)
-                /// Log.d(KoloLog, "onStartCommand: getZipDownloads")
-
             }, 1000)
 
         }
     }
+
+
+
+    // for manaul
+    @SuppressLint("SetTextI18n")
+    private fun downloadSequentiallyManually(files: List<DnApi>) {
+        if (currentDownloadIndex < files.size) {
+            val file = files[currentDownloadIndex]
+            handlerParsing.postDelayed(Runnable {
+                getZipDownloadsManually(file.SN, file.FolderName, file.FileName)
+            }, 1000)
+
+        }
+    }
+
+    private fun getZipDownloadsManually(sn: String, folderName: String, fileName: String) {
+
+        if (isProgresStarted) {
+            isProgresStarted = false
+
+
+            val intent = Intent(Constants.RECIVER_PROGRESS)
+            intent.putExtra(Constants.ParsingStatusSync, Constants.PR_Downloading)
+            sendBroadcast(intent)
+
+
+            getDownloadStatus()
+            if (myHandler != null) {
+                myHandler.postDelayed(runnableGetDownloadProgress, 500)
+            }
+
+        }
+
+
+    val Syn2AppLive = Constants.Syn2AppLive
+        val Demo_Parsing_Folder = Constants.TEMP_PARS_FOLDER
+        val saveMyFileToStorage = "/$Syn2AppLive/$Demo_Parsing_Folder/CLO/MANUAL/DEMO/$folderName"
+
+        val getSavedEditTextInputSynUrlZip = sharedP.getString(Constants.getSavedEditTextInputSynUrlZip, "").toString()
+
+        var replacedUrl = getSavedEditTextInputSynUrlZip // Initialize it with original value
+
+
+
+        if (getSavedEditTextInputSynUrlZip.contains("/App/index.html")) {
+            replacedUrl = getSavedEditTextInputSynUrlZip.replace(
+                "/App/index.html",
+                "/$folderName/$fileName"
+            )
+
+        } else {
+
+            Log.d("getZipDownloadsManually", "Unable to replace this url")
+        }
+
+
+        GlobalScope.launch(Dispatchers.IO) {
+            //  Log.d(KoloLog, "getZipDownloads:$getFileUrl ")
+            try {
+                val result = checkUrlExistence(replacedUrl)
+                if (result) {
+                    //    Log.d(KoloLog, "checkUrlExistence: Sucessful")
+
+                    handlerParsing.postDelayed(Runnable {
+                        val editior = sharedP.edit()
+                        editior.putString(Constants.fileNumber, sn)
+                        editior.putString(Constants.folderName, folderName)
+                        editior.putString(Constants.fileName, fileName)
+                        editior.apply()
+
+                        val dir = File(
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                            saveMyFileToStorage
+                        )
+                        if (!dir.exists()) {
+                            dir.mkdirs()
+                        }
+
+                        val managerDownload =
+                            getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+
+                        // save files to this folder
+                        val folder = File(
+                            Environment.getExternalStorageDirectory()
+                                .toString() + "/Download/$saveMyFileToStorage"
+                        )
+
+                        if (!folder.exists()) {
+                            folder.mkdirs()
+                        }
+
+                        val request = DownloadManager.Request(Uri.parse(replacedUrl))
+                        request.setTitle(fileName)
+                        request.allowScanningByMediaScanner()
+                        request.setDestinationInExternalPublicDir(
+                            Environment.DIRECTORY_DOWNLOADS, "/$saveMyFileToStorage/$fileName"
+                        )
+                        val downloadReferenceMain = managerDownload.enqueue(request)
+                        downloadReference = downloadReferenceMain
+                        val editor = sharedP.edit()
+                        editor.putLong(Constants.downloadKey, downloadReferenceMain)
+                        editor.apply()
+
+
+                    }, 300)
+                } else {
+
+                    withContext(Dispatchers.Main) {
+                        getNextOnFailedDownload(
+                            sn = sn,
+                            folderName = folderName,
+                            fileName = fileName
+                        )
+
+                    }
+
+
+                }
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+                    getNextOnFailedDownload(sn = sn, folderName = folderName, fileName = fileName)
+                    Log.d(KoloLog, "getZipDownloads: ${e.message.toString()}")
+                }
+
+
+            }
+
+        }
+
+
+    }
+
 
 
     @SuppressLint("SetTextI18n")

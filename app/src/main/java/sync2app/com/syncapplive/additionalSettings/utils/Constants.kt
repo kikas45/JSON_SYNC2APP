@@ -9,13 +9,17 @@ class Constants {
         const val CUSTOM_CP_SERVER_DOMAIN = "https://cp.cloudappserver.co.uk/app_base/public/"
         const val CUSTOM_API_SERVER_DOMAIN = "https://cp.cloudappserver.co.uk/app_base/public/"
 
+
+
         // This is important for master domain urls from the Json
         /// NOTE: The url must end with " / "  else the app will crash, ensure to always add the " / " at the end of the url
         const val BASE_URL_OF_MASTER_DOMAIN = "https://cp.cloudappserver.co.uk/app_base/public/CLO/DE_MO_2021001/DOM/Custom.Json/"
 
 
+
         // for Tv or App Mode Json settings,  the BASE ( master Url )  + this  END Path makes a full url
         const val END_PATH_OF_TV_MODE_URL = "/AppConfig/InstallAppSettings.json"
+
 
 
         // for Cloud App sync Server Time used in Schedule media, a full path include Company and location + an end with " Servertime"

@@ -1434,8 +1434,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                 } else {
 
                     /// when the button is checked
-
-                    // for maunal download
                     val editInputUrl = editTextInputSynUrlZip.text.toString().trim()
                     // to luanch a live url manual
                     val editInputAppIndex = editTextInputIndexManual.text.toString().trim()
@@ -1633,7 +1631,21 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     }
                 }
 
+                // newly added by 10:33 am
+            } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
+
+
+                showToastMessage("Google Drive Connection Pending")
+                /// showContinueGoogleDrive(getFolderClo, getFolderSubpath)
+
+                handler.postDelayed(Runnable {
+                    if (customProgressDialog != null){
+                        customProgressDialog.dismiss()
+                    }
+                }, 2500)
+
             }
+
 
 
         }, 300)
@@ -3941,36 +3953,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
             } else if (getSyncMethods == Constants.USE_PARSING_SYNC) {
 
-/*                lifecycleScope.launch {
-                    try {
-                        val result = checkUrlExistence(editInputUrl)
-                        if (result) {
-
-                            if (customProgressDialog != null){
-                                customProgressDialog.dismiss()
-                            }
-
-                            showToastMessage("(Parsing) We are sorry but the manual for this set up is not Ready ")
-
-                        } else {
-
-                            showPopsForMyConnectionTest(
-                                "CLO", fileNameWithoutExtension, "Failed!"
-                            )
-
-                            if (customProgressDialog != null){
-                                customProgressDialog.dismiss()
-                            }
-                        }
-                    } catch (e:Exception){
-                        if (customProgressDialog != null){
-                            customProgressDialog.dismiss()
-                        }
-                    }
-                }*/
-
-
-
                 lifecycleScope.launch {
                     try {
                         val result = checkUrlExistence(editInputUrl)
@@ -4263,13 +4245,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                         try {
                             val result = checkUrlExistence(get_Full_url)
                             if (result) {
-                                startMyDownlaodsMutiplesPath(
-                                    get_Full_url,
-                                    getFolderClo,
-                                    getFolderSubpath,
-                                    "Zip",
-                                    "App.zip",
-                                )
+                                startMyDownlaodsMutiplesPath(get_Full_url, getFolderClo, getFolderSubpath, "Zip", "App.zip",)
 
                                 // save also to room data base
                                 val user = User(
@@ -4283,13 +4259,12 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                                 savePathServerUrl(get_ModifiedUrl, getFolderClo, getFolderSubpath)
 
                             } else {
-                                showPopsForMyConnectionTest(
-                                    getFolderClo, getFolderSubpath, "Failed!"
-                                )
+                                showPopsForMyConnectionTest(getFolderClo, getFolderSubpath, "Failed!")
 
                                 if (customProgressDialog != null){
                                     customProgressDialog.dismiss()
                                 }
+
                             }
                         } catch (e:Exception){
                             if (customProgressDialog != null){
@@ -4397,7 +4372,16 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
                 } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
 
-                    showContinueGoogleDrive(getFolderClo, getFolderSubpath)
+                   // showContinueGoogleDrive(getFolderClo, getFolderSubpath)
+
+                    showToastMessage("Google Drive Connection Pending")
+                    /// showContinueGoogleDrive(getFolderClo, getFolderSubpath)
+
+                    handler.postDelayed(Runnable {
+                        if (customProgressDialog != null){
+                            customProgressDialog.dismiss()
+                        }
+                    }, 2500)
 
                 }
 

@@ -356,9 +356,7 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
                 if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
                     handler.postDelayed(Runnable {
 
-                        val getSavedEditTextInputSynUrlZip =
-                            sharedP.getString(Constants.getSavedEditTextInputSynUrlZip, "")
-                                .toString()
+                        val getSavedEditTextInputSynUrlZip = sharedP.getString(Constants.getSavedEditTextInputSynUrlZip, "").toString()
 
                         if (getSavedEditTextInputSynUrlZip.contains("/App/index.html")) {
                             myHandler.postDelayed(runnableManual, 500)
@@ -614,8 +612,7 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
 
         // delete existing files first
-        val directoryPath =
-            Environment.getExternalStorageDirectory().absolutePath + "/Download/" + saveMyFileToStorage
+        val directoryPath = Environment.getExternalStorageDirectory().absolutePath + "/Download/" + saveMyFileToStorage
         val myFile = File(directoryPath, fileName)
         delete(myFile)
 
