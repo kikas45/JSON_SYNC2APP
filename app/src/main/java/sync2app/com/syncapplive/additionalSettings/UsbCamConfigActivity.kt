@@ -201,8 +201,6 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
 
 
-
-
                 // Define colors for different states
                 val thumbColorStateList = ColorStateList(
                     arrayOf(

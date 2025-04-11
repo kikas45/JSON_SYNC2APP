@@ -265,6 +265,12 @@ class SplashKT : AppCompatActivity() {
 
     private fun setUpInternetAmination() {
 
+        binding.splashImage.setOnClickListener {
+            val intent = Intent(Settings.ACTION_SETTINGS)
+            startActivity(intent)
+        }
+
+
         if (!Utility.isNetworkAvailable(applicationContext)) {
             InitWebviewIndexFileState()
             isCallingStart = false

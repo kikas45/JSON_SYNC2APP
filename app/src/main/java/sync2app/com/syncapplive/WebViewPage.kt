@@ -4321,10 +4321,8 @@ class WebViewPage : AppCompatActivity() {
             val myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, MODE_PRIVATE)
             val sharedBiometric = getSharedPreferences(Constants.SHARED_BIOMETRIC, MODE_PRIVATE)
 
-            val imagUsemanualOrnotuseManual =
-                sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
-            val getSavedEditTextInputSynUrlZip =
-                myDownloadClass.getString(Constants.getSavedEditTextInputSynUrlZip, "").toString()
+            val imagUsemanualOrnotuseManual = sharedBiometric.getString(Constants.imagSwtichEnableManualOrNot, "").toString()
+            val getSavedEditTextInputSynUrlZip = myDownloadClass.getString(Constants.getSavedEditTextInputSynUrlZip, "").toString()
 
 
             val get_tMaster: String =
@@ -4342,9 +4340,8 @@ class WebViewPage : AppCompatActivity() {
             if (imagUsemanualOrnotuseManual.equals(Constants.imagSwtichEnableManualOrNot)) {
 
                 if (getSavedEditTextInputSynUrlZip.contains("/App/index.html")) {
-                    /// cleanTempFolder(getSavedEditTextInputSynUrlZip)
 
-                    Log.d("TO_USE_MANUAL_PATRSING", "initParsingUrlMethods: TO_USE_MANUAL_PATRSING")
+                    cleanTempFolder(getSavedEditTextInputSynUrlZip)
 
                 } else {
                     showToastMessage(Constants.Error_IndexFile_Message)
@@ -4352,6 +4349,8 @@ class WebViewPage : AppCompatActivity() {
                 }
 
             } else {
+
+
                 if (imagSwtichPartnerUrl == Constants.imagSwtichPartnerUrl) {
                     val urlPath =
                         "${CP_AP_MASTER_DOMAIN}/$get_UserID/$get_LicenseKey/App/index.html"
@@ -4361,6 +4360,8 @@ class WebViewPage : AppCompatActivity() {
                     val urlPath = "$get_tMaster/$get_UserID/$get_LicenseKey/App/index.html"
                     cleanTempFolder(urlPath)
                 }
+
+
             }
         } else {
             showToastMessage("No internet Connection")
