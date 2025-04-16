@@ -21,9 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import sync2app.com.syncapplive.WebViewPage;
-import sync2app.com.syncapplive.MyApplication;
 import sync2app.com.syncapplive.R;
-import sync2app.com.syncapplive.additionalSettings.scanutil.CaptureAct;
+import sync2app.com.syncapplive.additionalSettings.savedDownloadHistory.scanutil.CaptureAct;
 import sync2app.com.syncapplive.additionalSettings.utils.Constants;
 
 @RequiresApi(api = Build.VERSION_CODES.Q)

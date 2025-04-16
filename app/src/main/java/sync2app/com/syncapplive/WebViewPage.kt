@@ -148,7 +148,7 @@ import sync2app.com.syncapplive.additionalSettings.myFailedDownloadfiles.DnFaile
 import sync2app.com.syncapplive.additionalSettings.myFailedDownloadfiles.DnFailedViewModel
 import sync2app.com.syncapplive.additionalSettings.myParsingDownloadDataBase.ParsingApi
 import sync2app.com.syncapplive.additionalSettings.myParsingDownloadDataBase.ParsingViewModel
-import sync2app.com.syncapplive.additionalSettings.scanutil.CustomShortcutsDemo
+import sync2app.com.syncapplive.additionalSettings.savedDownloadHistory.scanutil.CustomShortcutsDemo
 import sync2app.com.syncapplive.additionalSettings.urlchecks.checkUrlExistence
 import sync2app.com.syncapplive.additionalSettings.usdbCamera.MyUsb.CameraHandlerKT
 import sync2app.com.syncapplive.additionalSettings.usdbCamera.MyUsb.kotlionCode.AudioHandlerKT
@@ -1297,13 +1297,20 @@ class WebViewPage : AppCompatActivity() {
     }
 
     private fun ExitOnError() {
-        // finishAffinity()
+        val lockDown = sharedBiometric.getString(Constants.imgEnableLockScreen, "").toString()
+
+        if (lockDown == Constants.imgEnableLockScreen){
+
+            showToastMessage("Kindly Remove App from Lock down mode")
+
+        }else{
 
         finishAndRemoveTask()
         Process.killProcess(Process.myTid())
 
         if (LoadLastWebPageOnAccidentalExit) {
             ClearLastUrl()
+        }
         }
     }
 
@@ -2446,8 +2453,16 @@ class WebViewPage : AppCompatActivity() {
                     showExitConfirmationDialog()
 
                 } else {
-                    finishAndRemoveTask()
-                    Process.killProcess(Process.myTid())
+
+                    val lockDown = sharedBiometric.getString(Constants.imgEnableLockScreen, "").toString()
+
+                    if (lockDown == Constants.imgEnableLockScreen){
+                        showToastMessage("Kindly Remove App from Lock down mode")
+
+                    }else{
+                        finishAndRemoveTask()
+                        Process.killProcess(Process.myTid())
+                    }
 
                 }
 
@@ -2749,21 +2764,30 @@ class WebViewPage : AppCompatActivity() {
 
                 if (getPasswordPrefilled == Constants.passowrdPrefeilled || editTextText == getSimpleAdminPassword) {
 
-                    val editor = myDownloadMangerClass.edit()
-                    editor.remove(Constants.SynC_Status)
-                    editor.apply()
+                    val lockDown = sharedBiometric.getString(Constants.imgEnableLockScreen, "").toString()
 
-                    val editor22 = simpleSavedPassword.edit()
-                    editor22.remove(Constants.Did_User_Input_PassWord)
-                    editor22.apply()
+                    if (lockDown == Constants.imgEnableLockScreen){
+
+                        showToastMessage("Kindly Remove App from Lock down mode")
+
+                    }else{
+
+                        val editor = myDownloadMangerClass.edit()
+                        editor.remove(Constants.SynC_Status)
+                        editor.apply()
+
+                        val editor22 = simpleSavedPassword.edit()
+                        editor22.remove(Constants.Did_User_Input_PassWord)
+                        editor22.apply()
 
 
-                    alertDialog.dismiss()
+                        alertDialog.dismiss()
 
-                    handler.postDelayed(Runnable {
-                        finishAndRemoveTask()
-                        Process.killProcess(Process.myTid())
-                    }, 300)
+                        handler.postDelayed(Runnable {
+                            finishAndRemoveTask()
+                            Process.killProcess(Process.myTid())
+                        }, 300)
+                    }
 
                 } else {
                     hideKeyBoard(editTextText2)

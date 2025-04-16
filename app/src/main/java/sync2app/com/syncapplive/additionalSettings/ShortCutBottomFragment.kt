@@ -25,8 +25,8 @@ import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import sync2app.com.syncapplive.R
-import sync2app.com.syncapplive.additionalSettings.scanutil.CustomShortcuts
-import sync2app.com.syncapplive.additionalSettings.scanutil.DefaultCustomShortCut
+import sync2app.com.syncapplive.additionalSettings.savedDownloadHistory.scanutil.CustomShortcuts
+import sync2app.com.syncapplive.additionalSettings.savedDownloadHistory.scanutil.DefaultCustomShortCut
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
 import sync2app.com.syncapplive.databinding.FragmentShortCutBottomBinding
 import java.io.File

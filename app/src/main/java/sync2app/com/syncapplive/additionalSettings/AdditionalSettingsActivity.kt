@@ -53,8 +53,8 @@ import sync2app.com.syncapplive.SettingsActivityKT
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.cloudAppsync.schedules.ScheduleMediaActivity
 import sync2app.com.syncapplive.additionalSettings.devicelock.MyDeviceAdminReceiver
-import sync2app.com.syncapplive.additionalSettings.scanutil.CustomShortcuts
-import sync2app.com.syncapplive.additionalSettings.scanutil.DefaultCustomShortCut
+import sync2app.com.syncapplive.additionalSettings.savedDownloadHistory.scanutil.CustomShortcuts
+import sync2app.com.syncapplive.additionalSettings.savedDownloadHistory.scanutil.DefaultCustomShortCut
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
 import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityAppAdminBinding

@@ -2129,34 +2129,45 @@ class SettingsActivityKT : AppCompatActivity() {
               if (handlerMoveToWebviewPage != null){
                   handlerMoveToWebviewPage.removeCallbacksAndMessages(null)
               }
+
               hideKeyBoard(editTextText2)
-              val getPasswordPrefilled =
-                  simpleSavedPassword.getString(Constants.passowrdPrefeilled, "").toString()
-              val getSimpleAdminPassword =
-                  simpleSavedPassword.getString(Constants.mySimpleSavedPassword, "").toString()
+
+              val getPasswordPrefilled = simpleSavedPassword.getString(Constants.passowrdPrefeilled, "").toString()
+              val getSimpleAdminPassword = simpleSavedPassword.getString(Constants.mySimpleSavedPassword, "").toString()
 
               val editTextText = editTextText2.text.toString().trim { it <= ' ' }
 
               if (getPasswordPrefilled == Constants.passowrdPrefeilled || editTextText == getSimpleAdminPassword) {
 
-                  val editor = myDownloadMangerClass.edit()
-                  editor.remove(Constants.SynC_Status)
-                  editor.apply()
-                  second_cancel_download()
+                  val lockDown = sharedBiometric.getString(Constants.imgEnableLockScreen, "").toString()
 
-                  val editor22 = simpleSavedPassword.edit()
-                  editor22.remove(Constants.Did_User_Input_PassWord)
-                  editor22.apply()
+                  if (lockDown == Constants.imgEnableLockScreen){
+
+                      showToastMessage("Kindly Remove App from Lock down mode")
+
+                  }else{
+
+                      val editor = myDownloadMangerClass.edit()
+                      editor.remove(Constants.SynC_Status)
+                      editor.apply()
+                      second_cancel_download()
+
+                      val editor22 = simpleSavedPassword.edit()
+                      editor22.remove(Constants.Did_User_Input_PassWord)
+                      editor22.apply()
 
 
-                  alertDialog.dismiss()
+                      alertDialog.dismiss()
 
-                  handler.postDelayed(Runnable {
-                      finishAndRemoveTask()
-                      Process.killProcess(Process.myTid())
-                  }, 300)
+                      handler.postDelayed(Runnable {
+                          finishAndRemoveTask()
+                          Process.killProcess(Process.myTid())
+                      }, 200)
+
+                  }
 
               } else {
+
                   hideKeyBoard(editTextText2)
                   showPop_For_wrong_Password("Wrong password")
                   editTextText2.error = "Wrong password"
@@ -2165,6 +2176,7 @@ class SettingsActivityKT : AppCompatActivity() {
                   editTextText2.startAnimation(shakeAnimation)
                   divider2.startAnimation(shakeAnimation)
                   divider2.setBackgroundColor(resources.getColor(R.color.red))
+
               }
 
 

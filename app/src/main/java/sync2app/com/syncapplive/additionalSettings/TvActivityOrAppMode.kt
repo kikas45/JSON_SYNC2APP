@@ -1135,11 +1135,11 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
             if (navigateAppMolde) {
 
 
-                startActivity(Intent(applicationContext, RequiredBioActivity::class.java))
                 editor.putString(Constants.MY_TV_OR_APP_MODE, Constants.App_Mode)
                 editor.putString(Constants.FIRST_TIME_APP_START, Constants.FIRST_TIME_APP_START)
                 editor.putString(Constants.IMG_TOGGLE_FOR_ORIENTATION, Constants.USE_POTRAIT)
                 editor.apply()
+                startActivity(Intent(applicationContext, RequiredBioActivity::class.java))
                 finish()
 
                 showToastMessage("Please wait")
@@ -1149,12 +1149,12 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
             if (navigateTVMode) {
 
-                startActivity(Intent(applicationContext, RequiredBioActivity::class.java))
                 editor.putString(Constants.MY_TV_OR_APP_MODE, Constants.TV_Mode)
                 editor.putString(Constants.CALL_RE_SYNC_MANGER, Constants.CALL_RE_SYNC_MANGER)
                 editor.putString(Constants.FIRST_TIME_APP_START, Constants.FIRST_TIME_APP_START)
-                editor.putString(Constants.IMG_TOGGLE_FOR_ORIENTATION, Constants.USE_POTRAIT)
+                editor.putString(Constants.IMG_TOGGLE_FOR_ORIENTATION, Constants.USE_UNSEPECIFIED)
                 editor.apply()
+                startActivity(Intent(applicationContext, RequiredBioActivity::class.java))
                 finish()
 
                 showToastMessage("Please wait")

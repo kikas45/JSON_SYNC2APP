@@ -384,7 +384,17 @@ public class AddNewSchedule extends AppCompatActivity {
         });
 
         //add
-        activity.addScheduleBtn.setOnClickListener(v -> validateParams());
+        activity.addScheduleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String getValue = activity.redirectUrl.getText().toString().trim();
+                if (getValue.isEmpty()){
+                    Toast.makeText(AddNewSchedule.this, "redirect url can not be empty", Toast.LENGTH_SHORT).show();
+                }else {
+                    validateParams();
+                }
+            }
+        });
 
         // spanner
         activity.imagSpannerSavedDownload.setOnClickListener(v -> populateMyField());
