@@ -14,6 +14,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +32,6 @@ import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.additionalSettings.USBCamera.CamModel.CamRetrofitInstance
 import sync2app.com.syncapplive.additionalSettings.usdbCamera.InputFilterMinMax
 import sync2app.com.syncapplive.additionalSettings.utils.Constants
-import sync2app.com.syncapplive.additionalSettings.utils.Utility
 import sync2app.com.syncapplive.databinding.ActivityUsbCamConfigBinding
 import sync2app.com.syncapplive.databinding.CustomDefinedTimeIntervalsBinding
 import java.io.File
@@ -98,6 +98,14 @@ class UsbCamConfigActivity : AppCompatActivity() {
     }
 
 
+    private var usb_live_stream = ""
+    private var stream_video = ""
+    private var allowfloatandexpand = ""
+    private var use_api = ""
+    private var disable_audio = ""
+    private var enable_window_display_interval = ""
+
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,166 +116,16 @@ class UsbCamConfigActivity : AppCompatActivity() {
         applyOritenation()
 
 
-
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                window?.navigationBarColor = Color.parseColor("#171616")
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
+        setUpDarkTheme()
 
 
-                myparentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-
-                textView42.setTextColor(resources.getColor(R.color.white))
-
-
-                textUseUsbCamera.setTextColor(resources.getColor(R.color.white))
-                textEnableStreamVideo.setTextColor(resources.getColor(R.color.white))
-                textFloatAndexpand.setTextColor(resources.getColor(R.color.white))
-                textPositionAngles.setTextColor(resources.getColor(R.color.white))
-                textStreamAudioSound.setTextColor(resources.getColor(R.color.white))
-                textUseAPIorDeviceSource.setTextColor(resources.getColor(R.color.white))
-                textWindowDisplayInterval.setTextColor(resources.getColor(R.color.white))
-                textPositionAngles.setTextColor(resources.getColor(R.color.white))
-                textDisplayTime.setTextColor(resources.getColor(R.color.white))
-                textHideTime.setTextColor(resources.getColor(R.color.white))
-                textTime30minuteDisplay.setTextColor(resources.getColor(R.color.white))
-                textTime30minuteHideTime.setTextColor(resources.getColor(R.color.white))
-                textErrorText.setTextColor(resources.getColor(R.color.white))
-                textStartHeight.setTextColor(resources.getColor(R.color.white))
-                textEndHeight.setTextColor(resources.getColor(R.color.white))
-                textStartWidthPos.setTextColor(resources.getColor(R.color.white))
-                textEndWidth.setTextColor(resources.getColor(R.color.white))
-
-
-                // fir back button
-                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                closeBs.setImageDrawable(drawable)
-
-
-                // for all forward icon
-                val drawable_imageView6 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_branding)
-                drawable_imageView6?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView51.setImageDrawable(drawable_imageView6)
-                imageView49.setImageDrawable(drawable_imageView6)
-                imageView50.setImageDrawable(drawable_imageView6)
-                imageView41.setImageDrawable(drawable_imageView6)
-                imageView52.setImageDrawable(drawable_imageView6)
-
-
-                // for nav icons
-                val drawable_imageView4 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_arrow_move_front)
-                drawable_imageView4?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView4.setImageDrawable(drawable_imageView4)
-                imageView56.setImageDrawable(drawable_imageView4)
-
-
-
-                textSavesettings.setBackgroundResource(R.drawable.round_edit_text_design_theme_extra)
-
-
-
-
-
-
-
-
-                editInputStartHeightPosition.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editInputStartHeightPosition.setTextColor(resources.getColor(R.color.white))
-                editInputStartHeightPosition.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-                editInputEndHeightPosition.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editInputEndHeightPosition.setTextColor(resources.getColor(R.color.white))
-                editInputEndHeightPosition.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-
-                editInputStartWidthPosition.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editInputStartWidthPosition.setTextColor(resources.getColor(R.color.white))
-                editInputStartWidthPosition.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-                editInpuEndWidthPosition.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editInpuEndWidthPosition.setTextColor(resources.getColor(R.color.white))
-                editInpuEndWidthPosition.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-
-
-
-
-
-
-                // Define colors for different states
-                val thumbColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_checked),
-                        intArrayOf(-android.R.attr.state_checked)
-                    ),
-                    intArrayOf(
-                        Color.LTGRAY,  // Color when checked
-                        Color.LTGRAY   // Color when unchecked
-                    )
-                )
-
-                val trackColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_enabled),
-                        intArrayOf(-android.R.attr.state_enabled)
-                    ),
-                    intArrayOf(
-                        Color.DKGRAY,  // Color when enabled
-                        Color.LTGRAY   // Color when disabled
-                    )
-                )
-
-                // Apply the color state lists
-                imgStreamAudioSound.thumbTintList = thumbColorStateList
-                imgStreamAudioSound.trackTintList = trackColorStateList
-
-                imgStreamAPIorDevice.thumbTintList = thumbColorStateList
-                imgStreamAPIorDevice.trackTintList = trackColorStateList
-
-                imgEnableDisplayIntervals.thumbTintList = thumbColorStateList
-                imgEnableDisplayIntervals.trackTintList = trackColorStateList
-
-                imgUseDevicecameraOrPlugInCamera.thumbTintList = thumbColorStateList
-                imgUseDevicecameraOrPlugInCamera.trackTintList = trackColorStateList
-
-                imgStreamVideo.thumbTintList = thumbColorStateList
-                imgStreamVideo.trackTintList = trackColorStateList
-
-                imgEnableExpandFloat.thumbTintList = thumbColorStateList
-                imgEnableExpandFloat.trackTintList = trackColorStateList
-
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider44.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider58.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider51.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider53.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider54.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider63.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider65.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider64.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-
-            }
-        }
-
-
-
-
-
-
-
-        val get_imgToggleImageBackground = sharedBiometric.getString(Constants.imgToggleImageBackground, "")
+        val get_imgToggleImageBackground =
+            sharedBiometric.getString(Constants.imgToggleImageBackground, "")
         val get_imageUseBranding = sharedBiometric.getString(Constants.imageUseBranding, "")
-        if (get_imgToggleImageBackground.equals(Constants.imgToggleImageBackground) && get_imageUseBranding.equals(Constants.imageUseBranding) ){
+        if (get_imgToggleImageBackground.equals(Constants.imgToggleImageBackground) && get_imageUseBranding.equals(
+                Constants.imageUseBranding
+            )
+        ) {
             loadBackGroundImage()
         }
 
@@ -349,7 +207,8 @@ class UsbCamConfigActivity : AppCompatActivity() {
                     binding.textErrorText.visibility = View.VISIBLE
 
                     handler.postDelayed(Runnable {
-                        val intent = Intent(applicationContext, AdditionalSettingsActivity::class.java)
+                        val intent =
+                            Intent(applicationContext, AdditionalSettingsActivity::class.java)
                         startActivity(intent)
                         finish()
 
@@ -369,6 +228,219 @@ class UsbCamConfigActivity : AppCompatActivity() {
             setLayoutParameters()
         }
 
+
+    }
+
+    private fun setUpDarkTheme() {
+
+        binding.apply {
+            if (preferences!!.getBoolean("darktheme", false)) {
+
+                // Set status bar color
+                window?.statusBarColor = Color.parseColor("#171616")
+                window?.navigationBarColor = Color.parseColor("#171616")
+                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
+                    false
+                WindowInsetsControllerCompat(
+                    window,
+                    window.decorView
+                ).isAppearanceLightNavigationBars = false
+
+
+                myparentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
+
+                // set text view
+
+                textView42.setTextColor(resources.getColor(R.color.white))
+
+
+                textUseUsbCamera.setTextColor(resources.getColor(R.color.white))
+                textEnableStreamVideo.setTextColor(resources.getColor(R.color.white))
+                textFloatAndexpand.setTextColor(resources.getColor(R.color.white))
+                textPositionAngles.setTextColor(resources.getColor(R.color.white))
+                textStreamAudioSound.setTextColor(resources.getColor(R.color.white))
+                textUseAPIorDeviceSource.setTextColor(resources.getColor(R.color.white))
+                textWindowDisplayInterval.setTextColor(resources.getColor(R.color.white))
+                textPositionAngles.setTextColor(resources.getColor(R.color.white))
+                textDisplayTime.setTextColor(resources.getColor(R.color.white))
+                textHideTime.setTextColor(resources.getColor(R.color.white))
+                textTime30minuteDisplay.setTextColor(resources.getColor(R.color.white))
+                textTime30minuteHideTime.setTextColor(resources.getColor(R.color.white))
+                textErrorText.setTextColor(resources.getColor(R.color.white))
+                textStartHeight.setTextColor(resources.getColor(R.color.white))
+                textEndHeight.setTextColor(resources.getColor(R.color.white))
+                textStartWidthPos.setTextColor(resources.getColor(R.color.white))
+                textEndWidth.setTextColor(resources.getColor(R.color.white))
+
+
+                // fir back button
+                val drawable =
+                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
+                drawable?.setColorFilter(
+                    ContextCompat.getColor(applicationContext, R.color.white),
+                    PorterDuff.Mode.SRC_IN
+                )
+                closeBs.setImageDrawable(drawable)
+
+
+                // for all forward icon
+                val drawable_imageView6 =
+                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_branding)
+                drawable_imageView6?.setColorFilter(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.deep_blue_light_extra
+                    ), PorterDuff.Mode.SRC_IN
+                )
+                imageView51.setImageDrawable(drawable_imageView6)
+                imageView49.setImageDrawable(drawable_imageView6)
+                imageView50.setImageDrawable(drawable_imageView6)
+                imageView41.setImageDrawable(drawable_imageView6)
+                imageView52.setImageDrawable(drawable_imageView6)
+
+
+                // for nav icons
+                val drawable_imageView4 =
+                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_arrow_move_front)
+                drawable_imageView4?.setColorFilter(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.deep_blue_light_extra
+                    ), PorterDuff.Mode.SRC_IN
+                )
+                imageView4.setImageDrawable(drawable_imageView4)
+                imageView56.setImageDrawable(drawable_imageView4)
+
+
+
+                textSavesettings.setBackgroundResource(R.drawable.round_edit_text_design_theme_extra)
+
+
+
+
+
+
+
+
+                editInputStartHeightPosition.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
+                editInputStartHeightPosition.setTextColor(resources.getColor(R.color.white))
+                editInputStartHeightPosition.setHintTextColor(resources.getColor(R.color.light_gray_wash))
+
+                editInputEndHeightPosition.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
+                editInputEndHeightPosition.setTextColor(resources.getColor(R.color.white))
+                editInputEndHeightPosition.setHintTextColor(resources.getColor(R.color.light_gray_wash))
+
+
+                editInputStartWidthPosition.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
+                editInputStartWidthPosition.setTextColor(resources.getColor(R.color.white))
+                editInputStartWidthPosition.setHintTextColor(resources.getColor(R.color.light_gray_wash))
+
+                editInpuEndWidthPosition.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
+                editInpuEndWidthPosition.setTextColor(resources.getColor(R.color.white))
+                editInpuEndWidthPosition.setHintTextColor(resources.getColor(R.color.light_gray_wash))
+
+
+                // Define colors for different states
+                val thumbColorStateList = ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_checked),
+                        intArrayOf(-android.R.attr.state_checked)
+                    ),
+                    intArrayOf(
+                        Color.LTGRAY,  // Color when checked
+                        Color.LTGRAY   // Color when unchecked
+                    )
+                )
+
+                val trackColorStateList = ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_enabled),
+                        intArrayOf(-android.R.attr.state_enabled)
+                    ),
+                    intArrayOf(
+                        Color.DKGRAY,  // Color when enabled
+                        Color.LTGRAY   // Color when disabled
+                    )
+                )
+
+                // Apply the color state lists
+                imgStreamAudioSound.thumbTintList = thumbColorStateList
+                imgStreamAudioSound.trackTintList = trackColorStateList
+
+                imgStreamAPIorDevice.thumbTintList = thumbColorStateList
+                imgStreamAPIorDevice.trackTintList = trackColorStateList
+
+                imgEnableDisplayIntervals.thumbTintList = thumbColorStateList
+                imgEnableDisplayIntervals.trackTintList = trackColorStateList
+
+                imgUseDevicecameraOrPlugInCamera.thumbTintList = thumbColorStateList
+                imgUseDevicecameraOrPlugInCamera.trackTintList = trackColorStateList
+
+                imgStreamVideo.thumbTintList = thumbColorStateList
+                imgStreamVideo.trackTintList = trackColorStateList
+
+                imgEnableExpandFloat.thumbTintList = thumbColorStateList
+                imgEnableExpandFloat.trackTintList = trackColorStateList
+
+
+                //  for divider i..n
+                divider21.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+                divider44.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+                divider58.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+                divider51.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+                divider53.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+                divider54.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+                divider63.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+                divider65.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+                divider64.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.light_gray
+                    )
+                )
+
+            }
+        }
 
     }
 
@@ -407,6 +479,32 @@ class UsbCamConfigActivity : AppCompatActivity() {
                         val display_time_api = response.body()?.display_time.toString()
                         val hide_time_api = response.body()?.hide_time.toString()
 
+                        // ad more
+                        val _usb_live_stream = response.body()?.usb_live_stream.toString()
+                        val _stream_video = response.body()?.stream_video.toString()
+                        val _allowfloatandexpand = response.body()?.allowfloatandexpand.toString()
+                        val _use_api = response.body()?.use_api.toString()
+                        val _disable_audio = response.body()?.disable_audio.toString()
+                        val _enable_window_display_interval = response.body()?.enable_window_display_interval.toString()
+
+
+                        usb_live_stream = _usb_live_stream
+                        stream_video = _stream_video
+                        allowfloatandexpand = _allowfloatandexpand
+                        use_api = _use_api
+                        disable_audio = _disable_audio
+                        enable_window_display_interval = _enable_window_display_interval
+
+
+                        Log.d("fetchApiCameraData", "usb_live_stream: $usb_live_stream")
+                        Log.d("fetchApiCameraData", "stream_video: $stream_video")
+                        Log.d("fetchApiCameraData", "allowfloatandexpand: $allowfloatandexpand")
+                        Log.d("fetchApiCameraData", "use_api: $use_api")
+                        Log.d("fetchApiCameraData", "disable_audio: $disable_audio")
+                        Log.d("fetchApiCameraData", "enable_window_display_interval: $enable_window_display_interval")
+
+
+
                         showToastMessage("API Settings Saved")
 
                         val editor = sharedCameraPreferences.edit()
@@ -417,6 +515,7 @@ class UsbCamConfigActivity : AppCompatActivity() {
                         editor.putString(Constants.display_time_api, display_time_api)
                         editor.putString(Constants.hide_time_api, hide_time_api)
                         editor.apply()
+
 
                         saveUSBCamSettings()
 
@@ -473,10 +572,8 @@ class UsbCamConfigActivity : AppCompatActivity() {
         binding.apply {
 
             // enable Usb camera
-            val get_imgUseDevicecameraOrPlugInCamera =
-                sharedBiometric.getString(Constants.imgUseDevicecameraOrPlugInCamera, "")
-            imgUseDevicecameraOrPlugInCamera.isChecked =
-                get_imgUseDevicecameraOrPlugInCamera.equals(Constants.imgUseDevicecameraOrPlugInCamera)
+            val get_imgUseDevicecameraOrPlugInCamera = sharedBiometric.getString(Constants.imgUseDevicecameraOrPlugInCamera, "")
+            imgUseDevicecameraOrPlugInCamera.isChecked = get_imgUseDevicecameraOrPlugInCamera.equals(Constants.imgUseDevicecameraOrPlugInCamera)
 
             if (get_imgUseDevicecameraOrPlugInCamera.equals(Constants.imgUseDevicecameraOrPlugInCamera)) {
                 binding.textUseUsbCamera.text = "Device Live Stream"
@@ -543,10 +640,8 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
 
             // enable device or Api
-            val get_imgStreamAPIorDevice =
-                sharedBiometric.getString(Constants.imgStreamAPIorDevice, "")
-            imgStreamAPIorDevice.isChecked =
-                get_imgStreamAPIorDevice.equals(Constants.imgStreamAPIorDevice)
+            val get_imgStreamAPIorDevice = sharedBiometric.getString(Constants.imgStreamAPIorDevice, "").toString()
+            imgStreamAPIorDevice.isChecked = get_imgStreamAPIorDevice.equals(Constants.imgStreamAPIorDevice)
             if (get_imgStreamAPIorDevice.equals(Constants.imgStreamAPIorDevice)) {
                 binding.textUseAPIorDeviceSource.text = "Use API"
 
@@ -593,8 +688,7 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
 
             /// enable or Display Interval
-            val get_imgEnableDisplayIntervals =
-                sharedBiometric.getString(Constants.imgEnableDisplayIntervals, "")
+            val get_imgEnableDisplayIntervals = sharedBiometric.getString(Constants.imgEnableDisplayIntervals, "").toString()
             imgEnableDisplayIntervals.isChecked =
                 get_imgEnableDisplayIntervals.equals(Constants.imgEnableDisplayIntervals)
 
@@ -624,8 +718,7 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
         binding.apply {
 
-            val get_imgStreamAPIorDevice =
-                sharedBiometric.getString(Constants.imgStreamAPIorDevice, "")
+            val get_imgStreamAPIorDevice = sharedBiometric.getString(Constants.imgStreamAPIorDevice, "")
 
             if (get_imgStreamAPIorDevice.equals(Constants.imgStreamAPIorDevice)) {
 
@@ -649,20 +742,15 @@ class UsbCamConfigActivity : AppCompatActivity() {
     private fun saveSettingForApi() {
         binding.apply {
             val startY: String =
-                sharedCameraPreferences.getString(Constants.start_height_api, "").toString()
-                    .trim()
+                sharedCameraPreferences.getString(Constants.start_height_api, "").toString().trim()
             val camHeight: String =
-                sharedCameraPreferences.getString(Constants.end_height_api, "").toString()
-                    .trim()
+                sharedCameraPreferences.getString(Constants.end_height_api, "").toString().trim()
             val startX: String =
-                sharedCameraPreferences.getString(Constants.start_width_api, "").toString()
-                    .trim()
+                sharedCameraPreferences.getString(Constants.start_width_api, "").toString().trim()
             val camWidth: String =
-                sharedCameraPreferences.getString(Constants.end_width_api, "").toString()
-                    .trim()
+                sharedCameraPreferences.getString(Constants.end_width_api, "").toString().trim()
             val display_time_api: String =
-                sharedCameraPreferences.getString(Constants.display_time_api, "").toString()
-                    .trim()
+                sharedCameraPreferences.getString(Constants.display_time_api, "").toString().trim()
             val hide_time_api: String =
                 sharedCameraPreferences.getString(Constants.hide_time_api, "").toString().trim()
 
@@ -767,15 +855,26 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
     private fun saveUSBCamSettings() {
         binding.apply {
+
+            if (imgStreamAPIorDevice.isChecked) {
+                saveTheCameraJSON()
+            } else {
+                saveNoneAPICameraJSonLoGicSettings()
+
+            }
+
+
+        }
+
+    }
+
+    private fun saveNoneAPICameraJSonLoGicSettings() {
+        binding.apply {
+
             val editor = sharedBiometric.edit()
 
-
-            // enable Usb camera
             if (imgUseDevicecameraOrPlugInCamera.isChecked) {
-                editor.putString(
-                    Constants.imgUseDevicecameraOrPlugInCamera,
-                    "imgUseDevicecameraOrPlugInCamera"
-                )
+                editor.putString(Constants.imgUseDevicecameraOrPlugInCamera, "imgUseDevicecameraOrPlugInCamera")
                 editor.apply()
                 binding.textUseUsbCamera.text = "Device Camera"
 
@@ -862,6 +961,108 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    private fun saveTheCameraJSON() {
+
+        binding.apply {
+
+            val editor = sharedBiometric.edit()
+
+            if (usb_live_stream == "true") {
+                editor.putString(Constants.imgUseDevicecameraOrPlugInCamera, "imgUseDevicecameraOrPlugInCamera")
+                editor.apply()
+                binding.textUseUsbCamera.text = "Device Camera"
+
+            } else {
+                editor.remove(Constants.imgUseDevicecameraOrPlugInCamera)
+                editor.apply()
+                binding.textUseUsbCamera.text = "USB Camera"
+            }
+
+
+            // enable video camera
+            if (stream_video == "true") {
+
+                editor.putString(Constants.imgStreamVideo, "imgStreamVideo")
+                editor.apply()
+                binding.textEnableStreamVideo.text = "Stream Video"
+
+            } else {
+                editor.remove(Constants.imgStreamVideo)
+                editor.apply()
+                binding.textEnableStreamVideo.text = "Do not Stream Video"
+            }
+
+
+            // enable float
+            if (allowfloatandexpand == "true") {
+                editor.putString(Constants.imgEnableExpandFloat, "imgEnableExpandFloat")
+                editor.apply()
+                binding.textFloatAndexpand.text = "Disable Float and Expand"
+
+            } else {
+                editor.remove(Constants.imgEnableExpandFloat)
+                editor.apply()
+                binding.textFloatAndexpand.text = "Allow Float and Expand"
+            }
+
+
+
+            // enable api  --  intentionall did it this way becuase it call server or not
+            if (imgStreamAPIorDevice.isChecked) {
+
+                editor.putString(Constants.imgStreamAPIorDevice, "imgStreamAPIorDevice")
+                editor.apply()
+                binding.textUseAPIorDeviceSource.text = "Use API"
+
+
+            } else {
+                editor.remove(Constants.imgStreamAPIorDevice)
+                editor.apply()
+                binding.textUseAPIorDeviceSource.text = "Use Device"
+
+            }
+
+
+
+
+
+
+            // enable audio
+
+            if (disable_audio == "true") {
+                editor.putString(Constants.imgStreamAudioSound, "imgStreamAudioSound")
+                editor.apply()
+                binding.textStreamAudioSound.text = "Disable Audio"
+
+            } else {
+                editor.remove(Constants.imgStreamAudioSound)
+                editor.apply()
+                binding.textStreamAudioSound.text = "Enable Audio"
+            }
+
+
+            // enable display intervals
+            if (enable_window_display_interval == "true") {
+                editor.putString(Constants.imgEnableDisplayIntervals, "imgEnableDisplayIntervals")
+                editor.apply()
+                binding.textWindowDisplayInterval.text = "Enable Window Display Interval"
+
+            } else {
+                editor.remove(Constants.imgEnableDisplayIntervals)
+                editor.apply()
+                binding.textWindowDisplayInterval.text = "Disable Window Display Interval"
+            }
+
+
+            // save edit text values
+            saveCameraCordinates_For_Device()
+
+
+        }
+
+
 
     }
 
@@ -940,7 +1141,10 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
             textTwoMinutes.setOnClickListener {
                 binding.textTime30minuteDisplay.text = "$timeMinuetes22 $Minutes"
-                editor.putLong(Constants.get_Display_Camera_Defined_Time_for_Device, Constants.t_2min)
+                editor.putLong(
+                    Constants.get_Display_Camera_Defined_Time_for_Device,
+                    Constants.t_2min
+                )
                 editor.apply();
                 alertDialog.dismiss()
 
@@ -950,14 +1154,20 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
             text55minutes.setOnClickListener {
                 binding.textTime30minuteDisplay.text = "$timeMinuetes55 $Minutes"
-                editor.putLong(Constants.get_Display_Camera_Defined_Time_for_Device, Constants.t_5min)
+                editor.putLong(
+                    Constants.get_Display_Camera_Defined_Time_for_Device,
+                    Constants.t_5min
+                )
                 editor.apply();
                 alertDialog.dismiss()
             }
 
             text100minutes2.setOnClickListener {
                 binding.textTime30minuteDisplay.text = "$timeMinuetes10 $Minutes"
-                editor.putLong(Constants.get_Display_Camera_Defined_Time_for_Device, Constants.t_10min)
+                editor.putLong(
+                    Constants.get_Display_Camera_Defined_Time_for_Device,
+                    Constants.t_10min
+                )
                 editor.apply();
                 alertDialog.dismiss()
 
@@ -966,7 +1176,10 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
             text1500minutes.setOnClickListener {
                 binding.textTime30minuteDisplay.text = "$timeMinuetes15 $Minutes"
-                editor.putLong(Constants.get_Display_Camera_Defined_Time_for_Device, Constants.t_15min)
+                editor.putLong(
+                    Constants.get_Display_Camera_Defined_Time_for_Device,
+                    Constants.t_15min
+                )
                 editor.apply();
 
                 alertDialog.dismiss()
@@ -975,7 +1188,10 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
             text3000minutes2.setOnClickListener {
                 binding.textTime30minuteDisplay.text = "$timeMinuetes30 $Minutes"
-                editor.putLong(Constants.get_Display_Camera_Defined_Time_for_Device, Constants.t_30min)
+                editor.putLong(
+                    Constants.get_Display_Camera_Defined_Time_for_Device,
+                    Constants.t_30min
+                )
                 editor.apply();
                 alertDialog.dismiss()
 
@@ -983,7 +1199,10 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
             text6000minutes.setOnClickListener {
                 binding.textTime30minuteDisplay.text = "$timeMinuetes60 $Minutes"
-                editor.putLong(Constants.get_Display_Camera_Defined_Time_for_Device, Constants.t_60min)
+                editor.putLong(
+                    Constants.get_Display_Camera_Defined_Time_for_Device,
+                    Constants.t_60min
+                )
                 editor.apply();
                 alertDialog.dismiss()
 
@@ -992,7 +1211,10 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
             textOneTwentyMinutes.setOnClickListener {
                 binding.textTime30minuteDisplay.text = "$timeMinuetes120 $Minutes"
-                editor.putLong(Constants.get_Display_Camera_Defined_Time_for_Device, Constants.t_120min)
+                editor.putLong(
+                    Constants.get_Display_Camera_Defined_Time_for_Device,
+                    Constants.t_120min
+                )
                 editor.apply();
                 alertDialog.dismiss()
             }
@@ -1166,7 +1388,8 @@ class UsbCamConfigActivity : AppCompatActivity() {
         val getFolderClo = myDownloadClass.getString(Constants.getFolderClo, "").toString()
         val getFolderSubpath = myDownloadClass.getString(Constants.getFolderSubpath, "").toString()
 
-        val pathFolder = "/" + getFolderClo + "/" + getFolderSubpath + "/" + Constants.App + "/" + "Config"
+        val pathFolder =
+            "/" + getFolderClo + "/" + getFolderSubpath + "/" + Constants.App + "/" + "Config"
         val folder =
             Environment.getExternalStorageDirectory().absolutePath + "/Download/${Constants.Syn2AppLive}/" + pathFolder
         val file = File(folder, fileTypes)
@@ -1180,24 +1403,22 @@ class UsbCamConfigActivity : AppCompatActivity() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun applyOritenation() {
-        val getState = sharedBiometric.getString(Constants.IMG_TOGGLE_FOR_ORIENTATION, "").toString()
+        val getState =
+            sharedBiometric.getString(Constants.IMG_TOGGLE_FOR_ORIENTATION, "").toString()
 
-        if (getState == Constants.USE_POTRAIT){
+        if (getState == Constants.USE_POTRAIT) {
             requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        }else if (getState == Constants.USE_LANDSCAPE){
+        } else if (getState == Constants.USE_LANDSCAPE) {
 
             requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
-        }else if (getState == Constants.USE_UNSEPECIFIED){
+        } else if (getState == Constants.USE_UNSEPECIFIED) {
             requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
         }
 
     }
-
-
-
 
 
 }

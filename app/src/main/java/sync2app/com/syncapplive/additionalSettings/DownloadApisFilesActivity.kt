@@ -39,7 +39,6 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import sync2app.com.syncapplive.WebViewPage
-import sync2app.com.syncapplive.MyApplication
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.myApiDownload.FilesApi
