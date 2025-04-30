@@ -1452,27 +1452,7 @@ class SettingsActivityKT : AppCompatActivity() {
 
             binding.textLoading.setText(message)
             binding.imgCloseDialog.setVisibility(View.GONE)
-            val consMainAlert_sub_layout: ConstraintLayout = binding.consMainAlertSubLayout
-            val imagSucessful: ImageView = binding.imagSucessful
-            val textLoading: TextView = binding.textLoading
-            val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-                applicationContext
-            )
-            if (preferences.getBoolean("darktheme", false)) {
-                consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-                textLoading.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-                val drawable_imagSucessful = ContextCompat.getDrawable(
-                    applicationContext, R.drawable.ic_email_read_24
-                )
-                if (drawable_imagSucessful != null) {
-                    drawable_imagSucessful.setColorFilter(
-                        ContextCompat.getColor(
-                            applicationContext, R.color.dark_light_gray_pop
-                        ), PorterDuff.Mode.SRC_IN
-                    )
-                    imagSucessful.setImageDrawable(drawable_imagSucessful)
-                }
-            }
+
             customProgressDialog!!.show()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -1591,80 +1571,6 @@ class SettingsActivityKT : AppCompatActivity() {
 
           /// end part of  use previous json
           /// end part of  use previous json
-
-
-
-          if (preferences.getBoolean("darktheme", false)) {
-
-
-              //  consMainAlert_dn.setBackgroundColor(getResources().getColor(R.color.dark_layout_for_ui));
-              //  consMainAlert_sub_layout.setBackgroundColor(getResources().getColor(R.color.dark_layout_for_ui));
-              consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-              textHome.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textView4.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textContinueLogin.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textLogoutButton.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textExit.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textSettings.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textAppAdmin.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textReSync.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textLaunchOnline.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textLaunchOffline.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textForgetPassword.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              textCanCellDialog.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-              editTextText2.setHintTextColor(resources.getColor(R.color.light_gray))
-              editTextText2.setTextColor(resources.getColor(R.color.white))
-              textForgetPasswordHome.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textCanCellDialog.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textLaunchOnline.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textLaunchOffline.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textAppSettings.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textHome.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textReSync.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textAppAdmin.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textExit.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textLogoutButton.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-              textContinueLogin.setBackgroundResource(R.drawable.card_design_darktheme_outline_pop_layout)
-
-              //   card_design_buy_gift_card_extra_dark_black
-              //   card_design_darktheme_outline_pop_layout
-              setDrawableColor(
-                  imagePassowrdSettings,
-                  R.drawable.ic_app_settings,
-                  R.color.dark_light_gray_pop
-              )
-              setDrawableColor(
-                  imgMaintainace,
-                  R.drawable.ic_maintence_24,
-                  R.color.dark_light_gray_pop
-              )
-              setDrawableColor(imgWifi, R.drawable.error_wifi, R.color.dark_light_gray_pop)
-              setDrawableColor(imgClearCatch, R.drawable.ic_clear_catch, R.color.dark_light_gray_pop)
-              divider2.setBackgroundColor(
-                  ContextCompat.getColor(
-                      applicationContext,
-                      R.color.dark_light_gray_pop
-                  )
-              )
-              val drawable_imgToggle = ContextCompat.getDrawable(
-                  applicationContext, R.drawable.ic_icon_visibile
-              )
-              drawable_imgToggle?.setColorFilter(
-                  ContextCompat.getColor(
-                      applicationContext, R.color.dark_light_gray_pop
-                  ), PorterDuff.Mode.SRC_IN
-              )
-              imgToggle.setImageDrawable(drawable_imgToggle)
-              val drawable_imgToggleNzotVisible = ContextCompat.getDrawable(
-                  applicationContext, R.drawable.ic_visibility_24
-              )
-              drawable_imgToggleNzotVisible?.setColorFilter(
-                  ContextCompat.getColor(
-                      applicationContext, R.color.dark_light_gray_pop
-                  ), PorterDuff.Mode.SRC_IN
-              )
-              imgToggleNzotVisible.setImageDrawable(drawable_imgToggleNzotVisible)
-          }
 
 
           // Load the shake animation
@@ -2184,8 +2090,6 @@ class SettingsActivityKT : AppCompatActivity() {
 
 
 
-
-
           textForgetPassword.setOnClickListener {
               if (handlerMoveToWebviewPage != null){
                   handlerMoveToWebviewPage.removeCallbacksAndMessages(null)
@@ -2578,35 +2482,10 @@ class SettingsActivityKT : AppCompatActivity() {
             alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
         }
-        val textForGetPassword: TextView = bindingCM.textGoToPassowrdPage
-        val textTitle: TextView = bindingCM.textTitle
+
         val textClickHere: TextView = bindingCM.textClickHere
-        val editTextEmail: EditText = bindingCM.editTextEmail
         val textOkayBtn: TextView = bindingCM.textOkayBtn
         val imgCloseDialog2: ImageView = bindingCM.imgCloseDialogForegetPassword
-        val divider2: View = bindingCM.divider56
-        val consMainAlert_sub_layout: ConstraintLayout = bindingCM.consMainAlertSubLayout
-        val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-            applicationContext
-        )
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-            textTitle.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            editTextEmail.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textForGetPassword.setTextColor(resources.getColor(R.color.white))
-
-
-            //  textLogoutButton.setBackgroundResource(R.drawable.card_design_darktheme_outline_pop_layout);
-            textOkayBtn.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-            setDrawableColor(imgCloseDialog2, R.drawable.ic_close_24, R.color.dark_light_gray_pop)
-            divider2.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                )
-            )
-        }
-
 
 
         textOkayBtn.setOnClickListener {
@@ -2756,29 +2635,8 @@ class SettingsActivityKT : AppCompatActivity() {
         val textContinuPassword: TextView = binding.textContinuPassword
         val textClickHere: TextView = binding.textClickHere
         val imgCloseDialog2: ImageView = binding.imgCloseDialogForegetPassword
-        val textForGetPassword: TextView = binding.textForGetPassword
         val divider2: View = binding.divider2
-        val consMainAlert_sub_layout: ConstraintLayout = binding.consMainAlertSubLayout
-        val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-            applicationContext
-        )
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-            textForGetPassword.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textContinuPassword.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            editTextInputUrl.setTextColor(resources.getColor(R.color.white))
 
-
-            //  textLogoutButton.setBackgroundResource(R.drawable.card_design_darktheme_outline_pop_layout);
-            textContinuPassword.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-            setDrawableColor(imgCloseDialog2, R.drawable.ic_close_24, R.color.dark_light_gray_pop)
-            divider2.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                )
-            )
-        }
 
         val imgIsemailVisbile =
             simpleSavedPassword.getString(Constants.imagEnableEmailVisisbility, "").toString()
@@ -2929,27 +2787,8 @@ class SettingsActivityKT : AppCompatActivity() {
             alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
         }
 
-        val textTitle: TextView = bindingCM.textTitle
         val textOkayBtn: TextView = bindingCM.textOkayBtn
         val imgCloseDialog2: ImageView = bindingCM.imgCloseDialogForegetPassword
-        val divider2: View = bindingCM.divider56
-        val consMainAlert_sub_layout: ConstraintLayout = bindingCM.consMainAlertSubLayout
-        val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-            applicationContext
-        )
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-            textTitle.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            textOkayBtn.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-            setDrawableColor(imgCloseDialog2, R.drawable.ic_close_24, R.color.dark_light_gray_pop)
-            divider2.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                )
-            )
-        }
 
 
 
@@ -3017,10 +2856,6 @@ class SettingsActivityKT : AppCompatActivity() {
                         reciverEmail
                     )
                 }
-
-
-
-
 
 
                 Log.d("mylog", "Email Sent Successfully")
@@ -3122,33 +2957,6 @@ class SettingsActivityKT : AppCompatActivity() {
             alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
         }
 
-        // Apply actions to views in the binding
-        val textEmailSendOkayBtn: TextView = binding.textEmailSendOkayBtn
-        val textBodyMessage: TextView = binding.textBodyMessage
-        val textSucessful: TextView = binding.textSucessful
-        val imagSucessful: ImageView = binding.imagSucessful
-        val consMainAlert_sub_layout: ConstraintLayout = binding.consMainAlertSubLayout
-        val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-            applicationContext
-        )
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-            textSucessful.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textBodyMessage.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textEmailSendOkayBtn.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textEmailSendOkayBtn.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-            val drawable_imagSucessful = ContextCompat.getDrawable(
-                applicationContext, R.drawable.ic_email_read_24
-            )
-            if (drawable_imagSucessful != null) {
-                drawable_imagSucessful.setColorFilter(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.dark_light_gray_pop
-                    ), PorterDuff.Mode.SRC_IN
-                )
-                imagSucessful.setImageDrawable(drawable_imagSucessful)
-            }
-        }
         binding.textEmailSendOkayBtn.setOnClickListener { view ->
             showExitConfirmationDialog()
             alertDialog.dismiss()

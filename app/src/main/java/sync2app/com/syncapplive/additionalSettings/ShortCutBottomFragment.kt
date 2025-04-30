@@ -132,8 +132,6 @@ class ShortCutBottomFragment : BottomSheetDialogFragment() {
 
 
 
-      //  val defaultRadioButton = view.findViewById<RadioButton>(R.id.defaultImageRadioButton)
-    //    val customRadioButton = view.findViewById<RadioButton>(R.id.customimageRadipoButton)
 
         defaultImageRadioButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -145,18 +143,6 @@ class ShortCutBottomFragment : BottomSheetDialogFragment() {
             }
         }
 
-
-
-    /*    customimageRadipoButton.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                customimageRadipoButton.isChecked = true
-                defaultImageRadioButton.isChecked = false
-                defaultradio = false
-                customradio = true
-
-            }
-        }
-*/
 
 
 

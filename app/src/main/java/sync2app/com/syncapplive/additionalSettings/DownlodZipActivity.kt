@@ -9,7 +9,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.database.Cursor
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -27,17 +26,12 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import sync2app.com.syncapplive.MyApplication
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.WebViewPage
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
@@ -298,37 +292,8 @@ class DownlodZipActivity : AppCompatActivity() {
         }
 
 
-
-        val consMainAlert_sub_layout = bindingCm.consMainAlertSubLayout
-        val textLoading = bindingCm.textLoading
-        val textLoading2 = bindingCm.textLoading2
         val textCancel = bindingCm.textCancel
         val textYesButton = bindingCm.textYesButton
-        val divider27 = bindingCm.divider27
-        val divider28 = bindingCm.divider28
-
-
-
-        val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textLoading.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textLoading2.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            textCancel.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textCancel.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-
-            textYesButton.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textYesButton.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-
-            divider27.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.dark_light_gray_pop))
-            divider28.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.dark_light_gray_pop))
-
-
-        }
-
 
 
         bindingCm.apply {
@@ -441,39 +406,6 @@ class DownlodZipActivity : AppCompatActivity() {
             customProgressDialog!!.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
 
             binding.textLoading.text = "$message"
-
-            val consMainAlert_sub_layout = binding.consMainAlertSubLayout
-            val textLoading = binding.textLoading
-            val imgCloseDialog = binding.imgCloseDialog
-            val imagSucessful = binding.imagSucessful
-            val progressBar2 = binding.progressBar2
-
-
-
-            val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-                applicationContext
-            )
-
-            if (preferences.getBoolean("darktheme", false)) {
-                consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-                textLoading.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-                val drawable_imgCloseDialog = ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-                drawable_imgCloseDialog?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                imgCloseDialog.setImageDrawable(drawable_imgCloseDialog)
-
-                val drawable_imagSucessfulg = ContextCompat.getDrawable(applicationContext, R.drawable.ic_download_24)
-                drawable_imagSucessfulg?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                imagSucessful.setImageDrawable(drawable_imagSucessfulg)
-
-                val colorWhite = ContextCompat.getColor(applicationContext, R.color.white)
-                progressBar2.indeterminateDrawable.setColorFilter(colorWhite, PorterDuff.Mode.SRC_IN)
-
-
-            }
-
-
 
 
 
@@ -950,8 +882,6 @@ class DownlodZipActivity : AppCompatActivity() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun applyOritenation() {
-
-
 
         val getState = sharedBiometric.getString(Constants.IMG_TOGGLE_FOR_ORIENTATION, "").toString()
 

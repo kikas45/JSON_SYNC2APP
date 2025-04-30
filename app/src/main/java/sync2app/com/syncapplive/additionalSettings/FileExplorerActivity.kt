@@ -1,11 +1,8 @@
 package sync2app.com.syncapplive.additionalSettings
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,11 +11,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
-import sync2app.com.syncapplive.MyApplication
 import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.fileMnager.FileManagerAdapter
@@ -39,7 +33,6 @@ class FileExplorerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFileExplorerBinding
     private lateinit var currentDirectory: File
     private lateinit var filesList: List<File>
-   // private lateinit var adapter: ArrayAdapter<String>
     private lateinit var adapter: FileManagerAdapter
 
 
@@ -89,8 +82,6 @@ class FileExplorerActivity : AppCompatActivity() {
 
         applyOritenation()
 
-
-        setUpDarkTheme()
 
         setUpFullScreenWindows()
 
@@ -145,46 +136,6 @@ class FileExplorerActivity : AppCompatActivity() {
         }
     }
 
-
-
-    private fun setUpDarkTheme() {
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-                // set windows
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-
-                textTitle.setTextColor(resources.getColor(R.color.white))
-                textNoFolder.setTextColor(resources.getColor(R.color.white))
-
-
-                // fir back button
-                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                closeBs.setImageDrawable(drawable)
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-
-
-            }
-        }
-
-
-    }
 
 
     override fun onResume() {
@@ -339,31 +290,6 @@ class FileExplorerActivity : AppCompatActivity() {
                     }
                 }
             }
-
-
-
-          /*  if (currentDirectory!=null){
-
-                if (currentDirectory == syn2AppLiveFolder) {
-                    super.onBackPressed()
-                } else {
-                    if (openCounts > 0) {
-                        val parentDirectory = currentDirectory.parentFile
-                        if (parentDirectory != null) {
-                            open(parentDirectory)
-                            openCounts--
-                        }
-                    } else {
-
-                        val sharedPreferences = getSharedPreferences("file_explorer_prefs", Context.MODE_PRIVATE)
-                        val editor = sharedPreferences.edit()
-                        editor.clear()
-                        editor.apply()
-                        super.onBackPressed()
-                    }
-                }
-            }*/
-
 
         }catch (e:Exception){
             showToastMessage(e.message.toString())

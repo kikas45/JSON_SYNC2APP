@@ -3861,28 +3861,6 @@ class WebViewPage : AppCompatActivity() {
                 val textDescription: TextView = binding.textDescription
                 val imgCloseDialog: ImageView = binding.imgCloseDialog
                 val imageView24: ImageView = binding.imageView24
-                val consMainAlert_sub_layout: ConstraintLayout = binding.consMainAlertSubLayout
-                val preferences = PreferenceManager.getDefaultSharedPreferences(
-                    applicationContext
-                )
-                if (preferences.getBoolean("darktheme", false)) {
-                    consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-                    textDescription.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-                    textContinuPasswordDai3.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-                    textContinue.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-                    val drawable_imgCloseDialog = ContextCompat.getDrawable(
-                        applicationContext, R.drawable.ic_close_24
-                    )
-                    if (drawable_imgCloseDialog != null) {
-                        drawable_imgCloseDialog.setColorFilter(
-                            ContextCompat.getColor(
-                                applicationContext,
-                                R.color.dark_light_gray_pop
-                            ), PorterDuff.Mode.SRC_IN
-                        )
-                        imgCloseDialog.setImageDrawable(drawable_imgCloseDialog)
-                    }
-                }
 
 
                 if (!message.isEmpty()) {
@@ -3890,52 +3868,14 @@ class WebViewPage : AppCompatActivity() {
                 }
 
                 if (message == Constants.UnableToFindIndex) {
-                    if (preferences.getBoolean("darktheme", false)) {
-                        val drawable_imageView24 =
-                            ContextCompat.getDrawable(applicationContext, R.drawable.ic_folder_24)
-                        if (drawable_imageView24 != null) {
-                            drawable_imageView24.setColorFilter(ContextCompat.getColor(applicationContext, R.color.dark_light_gray_pop
-                                ), PorterDuff.Mode.SRC_IN
-                            )
-                            imageView24.setImageDrawable(drawable_imageView24)
-                        }
-                    } else {
-                        imageView24.background = resources.getDrawable(R.drawable.ic_folder_24)
-                    }
+                    imageView24.background = resources.getDrawable(R.drawable.ic_folder_24)
+
                 } else if (message == Constants.Check_Inter_Connectivity) {
-                    if (preferences.getBoolean("darktheme", false)) {
-                        val drawable_imageView24 = ContextCompat.getDrawable(
-                            applicationContext, R.drawable.ic_wifi_no_internet
-                        )
-                        if (drawable_imageView24 != null) {
-                            drawable_imageView24.setColorFilter(
-                                ContextCompat.getColor(
-                                    applicationContext,
-                                    R.color.dark_light_gray_pop
-                                ), PorterDuff.Mode.SRC_IN
-                            )
-                            imageView24.setImageDrawable(drawable_imageView24)
-                        }
-                    } else {
-                        imageView24.background =
-                            resources.getDrawable(R.drawable.ic_wifi_no_internet)
-                    }
+
+                    imageView24.background = resources.getDrawable(R.drawable.ic_wifi_no_internet)
                 } else {
-                    if (preferences.getBoolean("darktheme", false)) {
-                        val drawable_imageView24 =
-                            ContextCompat.getDrawable(applicationContext, R.drawable.ic_sync_cm)
-                        if (drawable_imageView24 != null) {
-                            drawable_imageView24.setColorFilter(
-                                ContextCompat.getColor(
-                                    applicationContext,
-                                    R.color.dark_light_gray_pop
-                                ), PorterDuff.Mode.SRC_IN
-                            )
-                            imageView24.setImageDrawable(drawable_imageView24)
-                        }
-                    } else {
-                        imageView24.background = resources.getDrawable(R.drawable.ic_sync_cm)
-                    }
+
+                    imageView24.background = resources.getDrawable(R.drawable.ic_sync_cm)
                 }
 
 

@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.database.Cursor
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -31,8 +30,6 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
@@ -154,10 +151,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
 
 
-        setUpDarkTheme()
-
-
-
         val filter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         registerReceiver(downloadCompleteReceiver, filter)
 
@@ -200,7 +193,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
                 showCustomProgressDialog("Please wait!")
                 mfilesViewModel.deleteAllFiles()
-                second_cancel_ongoing_download()
                 copyFilesToFailedDownloads()
                 myHandler.postDelayed(Runnable {
                     reTryTheDownlaods()
@@ -256,63 +248,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
 
 
-    private fun setUpDarkTheme() {
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-                actionBarRoot.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-                textTitle.setTextColor(resources.getColor(R.color.white))
-
-
-                textDownloadSieze.setTextColor(resources.getColor(R.color.white))
-                textPercentageCompleted.setTextColor(resources.getColor(R.color.white))
-                textRemainging.setTextColor(resources.getColor(R.color.white))
-                textCsvStatus.setTextColor(resources.getColor(R.color.white))
-
-
-                // test connection buttons and connect buttons
-                textCancelBtn.setTextColor(resources.getColor(R.color.white))
-                textCancelBtn.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textLaunchApplication.setTextColor(resources.getColor(R.color.white))
-                textLaunchApplication.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textRetryBtn.setTextColor(resources.getColor(R.color.white))
-                textRetryBtn.setBackgroundResource(R.drawable.card_design_darktheme)
-
-                //  round_edit_text_design_outline_dark_theme
-
-
-                // fir back button
-                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                closeBs.setImageDrawable(drawable)
-
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-
-
-            }
-        }
-
-
-    }
-
     private fun reTryTheDownlaods() {
 
         try {
@@ -321,7 +256,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
             if (isSystemActive){
                 dnViewModel.deleteAllFiles()
-                second_cancel_ongoing_download()
                 val intent = Intent(applicationContext, DownloadApisFilesActivityParsing::class.java)
                 startActivity(intent)
                 finishAffinity()
@@ -337,7 +271,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
 
     private fun startMyCSVApiDownload() {
-        second_cancel_ongoing_download()
         binding.apply {
             val connectivityManager22: ConnectivityManager =
                 applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -395,7 +328,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
         val intent = Intent(applicationContext, ReSyncActivity::class.java)
         startActivity(intent)
         finish()
-        second_cancel_ongoing_download()
 
         try {
             customProgressDialog.cancel()
@@ -997,31 +929,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
     }
 
 
-    private fun second_cancel_ongoing_download() {
-
-      /*  try {
-
-            val download_ref: Long = sharedP.getLong(Constants.downloadKey, -15)
-
-            val query = DownloadManager.Query()
-            query.setFilterById(download_ref)
-            val c =
-                (applicationContext.getSystemService(DOWNLOAD_SERVICE) as DownloadManager).query(
-                    query
-                )
-            if (c.moveToFirst()) {
-                manager!!.remove(download_ref)
-                val editor: SharedPreferences.Editor = sharedP.edit()
-                editor.remove(Constants.downloadKey)
-                editor.apply()
-            }
-        } catch (ignored: java.lang.Exception) {
-        }*/
-
-
-    }
-
-
     override fun onBackPressed() {
         closeDownloadpage()
 
@@ -1094,7 +1001,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
                 unregisterReceiver(downloadCompleteReceiver)
             }
 
-            second_cancel_ongoing_download()
 
             if (myHandler != null) {
                 myHandler!!.removeCallbacks(runnableGetDownloadProgress)
@@ -1300,41 +1206,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
 
 
-            val consMainAlert_sub_layout = bindingDN.consMainAlertSubLayout
-            val textLoading = bindingDN.textLoading
-            val imgCloseDialog = bindingDN.imgCloseDialog
-            val imagSucessful = bindingDN.imagSucessful
-            val progressBar2 = bindingDN.progressBar2
-
-
-
-            val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-                applicationContext
-            )
-
-            if (preferences.getBoolean("darktheme", false)) {
-                consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-                textLoading.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-                val drawable_imgCloseDialog = ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-                drawable_imgCloseDialog?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                imgCloseDialog.setImageDrawable(drawable_imgCloseDialog)
-
-                val drawable_imagSucessfulg = ContextCompat.getDrawable(applicationContext, R.drawable.ic_download_24)
-                drawable_imagSucessfulg?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                imagSucessful.setImageDrawable(drawable_imagSucessfulg)
-
-                val colorWhite = ContextCompat.getColor(applicationContext, R.color.white)
-                progressBar2.indeterminateDrawable.setColorFilter(colorWhite, PorterDuff.Mode.SRC_IN)
-
-
-            }
-
-
-
-
-
 
             bindingDN.imgCloseDialog.setOnClickListener {
                 customProgressDialog.cancel()
@@ -1442,8 +1313,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
 
                 try {
                     copyFilesToFailedDownloads()
-                    mfilesViewModel.deleteAllFiles()
-                    second_cancel_ongoing_download()
                     showCustomProgressDialog("Please wait!")
                     handler.postDelayed(Runnable {
                         reTryTheDownlaods()
@@ -1462,7 +1331,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
                     }
                 } catch (e: Exception) {
                 }
-                second_cancel_ongoing_download()
                 showCustomProgressDialog("Please wait!")
                 stratMyACtivity()
                 alertDialog.dismiss()
@@ -1497,7 +1365,6 @@ class RetryApiDownloadActivityParsing : AppCompatActivity() {
                         this@RetryApiDownloadActivityParsing,
                         Observer { files ->
                             showCustomProgressDialog("Please wait!")
-                            second_cancel_ongoing_download()
                             val message = "Unable to download \n ${files.size} Files"
                             myHandler.postDelayed(Runnable {
                                 showCustomErrorDownload(message)

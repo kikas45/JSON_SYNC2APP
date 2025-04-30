@@ -17,10 +17,8 @@ import sync2app.com.syncapplive.additionalSettings.utils.Constants
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
-import sync2app.com.syncapplive.R
 import sync2app.com.syncapplive.SplashKT
 import sync2app.com.syncapplive.additionalSettings.autostartAppOncrash.Methods
 import sync2app.com.syncapplive.additionalSettings.utils.Utility
@@ -64,9 +62,6 @@ class RequiredBioActivity : AppCompatActivity() {
         Utility.hideSystemBars(window)
 
 
-
-
-        applyDarkTheme()
         Methods.addExceptionHandler(this)
 
         if (shouldLoadBackgroundImage()) {
@@ -76,29 +71,6 @@ class RequiredBioActivity : AppCompatActivity() {
         setupBiometricAuthentication()
     }
 
-    private fun applyDarkTheme() {
-
-        if (preferences!!.getBoolean("darktheme", false)) {
-            // Set status bar color
-            window?.statusBarColor = Color.parseColor("#171616")
-            // Set navigation bar color
-            window?.navigationBarColor = Color.parseColor("#171616")
-
-            // Ensure the text and icons are white
-            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
-
-
-            binding.parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-            binding.textView2.setTextColor(resources.getColor(R.color.white))
-            binding.textView3.setTextColor(resources.getColor(R.color.white))
-            binding.textView.setTextColor(resources.getColor(R.color.white))
-
-            val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_fingerprint)
-            drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-            binding.imageView3.setImageDrawable(drawable)
-        }
-    }
 
     private fun shouldLoadBackgroundImage(): Boolean {
         val get_imgToggleImageBackground = sharedBiometric.getString(Constants.imgToggleImageBackground, "")

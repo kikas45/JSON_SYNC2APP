@@ -40,75 +40,12 @@ class SMSActivity : AppCompatActivity() {
         )
     }
 
-    private var preferences: SharedPreferences? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySmsactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
-
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-
-                textTitle.setTextColor(resources.getColor(R.color.white))
-                textDisplayText.setTextColor(resources.getColor(R.color.white))
-
-                textPgoneNumbers.setTextColor(resources.getColor(R.color.white))
-
-                textSendMySms.setTextColor(resources.getColor(R.color.white))
-                textSendMySms.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textDoNothing.setTextColor(resources.getColor(R.color.white))
-                textDoNothing.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textCopySms.setTextColor(resources.getColor(R.color.white))
-                textCopySms.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-
-
-                // fir back button
-                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                closeBs.setImageDrawable(drawable)
-
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-
-
-                val drawable_imageView20 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_email_read_24)
-                drawable_imageView20?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView20.setImageDrawable(drawable_imageView20)
-
-
-
-
-            }
-        }
-
-
-
-
 
 
         val phoneNumber: String = sharedBiometric.getString("phoneNumber", "").toString()

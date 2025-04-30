@@ -1,5 +1,4 @@
 package sync2app.com.syncapplive.additionalSettings
-
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
@@ -7,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
@@ -27,12 +25,8 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.hbb20.CountryCodePicker
 import sync2app.com.syncapplive.R
@@ -635,33 +629,7 @@ class InformationActivity : AppCompatActivity() {
             alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
         }
 
-        // Apply actions to views in the binding
-        val textEmailSendOkayBtn: TextView = binding.textEmailSendOkayBtn
-        val textBodyMessage: TextView = binding.textBodyMessage
-        val textSucessful: TextView = binding.textSucessful
-        val imagSucessful: ImageView = binding.imagSucessful
-        val consMainAlert_sub_layout: ConstraintLayout = binding.consMainAlertSubLayout
-        val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-            applicationContext
-        )
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-            textSucessful.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textBodyMessage.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textEmailSendOkayBtn.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textEmailSendOkayBtn.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-            val drawable_imagSucessful = ContextCompat.getDrawable(
-                applicationContext, R.drawable.ic_email_read_24
-            )
-            if (drawable_imagSucessful != null) {
-                drawable_imagSucessful.setColorFilter(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.dark_light_gray_pop
-                    ), PorterDuff.Mode.SRC_IN
-                )
-                imagSucessful.setImageDrawable(drawable_imagSucessful)
-            }
-        }
+
         binding.textEmailSendOkayBtn.setOnClickListener { view ->
             alertDialog.dismiss()
         }
@@ -764,13 +732,4 @@ class InformationActivity : AppCompatActivity() {
         show_Pop_Confirm_Exit("Attention!", "Are you sure you want to exit?")
     }
 
-
-    override fun onResume() {
-        super.onResume()
-/*        if (constants.jsonUrl == null) {
-            val intent = Intent(applicationContext, SplashKT::class.java) ///
-            startActivity(intent)
-            finish()
-        }*/
-    }
 }

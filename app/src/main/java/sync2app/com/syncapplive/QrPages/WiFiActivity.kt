@@ -45,7 +45,6 @@ class WiFiActivity : AppCompatActivity() {
         )
     }
 
-    private var preferences: SharedPreferences? = null
 
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -53,64 +52,6 @@ class WiFiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWiFiBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
-
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-
-                textTitle.setTextColor(resources.getColor(R.color.white))
-                resultFieldWifi.setTextColor(resources.getColor(R.color.white))
-                resultFieldWifiEncryption.setTextColor(resources.getColor(R.color.white))
-                resultFieldWifiPw.setTextColor(resources.getColor(R.color.white))
-
-
-                textCopypassword.setTextColor(resources.getColor(R.color.white))
-                textCopypassword.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-
-                textCopyRowData.setTextColor(resources.getColor(R.color.white))
-                textCopyRowData.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textAddNetwork.setTextColor(resources.getColor(R.color.white))
-                textAddNetwork.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textDoNothing.setTextColor(resources.getColor(R.color.white))
-                textDoNothing.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-
-                // fir back button
-                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                closeBs.setImageDrawable(drawable)
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-
-
-
-            }
-        }
-
-
 
 
         val get_imgToggleImageBackground = sharedBiometric.getString(Constants.imgToggleImageBackground, "")

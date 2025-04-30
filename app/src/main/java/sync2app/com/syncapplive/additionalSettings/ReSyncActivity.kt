@@ -143,8 +143,8 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
     private var fil_appIndex = ""
 
     private var getUrlBasedOnSpinnerText = ""
-    private var API_Server = "API-Cloud App Server"
-    private var CP_server = "CP-Cloud App Server"
+    private var API_Server = "CP 2-Cloud App Server"
+    private var CP_server = "CP 1-Cloud App Server"
 
     private var Minutes = " Minutes"
 
@@ -231,218 +231,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
         }, Constants.MOVE_BK_WEBVIEW_TIME)
 
 
-        // write code for dark theme
-        binding.apply {
-            if (preferences.getBoolean("darktheme", false)) {
-
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
-                    false
-                WindowInsetsControllerCompat(
-                    window, window.decorView
-                ).isAppearanceLightNavigationBars = false
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-
-                textTitle.setTextColor(resources.getColor(R.color.white))
-
-                // text view in inner container
-                texturlsSavedDownload.setTextColor(resources.getColor(R.color.white))
-                texturlsViews.setTextColor(resources.getColor(R.color.white))
-
-                textPartnerUrlLunch.setTextColor(resources.getColor(R.color.white))
-                textUseManual.setTextColor(resources.getColor(R.color.white))
-
-
-                textView12.setTextColor(resources.getColor(R.color.white))
-                textIntervalsSelect.setTextColor(resources.getColor(R.color.white))
-                textDisplaytime.setTextColor(resources.getColor(R.color.white))
-
-
-
-                textConfigfileOnline.setTextColor(resources.getColor(R.color.white))
-                textLunchOnline.setTextColor(resources.getColor(R.color.white))
-                textToogleMode.setTextColor(resources.getColor(R.color.white))
-                textUseindexChangeOrTimestamp.setTextColor(resources.getColor(R.color.white))
-                textSyncOnFileChangeIntervals.setTextColor(resources.getColor(R.color.white))
-
-                // test connection buttons and connect buttons
-                textTestConnectionAPPer.setTextColor(resources.getColor(R.color.white))
-                textTestConnectionAPPer.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textDownloadZipSyncOrApiSyncNow.setTextColor(resources.getColor(R.color.white))
-                textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.card_design_darktheme)
-
-                //set edit text layout
-                editTextSubPathFolder.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editTextSubPathFolder.setTextColor(resources.getColor(R.color.white))
-                editTextSubPathFolder.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-                editTextCLOpath.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editTextCLOpath.setTextColor(resources.getColor(R.color.white))
-                editTextCLOpath.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-                editTextInputIndexManual.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editTextInputIndexManual.setTextColor(resources.getColor(R.color.white))
-                editTextInputIndexManual.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-                editTextInputSynUrlZip.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editTextInputSynUrlZip.setTextColor(resources.getColor(R.color.white))
-                editTextInputSynUrlZip.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-                textIntervalsSelect.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                textView12.setBackgroundResource(R.drawable.round_edit_text_design_theme_extra)
-                textDisplaytime.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                constraintLayoutSavedDwonlaod.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                constraintLayout4.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-
-
-                // set images
-                // Assuming 'imageView' is your ImageView
-                val drawable_imagSpannerSavedDownload =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_drop_down_24)
-                drawable_imagSpannerSavedDownload?.setColorFilter(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.white
-                    ), PorterDuff.Mode.SRC_IN
-                )
-                imagSpannerSavedDownload.setImageDrawable(drawable_imagSpannerSavedDownload)
-
-                val drawable_imagSpanner =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_drop_down_24)
-                drawable_imagSpanner?.setColorFilter(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.white
-                    ), PorterDuff.Mode.SRC_IN
-                )
-                imagSpanner.setImageDrawable(drawable_imagSpanner)
-
-
-                val drawable =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(
-                    ContextCompat.getColor(applicationContext, R.color.white),
-                    PorterDuff.Mode.SRC_IN
-                )
-                closeBs.setImageDrawable(drawable)
-
-
-                // set for switch layouts
-
-
-                // Define colors for different states
-                val thumbColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_checked),
-                        intArrayOf(-android.R.attr.state_checked)
-                    ), intArrayOf(
-                        Color.LTGRAY,  // Color when checked
-                        Color.LTGRAY   // Color when unchecked
-                    )
-                )
-
-                val trackColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_enabled),
-                        intArrayOf(-android.R.attr.state_enabled)
-                    ), intArrayOf(
-                        Color.DKGRAY,  // Color when enabled
-                        Color.LTGRAY   // Color when disabled
-                    )
-                )
-
-                // Apply the color state lists
-                imagSwtichPartnerUrl.thumbTintList = thumbColorStateList
-                imagSwtichPartnerUrl.trackTintList = trackColorStateList
-
-                imagSwtichEnableManualOrNot.thumbTintList = thumbColorStateList
-                imagSwtichEnableManualOrNot.trackTintList = trackColorStateList
-
-
-                imagSwtichUseIndexCahngeOrTimeStamp.thumbTintList = thumbColorStateList
-                imagSwtichUseIndexCahngeOrTimeStamp.trackTintList = trackColorStateList
-
-                imagSwtichEnableSyncOnFilecahnge.thumbTintList = thumbColorStateList
-                imagSwtichEnableSyncOnFilecahnge.trackTintList = trackColorStateList
-
-                imagSwtichEnableConfigFileOnline.thumbTintList = thumbColorStateList
-                imagSwtichEnableConfigFileOnline.trackTintList = trackColorStateList
-
-
-                imagSwtichEnableLaucngOnline.thumbTintList = thumbColorStateList
-                imagSwtichEnableLaucngOnline.trackTintList = trackColorStateList
-
-                imagSwtichEnablEnableToggleOrNot.thumbTintList = thumbColorStateList
-                imagSwtichEnablEnableToggleOrNot.trackTintList = trackColorStateList
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-                divider10.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-                divider27.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-                divider31.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-                divider30.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-                divider2756766.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-                divider13.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-
-                divider15565651.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-                divider11.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-                divider7.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.light_gray
-                    )
-                )
-
-
-            }
-        }
-
-
-
 
         powerManager = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock =
@@ -471,12 +259,9 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
         binding.apply {
 
-            val getSavedCLOImPutFiled =
-                myDownloadClass.getString(Constants.getSavedCLOImPutFiled, "").toString()
-            val getSaveSubFolderInPutFiled =
-                myDownloadClass.getString(Constants.getSaveSubFolderInPutFiled, "").toString()
-            val getSavedEditTextInputSynUrlZip =
-                myDownloadClass.getString(Constants.getSavedEditTextInputSynUrlZip, "").toString()
+            val getSavedCLOImPutFiled = myDownloadClass.getString(Constants.getSavedCLOImPutFiled, "").toString()
+            val getSaveSubFolderInPutFiled = myDownloadClass.getString(Constants.getSaveSubFolderInPutFiled, "").toString()
+            val getSavedEditTextInputSynUrlZip = myDownloadClass.getString(Constants.getSavedEditTextInputSynUrlZip, "").toString()
 
             val getSaved_manaul_index_edit_url_Input =
                 myDownloadClass.getString(Constants.getSaved_manaul_index_edit_url_Input, "")
@@ -493,18 +278,11 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
             if (!getSavedEditTextInputSynUrlZip.isNullOrEmpty()) {
                 editTextInputSynUrlZip.setText(getSavedEditTextInputSynUrlZip)
-            }else{
-               // val url = "https://cp.cloudappserver.co.uk/app_base/public/CLO/NG_EN_2025022117/App/index.html"
-               // editTextInputSynUrlZip.setText(url)
             }
 
             if (!getSaved_manaul_index_edit_url_Input.isNullOrEmpty()) {
                 editTextInputIndexManual.setText(getSaved_manaul_index_edit_url_Input)
-            }else{
-               // val url = "https://cp.cloudappserver.co.uk/app_base/public/CLO/NG_EN_2025022117/App/index.html"
-              //  editTextInputIndexManual.setText(url)
             }
-
 
 
             initViewTooggle()
@@ -687,10 +465,8 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                         }
 
                     }
-                } finally {
-//                    handler.postDelayed(Runnable {
-//
-//                    }, 900)
+                } catch (e:java.lang.Exception){
+                    showToastMessage("Something went wrong")
                 }
             }
         } else {
@@ -724,29 +500,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
         if (alertDialog.window != null) {
             alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
-
-
-        val consMainAlert_sub_layout = bindingCM.consMainAlertSubLayout
-        val textLoading = bindingCM.textLoading
-        val textLoading2 = bindingCM.textLoading2
-        val textRetryAPiDn = bindingCM.textCancel
-        val textUpdate = bindingCM.textUpdate
-
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textLoading.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textRetryAPiDn.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textLoading2.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textUpdate.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-
-            textRetryAPiDn.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-            textRetryAPiDn.setBackgroundResource(R.drawable.card_design_darktheme_outline_pop_layout)
-
-        }
-
 
 
 
@@ -798,26 +551,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
             alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
 
-        val consMainAlert_sub_layout = bindingCM.consMainAlertSubLayout
-        val textLoading = bindingCM.textLoading
-        val textLoading2 = bindingCM.textLoading2
-        val textRetryAPiDn = bindingCM.textCancel
-        val text_download_sync = bindingCM.textDownloadSync
-
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textLoading.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textLoading2.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textRetryAPiDn.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            text_download_sync.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            //  textLogoutButton.setBackgroundResource(R.drawable.card_design_darktheme_outline_pop_layout);
-            text_download_sync.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-            textRetryAPiDn.setBackgroundResource(R.drawable.card_design_darktheme_outline_pop_layout)
-
-        }
 
 
         bindingCM.textCancel.setOnClickListener {
@@ -1632,18 +1365,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                 }
 
                 // newly added by 10:33 am
-            } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
-
-
-                showToastMessage("Google Drive Connection Pending")
-                /// showContinueGoogleDrive(getFolderClo, getFolderSubpath)
-
-                handler.postDelayed(Runnable {
-                    if (customProgressDialog != null){
-                        customProgressDialog.dismiss()
-                    }
-                }, 2500)
-
             }
 
 
@@ -2137,7 +1858,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
         binding.apply {
             val getSyncMethods = sharedBiometric.getString(Constants.IMG_SELECTED_SYNC_METHOD, "").toString()
 
-            if (!preferences.getBoolean("darktheme", false)) {
                 if (getSyncMethods == Constants.USE_ZIP_SYNC) {
 
                     editTextInputSynUrlZip.hint = "Input url  ZIP Sync"
@@ -2202,80 +1922,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
             }
 
-
-            /*     imagSwtichEnableSyncFromAPI.setOnCheckedChangeListener { compoundButton, isValued ->
-
-                     try {
-                         if (handlerMoveToWebviewPage != null) {
-                             handlerMoveToWebviewPage.removeCallbacksAndMessages(null)
-                         }
-
-                         val editorDN = myDownloadClass.edit()
-                         editorDN.remove(Constants.SynC_Status)
-                         editorDN.remove(Constants.textDownladByes)
-                         editorDN.remove(Constants.progressBarPref)
-                         editorDN.remove(Constants.progressBarPref)
-                         editorDN.remove(Constants.filesChange)
-                         editorDN.remove(Constants.numberOfFiles)
-
-                         editorDN.apply()
-
-
-                         val editor = sharedBiometric.edit()
-                         hideKeyBoard(binding.editTextInputSynUrlZip)
-
-                         if (compoundButton.isChecked) {
-                             editor.putString(
-                                 Constants.IMG_SELECTED_SYNC_METHOD,
-                                 Constants.IMG_SELECTED_SYNC_METHOD
-                             )
-                             editor.apply()
-                             textSynfromApiZip.setText("Use ZIP Sync")
-                             editTextInputSynUrlZip.setHint("Input url  ZIP Sync")
-                             textDownloadZipSyncOrApiSyncNow.setText("Connect ZIP Sync")
-
-
-                             if (!preferences.getBoolean("darktheme", false)) {
-                                 textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.card_design_buy_gift_card)
-                                 textDownloadZipSyncOrApiSyncNow.setTextColor(
-                                     ContextCompat.getColor(
-                                         applicationContext, R.color.white
-                                     )
-                                 )
-
-                             }
-
-
-                         } else {
-
-
-                             editor.remove(Constants.IMG_SELECTED_SYNC_METHOD)
-                             editor.apply()
-
-                             textSynfromApiZip.setText("Use API Sync")
-                             textDownloadZipSyncOrApiSyncNow.setText("Connect API Sync")
-                             editTextInputSynUrlZip.setHint("Input url  API Sync")
-
-                             if (!preferences.getBoolean("darktheme", false)) {
-
-                                 textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.light_background_blue_color)
-                                 textDownloadZipSyncOrApiSyncNow.setTextColor(
-                                     ContextCompat.getColor(
-                                         applicationContext, R.color.deep_blue
-                                     )
-                                 )
-                             }
-
-
-                         }
-                     } catch (_: Exception) {
-                     }
-
-                 }
-     */
-
-
-        }
     }
 
     private fun imageEnablePartherOrmasterDomain() {
@@ -2408,54 +2054,12 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
         alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
 
-
-        val consMainAlert_sub_layout = bindingCm.consMainAlertDn
-        val textTitle = bindingCm.textTitle
-        val imgCloseDialog = bindingCm.imageCrossClose
-        val close_bs = bindingCm.closeBs
-        val divider21 = bindingCm.divider21
         val imgZipSync = bindingCm.imgZipSync
-
-
-        val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textTitle.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            val drawable_close_bs =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-            drawable_close_bs?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            close_bs.setImageDrawable(drawable_close_bs)
-
-            val drawable_imageCrossClose =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-            drawable_imageCrossClose?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            imgCloseDialog.setImageDrawable(drawable_imageCrossClose)
-
-            divider21.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                )
-            )
-
-
-        }
 
 
         if (handlerMoveToWebviewPage != null) {
             handlerMoveToWebviewPage.removeCallbacksAndMessages(null)
         }
-
 
 
 
@@ -2477,10 +2081,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     applicationContext,
                     R.drawable.ic_check_false_radio_btn_24
                 )
-                imgFTPSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
 
             } else if (getSyncMethods == Constants.USE_API_SYNC) {
 
@@ -2496,10 +2096,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     applicationContext,
                     R.drawable.ic_check_false_radio_btn_24
                 )
-                imgFTPSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
+
 
             } else if (getSyncMethods == Constants.USE_PARSING_SYNC) {
                 // set only this one to be true
@@ -2514,31 +2111,8 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     applicationContext,
                     R.drawable.ic_check_false_radio_btn_24
                 )
-                imgFTPSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
-
-            } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
-                // set only this one to be true
-                imgFTPSync.background =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_check_true_24)
-                // set the rest to be false
-                imgZipSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
-                imgAPISync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
-                imgParsingSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
 
             }
-
 
 
             closeBs.setOnClickListener {
@@ -2568,10 +2142,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     applicationContext,
                     R.drawable.ic_check_false_radio_btn_24
                 )
-                imgFTPSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
+
 
                 alertDialog.dismiss()
             }
@@ -2593,10 +2164,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     applicationContext,
                     R.drawable.ic_check_false_radio_btn_24
                 )
-                imgFTPSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
+
 
                 alertDialog.dismiss()
             }
@@ -2616,10 +2184,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     applicationContext,
                     R.drawable.ic_check_false_radio_btn_24
                 )
-                imgFTPSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
+
 
 
                 initParsingSyncMethod()
@@ -2628,30 +2193,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
             }
 
-            textFTPSync.setOnClickListener {
-
-                // set only this one to be true
-                imgFTPSync.background =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_check_true_24)
-                // set the rest to be false
-                imgZipSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
-                imgAPISync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
-                imgParsingSync.background = ContextCompat.getDrawable(
-                    applicationContext,
-                    R.drawable.ic_check_false_radio_btn_24
-                )
-
-
-                initFTPSyncMethod()
-                initToggleUseZipSyncOrApI()
-                alertDialog.dismiss()
-            }
 
         }
 
@@ -2684,15 +2225,12 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
             binding.editTextInputSynUrlZip.hint = "Input url  API Sync"
 
 
-            if (!preferences.getBoolean("darktheme", false)) {
-
-                binding.textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.light_background_blue_color)
-                binding.textDownloadZipSyncOrApiSyncNow.setTextColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.deep_blue
-                    )
+            binding.textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.light_background_blue_color)
+            binding.textDownloadZipSyncOrApiSyncNow.setTextColor(
+                ContextCompat.getColor(
+                    applicationContext, R.color.deep_blue
                 )
-            }
+            )
 
 
         }
@@ -2721,15 +2259,12 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
             textDownloadZipSyncOrApiSyncNow.text = "Connect ZIP Sync"
 
 
-            if (!preferences.getBoolean("darktheme", false)) {
-                textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.card_design_buy_gift_card)
-                textDownloadZipSyncOrApiSyncNow.setTextColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.white
-                    )
+            textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.card_design_buy_gift_card)
+            textDownloadZipSyncOrApiSyncNow.setTextColor(
+                ContextCompat.getColor(
+                    applicationContext, R.color.white
                 )
-
-            }
+            )
 
         }
     }
@@ -2759,55 +2294,12 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
             textDownloadZipSyncOrApiSyncNow.text = "Connect Parsing Sync"
 
 
-            if (!preferences.getBoolean("darktheme", false)) {
-                textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.card_design_buy_gift_card)
-                textDownloadZipSyncOrApiSyncNow.setTextColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.white
-                    )
+            textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.card_design_buy_gift_card)
+            textDownloadZipSyncOrApiSyncNow.setTextColor(
+                ContextCompat.getColor(
+                    applicationContext, R.color.white
                 )
-
-            }
-
-        }
-    }
-
-    private fun initFTPSyncMethod() {
-        binding.apply {
-
-            val editorDN = myDownloadClass.edit()
-            editorDN.remove(Constants.SynC_Status)
-            editorDN.remove(Constants.textDownladByes)
-            editorDN.remove(Constants.progressBarPref)
-            editorDN.remove(Constants.progressBarPref)
-            editorDN.remove(Constants.filesChange)
-            editorDN.remove(Constants.numberOfFiles)
-
-            editorDN.apply()
-
-
-            val editor = sharedBiometric.edit()
-            hideKeyBoard(binding.editTextInputSynUrlZip)
-
-
-            editor.putString(Constants.IMG_SELECTED_SYNC_METHOD, Constants.USE_DRIVE_SYNC)
-            editor.apply()
-
-            binding.textDownloadZipSyncOrApiSyncNow.text = "Connect Drive Sync"
-            binding.editTextInputSynUrlZip.hint = "Input url  Drive Sync"
-
-
-            if (!preferences.getBoolean("darktheme", false)) {
-
-                binding.textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.light_background_blue_color)
-                binding.textDownloadZipSyncOrApiSyncNow.setTextColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.deep_blue
-                    )
-                )
-            }
-
-
+            )
         }
     }
 
@@ -3161,54 +2653,8 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
         }
 
 
-        val consMainAlert_sub_layout = bindingCm.consMainAlertSubLayout
-        val textTitle = bindingCm.textTitle
         val textApiServer = bindingCm.textApiServer
         val textCloudServer = bindingCm.textCloudServer
-        val imgCloseDialog = bindingCm.imageCrossClose
-        val close_bs = bindingCm.closeBs
-        val divider21 = bindingCm.divider21
-
-
-        val preferences =
-            android.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textTitle.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textApiServer.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textCloudServer.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            val drawable_close_bs =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-            drawable_close_bs?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            close_bs.setImageDrawable(drawable_close_bs)
-
-            val drawable_imageCrossClose =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-            drawable_imageCrossClose?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            imgCloseDialog.setImageDrawable(drawable_imageCrossClose)
-
-
-            divider21.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                )
-            )
-
-        }
-
-
-
 
 
 
@@ -3222,6 +2668,16 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
                 binding.texturlsViews.text = CP_server
                 getUrlBasedOnSpinnerText = CP_server
+
+
+
+                binding.texturlsSavedDownload.setTextColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.deep_blue
+                    )
+                )
+
 
                 val editor = myDownloadClass.edit()
                 editor.putString(Constants.Saved_Parthner_Name, CP_server)
@@ -3239,6 +2695,16 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
 
                 binding.texturlsViews.text = API_Server
                 getUrlBasedOnSpinnerText = API_Server
+
+
+                binding.texturlsSavedDownload.setTextColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.deep_blue
+                    )
+                )
+
+
 
                 val editor = myDownloadClass.edit()
                 editor.putString(Constants.Saved_Parthner_Name, API_Server)
@@ -3733,146 +3199,12 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                 }
 
 
-            } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
-
-
-                showContinueGoogleDrive(getFolderClo, getFolderSubpath)
-
             }
 
 
 
 
         }, 300)
-    }
-
-    private fun extractFileIdFromUrl(url: String): String? {
-        val regex = "https://drive\\.google\\.com/file/d/([a-zA-Z0-9_-]+)".toRegex()
-        val matchResult = regex.find(url)
-        return matchResult?.groups?.get(1)?.value
-    }
-
-
-    private fun initDownload(url: String) {
-        val finalFolderPath = "Drive"
-        val fileName = "App.zip"
-
-        val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-        val folder = File(
-            Environment.getExternalStorageDirectory()
-                .toString() + "/Download/${Constants.Syn2AppLive}/$finalFolderPath"
-        )
-        if (!folder.exists()) {
-            folder.mkdirs()
-        }
-
-        val request = DownloadManager.Request(Uri.parse(url))
-            .setTitle(fileName)
-            .setDescription("Downloading ZIP file from Google Drive")
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_DOWNLOADS,
-                "/${Constants.Syn2AppLive}/$finalFolderPath/$fileName"
-            )
-        downloadManager.enqueue(request)
-
-
-    }
-
-
-    private fun showContinueGoogleDrive(getFolderClo: String, getFolderSubpath: String) {
-
-        val bindingCM: CustomGoogleDriveUrlBinding = CustomGoogleDriveUrlBinding.inflate(
-            LayoutInflater.from(this)
-        )
-        val alertDialogBuilder = AlertDialog.Builder(this@ReSyncActivity)
-
-        alertDialogBuilder.setView(bindingCM.root)
-        alertDialogBuilder.setCancelable(true)
-
-        val alertDialog = alertDialogBuilder.create()
-
-        // Set the background of the AlertDialog to be transparent
-        if (alertDialog.window != null) {
-            alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
-        }
-
-      ///  val getUrl = "https://drive.google.com/file/d/1LEFSA6RFiwLVZw2GlV8ASsTGogwIh_FA/view?usp=drive_link"
-        val getUrl = "https://drive.google.com/file/d/1tQcUnzySYRGNNkx_x5LtVmRdWNd1ACJ1/view?usp=sharing"
-        bindingCM.eitTextEnterNewPassword.setText(getUrl)
-
-        bindingCM.textContinuPasswordDai.setOnClickListener {
-
-            val url = bindingCM.eitTextEnterNewPassword.text.toString()
-            val fileId = extractFileIdFromUrl(url)
-            if (fileId != null) {
-                val downloadUrl = "${Constants.GOOGLE_DRIVE_DOMAIN}$fileId"
-                checkDriveUrlForValidity(getFolderClo, getFolderSubpath, downloadUrl)
-                alertDialog.dismiss()
-
-            }else{
-                Toast.makeText(applicationContext, "Something went wrong", Toast.LENGTH_SHORT).show()
-                alertDialog.dismiss()
-            }
-
-
-        }
-
-
-
-        bindingCM.imgCloseDialog.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-
-        alertDialog.show()
-
-
-    }
-
-
-
-    @SuppressLint("NewApi")
-    private  fun  checkDriveUrlForValidity(getFolderClo:String, getFolderSubpath: String, baseUrl:String){
-
-        showCustomProgressDialog("Please wait")
-
-
-        lifecycleScope.launch {
-                val result = checkUrlExistence(baseUrl)
-                if (result) {
-
-                    startMyDownlaodsMutiplesPath(
-                        baseUrl,
-                        getFolderClo,
-                        getFolderSubpath,
-                        Constants.Zip,
-                        Constants.fileNmae_App_Zip,
-                    )
-
-                    // save also to room data base
-                    val user = User(
-                        CLO = getFolderClo,
-                        DEMO = getFolderSubpath,
-                        EditUrl = "",
-                        EditUrlIndex = ""
-                    )
-                    mUserViewModel.addUser(user)
-
-
-                } else {
-                    showPopsForMyConnectionTest(getFolderClo, getFolderSubpath, "Failed!")
-
-                    if (customProgressDialog != null){
-                        customProgressDialog.dismiss()
-                    }
-                }
-
-        }
-
-
     }
 
 
@@ -3983,40 +3315,6 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                         }
                     }
                 }
-
-
-
-
-
-            } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
-
-             lifecycleScope.launch {
-                 try {
-                     val result = checkUrlExistence(editInputUrl)
-                     if (result) {
-
-                         if (customProgressDialog != null){
-                             customProgressDialog.dismiss()
-                         }
-
-                         showToastMessage("(FTP) We are sorry but the manual for this set up is not Ready")
-
-
-                     } else {
-
-                         showPopsForMyConnectionTest("CLO", fileNameWithoutExtension, "Failed!")
-
-                         if (customProgressDialog != null){
-                             customProgressDialog.dismiss()
-                         }
-                     }
-                 } catch (e:Exception){
-                     if (customProgressDialog != null){
-                         customProgressDialog.dismiss()
-                     }
-                 }
-             }
-
 
         }
 
@@ -4193,20 +3491,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                         }
                     }
 
-                } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
-
-
-                    showToastMessage("Google Drive Connection Pending")
-                   /// showContinueGoogleDrive(getFolderClo, getFolderSubpath)
-
-                    handler.postDelayed(Runnable {
-                        if (customProgressDialog != null){
-                            customProgressDialog.dismiss()
-                        }
-                    }, 2500)
-
                 }
-
 
 
             } else {
@@ -4370,21 +3655,7 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
                     }
 
 
-                } else if (getSyncMethods == Constants.USE_DRIVE_SYNC) {
-
-                   // showContinueGoogleDrive(getFolderClo, getFolderSubpath)
-
-                    showToastMessage("Google Drive Connection Pending")
-                    /// showContinueGoogleDrive(getFolderClo, getFolderSubpath)
-
-                    handler.postDelayed(Runnable {
-                        if (customProgressDialog != null){
-                            customProgressDialog.dismiss()
-                        }
-                    }, 2500)
-
                 }
-
 
             } else {
                 showToastMessage("No Internet Connection")
@@ -4412,34 +3683,10 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
 
-        val consMainAlert_sub_layout = bindingCM.consMainAlertSubLayout
         val textSucessful = bindingCM.textSucessful
         val textYourUrlTest = bindingCM.textYourUrlTest
         val textContinuPassword2 = bindingCM.textContinuPassword2
         val imgCloseDialog = bindingCM.imgCloseDialog
-
-
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textSucessful.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textYourUrlTest.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textContinuPassword2.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            textContinuPassword2.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-
-            val drawable_imgCloseDialog =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-            drawable_imgCloseDialog?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.white
-                ), PorterDuff.Mode.SRC_IN
-            )
-            imgCloseDialog.setImageDrawable(drawable_imgCloseDialog)
-
-
-        }
 
 
 
@@ -5699,58 +4946,10 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
         custom_ApI_Dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
 
-        val consMainAlert_sub_layout = bindingCm.constraintLayout
-        val textTitle = bindingCm.textTitle
         val textErrorText = bindingCm.textErrorText
         val textTryAgin = bindingCm.textTryAgin
-        val imgCloseDialog = bindingCm.imageCrossClose
-        val close_bs = bindingCm.closeBs
         val progressBar2 = bindingCm.progressBar2
-        val divider21 = bindingCm.divider21
 
-
-        val preferences =
-            android.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textTitle.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textErrorText.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textTryAgin.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            val drawable_close_bs =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-            drawable_close_bs?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            close_bs.setImageDrawable(drawable_close_bs)
-
-            val drawable_imageCrossClose =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-            drawable_imageCrossClose?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            imgCloseDialog.setImageDrawable(drawable_imageCrossClose)
-
-            val colorWhite =
-                ContextCompat.getColor(applicationContext, R.color.dark_light_gray_pop)
-            progressBar2.indeterminateDrawable.setColorFilter(
-                colorWhite, PorterDuff.Mode.SRC_IN
-            )
-
-            divider21.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                )
-            )
-
-
-        }
 
         if (handlerMoveToWebviewPage != null) {
             handlerMoveToWebviewPage.removeCallbacksAndMessages(null)

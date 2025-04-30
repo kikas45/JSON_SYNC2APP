@@ -142,8 +142,9 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
     private var navigateAppMolde = false;
     private val TAG = "TvActivityOrAppMode"
     private var getUrlBasedOnSpinnerText = ""
-    private var API_Server = "API-Cloud App Server"
-    private var CP_server = "CP-Cloud App Server"
+
+    private var API_Server = "CP 2-Cloud App Server"
+    private var CP_server = "CP 1-Cloud App Server"
 
     private val mApiViewModel by viewModels<ApiUrlViewModel>()
 
@@ -182,8 +183,11 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
         )
     }
 
-    private var preferences: SharedPreferences? = null
+   // private var preferences: SharedPreferences? = null
 
+    private val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    }
 
     @SuppressLint("CommitPrefEdits", "SetTextI18n", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -199,7 +203,8 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
         setUpInternetAmination()
 
-        setUpdarkUITheme()
+       // setUpdarkUITheme()  ///   for dark theme, enable it latter if needed
+
         applyOritenation()
 
         //add exception
@@ -372,7 +377,7 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
                 ///  Shared pref for app Settings
                 // used for App settings Shared Prefernce
-                val editorPref = preferences?.edit()
+                val editorPref = preferences.edit()
                 editorPref!!.putBoolean(Constants.hidebottombar, false)
                 editorPref.putBoolean(Constants.fullscreen, false)
                 editorPref.putBoolean(Constants.immersive_mode, false)
@@ -424,8 +429,8 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
 
 
                 // Shared pref for app Settings
-                // used for App settings Shared Prefernce
-                val editorPref = preferences?.edit()
+                // used for App settings Shared Preference
+                val editorPref = preferences.edit()
                 editorPref!!.putBoolean(Constants.hidebottombar, true)
                 editorPref.putBoolean(Constants.fullscreen, true)
                 editorPref.putBoolean(Constants.immersive_mode, true)
@@ -534,8 +539,7 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
         if (Utility.isNetworkAvailable(this)) {
 
 
-            val get_Saved_Domains_Urls =
-                simpleSavedPassword.getString(Constants.Saved_Domains_Urls, "").toString().trim()
+            val get_Saved_Domains_Urls = simpleSavedPassword.getString(Constants.Saved_Domains_Urls, "").toString().trim()
 
             if (binding.imgUserMasterDomainORCustom.isChecked) {
                 // add the toggle check for Sync Page
@@ -605,54 +609,10 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
         }
 
 
-        val consMainAlert_sub_layout = bindingCm.consMainAlertSubLayout
-        val textTitle = bindingCm.textTitle
+
         val textApiServer = bindingCm.textApiServer
         val textCloudServer = bindingCm.textCloudServer
-        val imgCloseDialog = bindingCm.imageCrossClose
-        val close_bs = bindingCm.closeBs
-        val divider21 = bindingCm.divider21
 
-
-        val preferences =
-            android.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textTitle.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textApiServer.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textCloudServer.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            val drawable_close_bs =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-            drawable_close_bs?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            close_bs.setImageDrawable(drawable_close_bs)
-
-            val drawable_imageCrossClose =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-            drawable_imageCrossClose?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            imgCloseDialog.setImageDrawable(drawable_imageCrossClose)
-
-
-            divider21.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                )
-            )
-
-        }
 
         bindingCm.apply {
 
@@ -660,22 +620,13 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
                 binding.texturlsSavedDownload.text = CP_server
                 getUrlBasedOnSpinnerText = CP_server
 
-                if (preferences!!.getBoolean("darktheme", false)) {
-                    binding.texturlsSavedDownload.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.white
-                        )
+                binding.texturlsSavedDownload.setTextColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.deep_blue
                     )
-                } else {
+                )
 
-                    binding.texturlsSavedDownload.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.deep_blue
-                        )
-                    )
-                }
 
                 val editor = myDownloadClass.edit()
                 editor.putString(Constants.Saved_Parthner_Name, CP_server)
@@ -693,32 +644,16 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
                 binding.texturlsSavedDownload.text = API_Server
                 getUrlBasedOnSpinnerText = API_Server
 
-                if (preferences!!.getBoolean("darktheme", false)) {
-
-                    binding.texturlsSavedDownload.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.white
-                        )
+                binding.texturlsSavedDownload.setTextColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.deep_blue
                     )
-
-                } else {
-
-                    binding.texturlsSavedDownload.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.deep_blue
-                        )
-                    )
-                }
-
+                )
 
                 val editor = myDownloadClass.edit()
                 editor.putString(Constants.Saved_Parthner_Name, API_Server)
-                editor.putString(
-                    Constants.CP_OR_AP_MASTER_DOMAIN,
-                    Constants.CUSTOM_API_SERVER_DOMAIN
-                )
+                editor.putString(Constants.CP_OR_AP_MASTER_DOMAIN, Constants.CUSTOM_API_SERVER_DOMAIN)
                 editor.apply()
 
                 alertDialog.dismiss()
@@ -754,58 +689,9 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
         }
 
 
-        val consMainAlert_sub_layout = bindingCm.constraintLayout
-        val textTitle = bindingCm.textTitle
         val textErrorText = bindingCm.textErrorText
         val textTryAgin = bindingCm.textTryAgin
-        val imgCloseDialog = bindingCm.imageCrossClose
-        val close_bs = bindingCm.closeBs
         val progressBar2 = bindingCm.progressBar2
-        val divider21 = bindingCm.divider21
-
-
-        val preferences =
-            android.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textTitle.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textErrorText.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-            textTryAgin.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            val drawable_close_bs =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-            drawable_close_bs?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            close_bs.setImageDrawable(drawable_close_bs)
-
-            val drawable_imageCrossClose =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-            drawable_imageCrossClose?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            imgCloseDialog.setImageDrawable(drawable_imageCrossClose)
-
-            val colorWhite = ContextCompat.getColor(applicationContext, R.color.dark_light_gray_pop)
-            progressBar2.indeterminateDrawable.setColorFilter(colorWhite, PorterDuff.Mode.SRC_IN)
-
-            divider21.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext,
-                    R.color.dark_light_gray_pop
-                )
-            )
-
-
-        }
 
 
 
@@ -897,22 +783,12 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
         if (name.isNotEmpty()) {
             binding.texturlsSavedDownload.text = name
 
-            if (preferences!!.getBoolean("darktheme", false)) {
-                binding.texturlsSavedDownload.setTextColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.white
-                    )
+            binding.texturlsSavedDownload.setTextColor(
+                ContextCompat.getColor(
+                    applicationContext,
+                    R.color.white
                 )
-            } else {
-                binding.texturlsSavedDownload.setTextColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.deep_blue
-                    )
-                )
-            }
-
+            )
 
         }
 
@@ -1253,41 +1129,6 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
     }
 
 
-/// later use the permission required of it
-
-    /*
-
-        private fun startPermissionProcess() {
-                when {
-                    !isIgnoringBatteryOptimizations(this, packageName) -> {
-                        requestIgnoreBatteryOptimizations()
-                    }
-                    !Settings.System.canWrite(applicationContext) -> {
-                        showPopAllowAppToWriteSystem()
-                    }
-                    !Settings.canDrawOverlays(this) -> {
-                        showPop_For_Allow_Display_Over_Apps()
-                    }
-                    !checkStoragePermission(this) -> {
-                        showPop_For_Grant_Permsiion()
-                    }
-                    else -> {
-
-                        if (!isDialogPermissionShown){
-
-                            handler.postDelayed(Runnable {
-
-                                checkMultiplePermissions()
-
-                            }, 500)
-                        }
-                    }
-                }
-            }
-
-    */
-
-
     @SuppressLint("BatteryLife")
     private fun requestIgnoreBatteryOptimizations() {
         val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
@@ -1592,90 +1433,6 @@ class TvActivityOrAppMode : AppCompatActivity(), SavedApiAdapter.OnItemClickList
     }
 
 
-    private fun setUpdarkUITheme() {
-        // write code for dark theme
-        preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-                constraintLayoutSlectDomain.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-
-                // set text view
-
-                textView2.setTextColor(resources.getColor(R.color.white))
-
-                // text view in inner container
-                textView3.setTextColor(resources.getColor(R.color.white))
-                textPartnerUrlLunch.setTextColor(resources.getColor(R.color.white))
-                textView16.setTextColor(resources.getColor(R.color.white))
-                textAppMode.setTextColor(resources.getColor(R.color.white))
-                textView15.setTextColor(resources.getColor(R.color.white))
-                texturlsSavedDownload.setTextColor(resources.getColor(R.color.white))
-
-
-                // Define colors for different states
-                val thumbColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_checked),
-                        intArrayOf(-android.R.attr.state_checked)
-                    ),
-                    intArrayOf(
-                        Color.LTGRAY,  // Color when checked
-                        Color.LTGRAY   // Color when unchecked
-                    )
-                )
-
-                val trackColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_enabled),
-                        intArrayOf(-android.R.attr.state_enabled)
-                    ),
-                    intArrayOf(
-                        Color.DKGRAY,  // Color when enabled
-                        Color.LTGRAY   // Color when disabled
-                    )
-                )
-
-                // Apply the color state lists
-                imgUserMasterDomainORCustom.thumbTintList = thumbColorStateList
-                imgUserMasterDomainORCustom.trackTintList = trackColorStateList
-
-
-                val drawable_imagSpannerSavedDownload =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_drop_down_24)
-                drawable_imagSpannerSavedDownload?.setColorFilter(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.white
-                    ), PorterDuff.Mode.SRC_IN
-                )
-                imagSpannerSavedDownload.setImageDrawable(drawable_imagSpannerSavedDownload)
-
-
-                // test connection buttons and connect buttons
-                textTvMode.setTextColor(resources.getColor(R.color.white))
-                textTvMode.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textAppMode.setTextColor(resources.getColor(R.color.white))
-                textAppMode.setBackgroundResource(R.drawable.card_design_darktheme)
-
-
-                // for edit text values
-                editTextUserID.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editTextUserID.setTextColor(resources.getColor(R.color.white))
-                editTextUserID.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-                editTextLicenseKey.setBackgroundResource(R.drawable.round_edit_text_design_outline_dark_theme)
-                editTextLicenseKey.setTextColor(resources.getColor(R.color.white))
-                editTextLicenseKey.setHintTextColor(resources.getColor(R.color.light_gray_wash))
-
-
-            }
-        }
-
-    }
 
 
     @SuppressLint("SourceLockedOrientationActivity")

@@ -201,45 +201,6 @@
             app:tint="@color/deep_blue" />
 
 
-        <TextView
-            android:id="@+id/textFTPSync"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:elegantTextHeight="true"
-            android:focusable="true"
-            android:foreground="?selectableItemBackground"
-            android:gravity="start|center"
-            android:paddingStart="20dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="5dp"
-            android:paddingBottom="5dp"
-            android:text="Use FTP Sync"
-            android:textColor="@color/deep_blue"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textParsingSync"
-            app:layout_constraintVertical_bias="0.0" />
-
-
-        <ImageView
-            android:id="@+id/imgFTPSync"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:scaleType="fitCenter"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_check_false_radio_btn_24"
-            app:layout_constraintBottom_toBottomOf="@+id/textFTPSync"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textFTPSync"
-            app:tint="@color/deep_blue" />
-
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

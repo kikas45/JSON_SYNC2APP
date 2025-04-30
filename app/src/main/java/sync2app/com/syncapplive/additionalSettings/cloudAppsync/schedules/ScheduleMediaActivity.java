@@ -78,9 +78,6 @@ public class ScheduleMediaActivity extends AppCompatActivity {
         closeBs = binding.closeBs;
 
 
-        // set up dark theme
-        setuDarkTheme();
-
         // Setup folder path
 
         SharedPreferences myDownloadClass = getSharedPreferences(Constants.MY_DOWNLOADER_CLASS, Context.MODE_PRIVATE);
@@ -231,79 +228,6 @@ public class ScheduleMediaActivity extends AppCompatActivity {
             loadBackGroundImage();
         }
 
-
-    }
-
-    private void setuDarkTheme() {
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (preferences.getBoolean("darktheme", false)) {
-
-            // set windows
-
-            getWindow().setStatusBarColor(Color.parseColor("#171616"));
-
-            getWindow().setNavigationBarColor(Color.parseColor("#171616"));
-
-            WindowInsetsControllerCompat insetsController = new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
-            insetsController.setAppearanceLightStatusBars(false);
-            insetsController.setAppearanceLightNavigationBars(false);
-
-            parentConatiner.setBackgroundColor(getResources().getColor(R.color.dark_layout_for_ui));
-            setDrawableColor(binding.closeBs, R.drawable.ic_baseline_arrow, R.color.white);
-            setDrawableColor(binding.imageView40, R.drawable.ic_arrow_move_front, R.color.white);
-            setDrawableColor(binding.imageView4, R.drawable.ic_arrow_move_front, R.color.white);
-            setDrawableColor(binding.imageView47, R.drawable.ic_arrow_move_front, R.color.white);
-            setDrawableColor(binding.imageView41, R.drawable.ic_schedule, R.color.deep_blue_light_extra);
-            setDrawableColor(binding.imageView45, R.drawable.ic_schedule, R.color.deep_blue_light_extra);
-            setDrawableColor(binding.imageView46, R.drawable.ic_schedule, R.color.deep_blue_light_extra);
-            setDrawableColor(binding.imageView48, R.drawable.ic_app_or_tv_tv_24, R.color.deep_blue_light_extra);
-
-
-            setTextColor(binding.textView42, R.color.white);
-            setTextColor(binding.addScheduleCard, R.color.white);
-            setTextColor(binding.allSchedulesCard, R.color.white);
-            setTextColor(binding.textScheduleIndicator, R.color.white);
-            setTextColor(binding.textGoTowebview, R.color.white);
-
-
-            // Define colors for different states
-            ColorStateList thumbColorStateList = new ColorStateList(
-                    new int[][]{
-                            new int[]{android.R.attr.state_checked},
-                            new int[]{-android.R.attr.state_checked}
-                    },
-                    new int[]{
-                            Color.LTGRAY,  // Color when checked
-                            Color.LTGRAY   // Color when unchecked
-                    }
-            );
-
-            ColorStateList trackColorStateList = new ColorStateList(
-                    new int[][]{
-                            new int[]{android.R.attr.state_enabled},
-                            new int[]{-android.R.attr.state_enabled}
-                    },
-                    new int[]{
-                            Color.DKGRAY,  // Color when enabled
-                            Color.LTGRAY   // Color when disabled
-                    }
-            );
-
-
-            scheduleSwitch.setThumbTintList(thumbColorStateList);
-            scheduleSwitch.setTrackTintList(trackColorStateList);
-
-
-            // for divider
-            setDividerColor(binding.divider21, R.color.light_gray);
-            setDividerColor(binding.divider32, R.color.light_gray);
-            setDividerColor(binding.divider50, R.color.light_gray);
-            setDividerColor(binding.divider34, R.color.light_gray);
-            setDividerColor(binding.divider49, R.color.light_gray);
-
-
-        }
 
     }
 

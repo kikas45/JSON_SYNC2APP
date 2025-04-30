@@ -93,7 +93,6 @@ class MaintenanceActivity : AppCompatActivity() {
 
         setUpFullScreenWindows()
 
-        setUpDarkTheme()
 
         val editor = sharedBiometric.edit()
 
@@ -423,139 +422,6 @@ class MaintenanceActivity : AppCompatActivity() {
 
     }
 
-    private fun setUpDarkTheme() {
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-                // set windows
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = false
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-
-                textView42.setTextColor(resources.getColor(R.color.white))
-                textHardwarePage.setTextColor(resources.getColor(R.color.white))
-                textBranding.setTextColor(resources.getColor(R.color.white))
-                textCrashPage.setTextColor(resources.getColor(R.color.white))
-                textFileManger.setTextColor(resources.getColor(R.color.white))
-                textCheckDownloadStatus2.setTextColor(resources.getColor(R.color.white))
-                textShowOnlineStatus.setTextColor(resources.getColor(R.color.white))
-                textShowAppRestartTvMode.setTextColor(resources.getColor(R.color.white))
-
-
-                // fir back button
-                val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                closeBs.setImageDrawable(drawable)
-
-
-                // for all forward icon
-                val drawable_imageView6 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_arrow_move_front)
-                drawable_imageView6?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_IN)
-                imageView40.setImageDrawable(drawable_imageView6)
-                imageView22.setImageDrawable(drawable_imageView6)
-                imageView36.setImageDrawable(drawable_imageView6)
-                imageView4.setImageDrawable(drawable_imageView6)
-
-
-
-                // for nav icons
-                val drawable_imageView41 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_branding)
-                drawable_imageView41?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView41.setImageDrawable(drawable_imageView41)
-
-                val drawable_imageView9 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_branding)
-                drawable_imageView9?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView9.setImageDrawable(drawable_imageView9)
-
-                val drawable_imageView21 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_crash_report)
-                drawable_imageView21?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView21.setImageDrawable(drawable_imageView21)
-
-                val drawable_imageView33 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_folder_icon)
-                drawable_imageView33?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView33.setImageDrawable(drawable_imageView33)
-
-                val drawable_imageView39 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_download_24)
-                drawable_imageView39?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView39.setImageDrawable(drawable_imageView39)
-
-                val drawable_imageView23 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_show_online_status)
-                drawable_imageView23?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView23.setImageDrawable(drawable_imageView23)
-
-                val drawable_imageView37 = ContextCompat.getDrawable(applicationContext, R.drawable.ic_crash_report)
-                drawable_imageView37?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.deep_blue_light_extra), PorterDuff.Mode.SRC_IN)
-                imageView37.setImageDrawable(drawable_imageView37)
-
-
-
-
-
-                // Define colors for different states
-                val thumbColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_checked),
-                        intArrayOf(-android.R.attr.state_checked)
-                    ),
-                    intArrayOf(
-                        Color.LTGRAY,  // Color when checked
-                        Color.LTGRAY   // Color when unchecked
-                    )
-                )
-
-                val trackColorStateList = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_enabled),
-                        intArrayOf(-android.R.attr.state_enabled)
-                    ),
-                    intArrayOf(
-                        Color.DKGRAY,  // Color when enabled
-                        Color.LTGRAY   // Color when disabled
-                    )
-                )
-
-                // Apply the color state lists
-                imagEnableDownloadStatus.thumbTintList = thumbColorStateList
-                imagEnableDownloadStatus.trackTintList = trackColorStateList
-
-                imagShowOnlineStatus.thumbTintList = thumbColorStateList
-                imagShowOnlineStatus.trackTintList = trackColorStateList
-
-                imgStartAppRestartOnTvMode.thumbTintList = thumbColorStateList
-                imgStartAppRestartOnTvMode.trackTintList = trackColorStateList
-
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider32.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider33.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider42.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider38.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider29.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider41.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                // divider34.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-                divider40.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.light_gray))
-
-
-
-
-
-            }
-        }
-
-    }
-
 
     private fun setUpFullScreenWindows() {
         val get_INSTALL_TV_JSON_USER_CLICKED = sharedTVAPPModePreferences.getString(Constants.INSTALL_TV_JSON_USER_CLICKED, "").toString()
@@ -820,28 +686,6 @@ class MaintenanceActivity : AppCompatActivity() {
 
         alertDialog.setCanceledOnTouchOutside(true)
 
-        bindingCm.apply {
-
-
-
-
-            val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-            if (preferences.getBoolean("darktheme", false)) {
-                consMainAlertSubLayout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-                textDisplayResults.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-                textTitles.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-                textContinuPassword2.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-                textContinuPassword2.setBackgroundResource(R.drawable.card_design_buy_gift_card_extra_dark_black)
-
-            }
-
-
-        }
-
-
-
 
 
         bindingCm.textDisplayResults.setText(message)
@@ -967,49 +811,8 @@ class MaintenanceActivity : AppCompatActivity() {
 
         alertDialog.window!!.attributes.windowAnimations = R.style.PauseDialogAnimation
 
-
-        val consMainAlert_sub_layout = bindingCm.consMainAlertDn
-        val textTitle = bindingCm.textTitle
-        val imgCloseDialog = bindingCm.imageCrossClose
-        val close_bs = bindingCm.closeBs
-        val divider21 = bindingCm.divider21
         val imgZipSync = bindingCm.imgZipSync
 
-
-        val preferences =
-            android.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        if (preferences.getBoolean("darktheme", false)) {
-            consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-            textTitle.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-            val drawable_close_bs =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-            drawable_close_bs?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            close_bs.setImageDrawable(drawable_close_bs)
-
-            val drawable_imageCrossClose =
-                ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-            drawable_imageCrossClose?.setColorFilter(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                ), PorterDuff.Mode.SRC_IN
-            )
-            imgCloseDialog.setImageDrawable(drawable_imageCrossClose)
-
-            divider21.setBackgroundColor(
-                ContextCompat.getColor(
-                    applicationContext, R.color.dark_light_gray_pop
-                )
-            )
-
-
-        }
 
 
 

@@ -9,10 +9,7 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.database.Cursor
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -31,7 +28,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
@@ -151,8 +147,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
 
 
-        setUpDarkTheme()
-
         setUpFullScreenWindows()
 
 
@@ -199,7 +193,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
                 showCustomProgressDialog("Please wait!")
                 mfilesViewModel.deleteAllFiles()
-                remove_download_key()
                 copyFilesToFailedDownloads()
                 myHandler.postDelayed(Runnable {
                     reTryTheDownlaods()
@@ -254,80 +247,8 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
         }
     }
 
-    private fun setUpDarkTheme() {
-        binding.apply {
-            if (preferences!!.getBoolean("darktheme", false)) {
-
-                // set windows
-                // Set status bar color
-                window?.statusBarColor = Color.parseColor("#171616")
-                // Set navigation bar color
-                window?.navigationBarColor = Color.parseColor("#171616")
-
-                // Ensure the text and icons are white
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
-                    false
-                WindowInsetsControllerCompat(
-                    window,
-                    window.decorView
-                ).isAppearanceLightNavigationBars = false
-
-
-                parentContainer.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-                actionBarRoot.setBackgroundColor(resources.getColor(R.color.dark_layout_for_ui))
-
-                // set text view
-                textTitle.setTextColor(resources.getColor(R.color.white))
-
-
-                textDownloadSieze.setTextColor(resources.getColor(R.color.white))
-                textPercentageCompleted.setTextColor(resources.getColor(R.color.white))
-                textRemainging.setTextColor(resources.getColor(R.color.white))
-                textCsvStatus.setTextColor(resources.getColor(R.color.white))
-
-
-                // test connection buttons and connect buttons
-                textCancelBtn.setTextColor(resources.getColor(R.color.white))
-                textCancelBtn.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textLaunchApplication.setTextColor(resources.getColor(R.color.white))
-                textLaunchApplication.setBackgroundResource(R.drawable.card_design_darktheme_outline)
-
-                textRetryBtn.setTextColor(resources.getColor(R.color.white))
-                textRetryBtn.setBackgroundResource(R.drawable.card_design_darktheme)
-
-                //  round_edit_text_design_outline_dark_theme
-
-
-                // fir back button
-                val drawable =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_arrow)
-                drawable?.setColorFilter(
-                    ContextCompat.getColor(applicationContext, R.color.white),
-                    PorterDuff.Mode.SRC_IN
-                )
-                closeBs.setImageDrawable(drawable)
-
-
-                //  for divider i..n
-                divider21.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.light_gray
-                    )
-                )
-
-
-            }
-        }
-
-
-    }
 
     private fun reTryTheDownlaods() {
-
-
-        remove_download_key()
 
         myHandler.postDelayed(Runnable {
             if (isSystemActive) {
@@ -347,7 +268,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
 
 
     private fun startParsringDownload() {
-        remove_download_key()
         binding.apply {
 
             if (Utility.isNetworkAvailable(applicationContext)) {
@@ -408,7 +328,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
             finishAffinity()
 
         }, 500)
-        remove_download_key()
 
         try {
             customProgressDialog.cancel()
@@ -1013,30 +932,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
     }
 
 
-    private fun remove_download_key() {
-
-        try {
-
-/*            val download_ref: Long = sharedP.getLong(Constants.downloadKey, -15)
-
-            val query = DownloadManager.Query()
-            query.setFilterById(download_ref)
-            val c =
-                (applicationContext.getSystemService(DOWNLOAD_SERVICE) as DownloadManager).query(
-                    query
-                )
-            if (c.moveToFirst()) {
-                manager!!.remove(download_ref)
-                val editor: SharedPreferences.Editor = sharedP.edit()
-                editor.remove(Constants.downloadKey)
-                editor.apply()
-            }*/
-
-        } catch (ignored: java.lang.Exception) {
-        }
-    }
-
-
     override fun onBackPressed() {
         closeDownloadpage()
 
@@ -1106,8 +1001,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
             if (downloadCompleteReceiver != null) {
                 unregisterReceiver(downloadCompleteReceiver)
             }
-
-            remove_download_key()
 
             if (myHandler != null) {
                 myHandler!!.removeCallbacks(runnableGetDownloadProgress)
@@ -1309,54 +1202,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
             bindingDN.imgCloseDialog.visibility = View.GONE
 
 
-            val consMainAlert_sub_layout = bindingDN.consMainAlertSubLayout
-            val textLoading = bindingDN.textLoading
-            val imgCloseDialog = bindingDN.imgCloseDialog
-            val imagSucessful = bindingDN.imagSucessful
-            val progressBar2 = bindingDN.progressBar2
-
-
-
-            val preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(
-                applicationContext
-            )
-
-            if (preferences.getBoolean("darktheme", false)) {
-                consMainAlert_sub_layout.setBackgroundResource(R.drawable.card_design_account_number_dark_pop_layout)
-
-                textLoading.setTextColor(resources.getColor(R.color.dark_light_gray_pop))
-
-                val drawable_imgCloseDialog =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_24)
-                drawable_imgCloseDialog?.setColorFilter(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.white
-                    ), PorterDuff.Mode.SRC_IN
-                )
-                imgCloseDialog.setImageDrawable(drawable_imgCloseDialog)
-
-                val drawable_imagSucessfulg =
-                    ContextCompat.getDrawable(applicationContext, R.drawable.ic_download_24)
-                drawable_imagSucessfulg?.setColorFilter(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.white
-                    ), PorterDuff.Mode.SRC_IN
-                )
-                imagSucessful.setImageDrawable(drawable_imagSucessfulg)
-
-                val colorWhite = ContextCompat.getColor(applicationContext, R.color.white)
-                progressBar2.indeterminateDrawable.setColorFilter(
-                    colorWhite,
-                    PorterDuff.Mode.SRC_IN
-                )
-
-
-            }
-
-
-
             customProgressDialog.show()
         } catch (_: Exception) {
         }
@@ -1460,7 +1305,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
                     copyFilesToFailedDownloads()
                     mfilesViewModel.deleteAllFiles()
                     showCustomProgressDialog("Please wait!")
-                    remove_download_key()
                     handler.postDelayed(Runnable {
                         reTryTheDownlaods()
                     }, 4000)
@@ -1478,7 +1322,7 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
                     }
                 } catch (e: Exception) {
                 }
-                remove_download_key()
+
                 showCustomProgressDialog("Please wait!")
                 stratMyACtivity()
                 alertDialog.dismiss()
@@ -1514,7 +1358,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
                         this@DownloadApisFilesActivityParsing,
                         Observer { files ->
                             showCustomProgressDialog("Please wait!")
-                            remove_download_key()
                             val message = "Unable to download \n ${files.size} Files"
                             myHandler.postDelayed(Runnable {
                                 showCustomErrorDownload(message)
@@ -1547,8 +1390,6 @@ class DownloadApisFilesActivityParsing : AppCompatActivity() {
     }
 
     private fun copyFilesToFailedDownloads() {
-
-
         dnFailedViewModel.getAllFiles()
             .observe(this@DownloadApisFilesActivityParsing) { filesList ->
                 if (filesList.isNotEmpty()) {

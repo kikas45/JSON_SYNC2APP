@@ -66,8 +66,6 @@ class SplashVideoActivity : AppCompatActivity() {
 
 
 
-       /// window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-
         // to make app full screen
         Utility.hideSystemBars(window)
 
@@ -203,26 +201,6 @@ class SplashVideoActivity : AppCompatActivity() {
         val fileType = "Splash.mp4"
         loadMyVideo(fileType)
 
-        /*
-
-                    val currentOrientation = resources.configuration.orientation
-                val get_TV_or_App_Mode = sharedBiometric.getString(Constants.MY_TV_OR_APP_MODE, "")
-
-             if (currentOrientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE || get_TV_or_App_Mode.equals(Constants.TV_Mode)) {
-                  //  requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-
-                    val fileType = "Splash.mp4"
-                    loadMyVideo(fileType)
-
-                } else {
-
-                //    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-                    val fileType = "Splash.mp4"
-                    loadMyVideo(fileType)
-                }
-                */
-
     }
 
     override fun onDestroy() {
@@ -260,8 +238,6 @@ class SplashVideoActivity : AppCompatActivity() {
         }
 
     }
-
-
 
 
     private fun delayedSkipToHome() {
