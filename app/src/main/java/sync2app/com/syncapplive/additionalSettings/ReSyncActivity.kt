@@ -2286,13 +2286,11 @@ class ReSyncActivity : AppCompatActivity(), SavedHistoryListAdapter.OnItemClickL
             val editor = sharedBiometric.edit()
             hideKeyBoard(binding.editTextInputSynUrlZip)
 
-
             editor.putString(Constants.IMG_SELECTED_SYNC_METHOD, Constants.USE_PARSING_SYNC)
             editor.apply()
 
             editTextInputSynUrlZip.hint = "Input url  Parsing Sync"
             textDownloadZipSyncOrApiSyncNow.text = "Connect Parsing Sync"
-
 
             textDownloadZipSyncOrApiSyncNow.setBackgroundResource(R.drawable.card_design_buy_gift_card)
             textDownloadZipSyncOrApiSyncNow.setTextColor(

@@ -201,7 +201,6 @@ class SplashKT : AppCompatActivity() {
         val deepBlue = resources.getColor(R.color.white)
         val deepRed = resources.getColor(R.color.red)
 
-        // Create ObjectAnimator for text color change
 
         // Create ObjectAnimator for text color change
         val colorAnimator = ObjectAnimator.ofInt(goConnection, "textColor", deepBlue, deepRed)
@@ -214,9 +213,6 @@ class SplashKT : AppCompatActivity() {
 
 
         colorAnimator.start()
-
-
-        // Create ObjectAnimator for color change
 
 
         // Create ObjectAnimator for color change
